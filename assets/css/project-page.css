@@ -65,6 +65,7 @@ figcaption b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 
 /* results band */
 .res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6)}
+.res:has(>div:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))} /* four numbers sit two by two, not three and one */
 .res>div{border-top:1px solid var(--line);padding-top:var(--s4)}
 .res b{display:flex;align-items:center;gap:var(--s2);font-family:var(--font-display);font-weight:600;font-size:clamp(48px,6vw,84px);line-height:1}
 .res>div>span{display:block;margin-top:var(--s3);font-size:15px;font-weight:500}

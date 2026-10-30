@@ -93,7 +93,7 @@
 
   /* ---- render ---- */
   var page = $('#page');
-  var ce = function (f, ph, tag, cls, val) { return '<' + tag + ' class="' + (cls || '') + '" contenteditable="true" spellcheck="true" data-f="' + f + '" data-ph="' + esc(ph) + '">' + esc(val || '') + '</' + tag + '>'; };
+  var ce = function (f, ph, tag, cls, val) { return '<' + tag + ' class="' + (cls || '') + '" contenteditable="true" spellcheck="true" role="textbox" aria-label="' + esc(ph) + '" data-f="' + f + '" data-ph="' + esc(ph) + '">' + esc(val || '') + '</' + tag + '>'; };
   var picBtn = function (act, label, k) { return '<button type="button" class="pe-pic" data-act="' + act + '"' + (k != null ? ' data-k="' + k + '"' : '') + '>' + I('image') + label + '</button>'; };
   var rType = function (v) { return /^\s*[+\-−]/.test(v) ? 'change' : /%\s*$/.test(v) ? 'percent' : 'number'; };
   var platform = function (u) { return /instagram/.test(u) ? 'Instagram' : /tiktok/.test(u) ? 'TikTok' : /behance/.test(u) ? 'Behance' : /youtu/.test(u) ? 'YouTube' : ''; };
@@ -220,9 +220,9 @@
 
   /* ---- the bar ---- */
   var bar = document.createElement('div'); bar.className = 'pe-bar';
-  bar.innerHTML = '<div class="in"><a class="back" href="' + F.href('projects.html') + '">' + I('left') + 'Projects</a><span class="saved" id="peSaved" role="status"><i></i>Saved</span>' +
-    '<span class="pill" id="peStatus"></span><button class="btn btn-2" type="button" data-act="settings">' + I('sliders') + 'Settings</button>' +
-    '<a class="btn btn-2" id="pePreview" href="#">' + I('eye') + 'Preview</a><button class="btn" type="button" id="pePublish">Publish</button></div>';
+  bar.innerHTML = '<div class="in"><a class="back" href="' + F.href('projects.html') + '" aria-label="Back to projects">' + I('left') + '<span class="lbl">Projects</span></a><span class="saved" id="peSaved" role="status"><i></i>Saved</span>' +
+    '<span class="pill" id="peStatus"></span><button class="btn btn-2" type="button" data-act="settings" aria-haspopup="dialog" aria-label="Settings">' + I('sliders') + '<span class="lbl">Settings</span></button>' +
+    '<a class="btn btn-2" id="pePreview" href="#" aria-label="Preview">' + I('eye') + '<span class="lbl">Preview</span></a><button class="btn" type="button" id="pePublish">Publish</button></div>';
   page.parentNode.insertBefore(bar, page);
   savedEl = $('#peSaved');
   function renderBar() {
@@ -233,7 +233,7 @@
   }
 
   /* ---- settings: what visitors never see ---- */
-  var panel = document.createElement('aside'); panel.className = 'pe-panel'; panel.setAttribute('aria-label', 'Project settings'); panel.hidden = true;
+  var panel = document.createElement('aside'); panel.className = 'pe-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', 'Project settings'); panel.hidden = true;
   var scrim = document.createElement('div'); scrim.className = 'pe-scrim'; scrim.hidden = true;
   document.body.appendChild(scrim); document.body.appendChild(panel);
   function ndaWarn() {
@@ -249,6 +249,7 @@
   }
   var lastFocus = null;
   function setPanel(on) {
+    page.inert = bar.inert = on; /* the page behind can't be reached while Settings is open */
     if (on) { lastFocus = document.activeElement; renderPanel(); panel.hidden = scrim.hidden = false; requestAnimationFrame(function () { panel.classList.add('is-open'); scrim.classList.add('is-open'); $('#peDate').focus(); }); }
     else { panel.classList.remove('is-open'); scrim.classList.remove('is-open'); setTimeout(function () { panel.hidden = scrim.hidden = true; }, 200); if (lastFocus) lastFocus.focus(); }
   }
@@ -277,7 +278,7 @@
   var picker = document.createElement('dialog'); picker.className = 'pe-picker'; document.body.appendChild(picker);
   function pickPicture(title, done, many) {
     var pool = FAMA_FEATURED.pool(), chosen = [];
-    picker.innerHTML = '<form method="dialog"><div class="pe-pk-h"><h2>' + esc(title) + '</h2><button class="x" value="cancel" aria-label="Close">' + I('x') + '</button></div>' +
+    picker.setAttribute('aria-labelledby', 'pePkT'); picker.innerHTML = '<form method="dialog"><div class="pe-pk-h"><h2 id="pePkT">' + esc(title) + '</h2><button class="x" value="cancel" aria-label="Close">' + I('x') + '</button></div>' +
       '<label class="pe-up">' + I('upload') + '<span><b>Upload from your device</b><small>JPG, PNG or WebP' + (many ? ', several at once' : '') + '</small></span><input type="file" accept="image/jpeg,image/png,image/webp"' + (many ? ' multiple' : '') + '></label>' +
       '<p class="pe-pk-k">Or pick one of yours</p><div class="pe-pk-grid">' + pool.map(function (u, k) { return '<button type="button" class="pe-pk" data-u="' + esc(u) + '" aria-pressed="false" style="background-image:url(' + esc(u) + ')" aria-label="Picture ' + (k + 1) + '"></button>'; }).join('') + '</div>' +
       (many ? '<div class="pe-pk-foot"><button class="btn btn-2" value="cancel">Cancel</button><button class="btn" value="ok" id="pePkOk" disabled>Add pictures</button></div>' : '') + '</form>';
@@ -322,11 +323,23 @@
   });
   page.addEventListener('change', function (e) { var el = e.target; if (el.matches('.pe-url input')) { var bw = el.closest('.pe-b'); P.blocks[+bw.dataset.i].url = el.value.trim(); save(); renderStory(at(+bw.dataset.i, 'input')); } });
   /* paste as plain text, so nothing but words gets in */
-  page.addEventListener('paste', function (e) { if (!e.target.isContentEditable) return; e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain').replace(/\s*\n\s*/g, ' ')); });
+  page.addEventListener('paste', function (e) {
+    var el = e.target; if (!el.isContentEditable) return; e.preventDefault();
+    var txt = (e.clipboardData || window.clipboardData).getData('text/plain').replace(/\r/g, '');
+    var paras = txt.split(/\n\s*\n+/).map(function (x) { return x.replace(/\s*\n\s*/g, ' ').trim(); }).filter(Boolean);
+    var bw = el.closest('.pe-b'), b = bw && P.blocks[+bw.dataset.i];
+    /* several paragraphs pasted into a text block: the first goes here, each of the others becomes its own text block */
+    if (paras.length > 1 && b && b.t === 'text' && el.dataset.f === 'v') {
+      var i = +bw.dataset.i; document.execCommand('insertText', false, paras[0]); b.v = el.textContent;
+      paras.slice(1).forEach(function (v, k) { P.blocks.splice(i + 1 + k, 0, { t: 'text', v: v }); });
+      save(); renderStory(at(i + paras.length - 1)); toast(paras.length + ' paragraphs added'); return;
+    }
+    document.execCommand('insertText', false, paras.join(' '));
+  });
   page.addEventListener('keydown', function (e) {
     var el = e.target;
     if (el.isContentEditable && e.key === 'Enter' && el.dataset.p === 'title') { e.preventDefault(); var first = $('#story [contenteditable]'); if (first) first.focus(); return; }
-    if (el.isContentEditable && e.key === 'Enter' && !e.shiftKey) {
+    if (el.isContentEditable && e.key === 'Enter') {
       var bw = el.closest('.pe-b'); if (!bw) { e.preventDefault(); return; }
       var i = +bw.dataset.i, b = P.blocks[i]; e.preventDefault();
       if (b.t === 'text' || b.t === 'heading') { P.blocks.splice(i + 1, 0, fresh('text')); save(); renderStory(at(i + 1)); }
@@ -335,7 +348,8 @@
     if (el.isContentEditable && e.key === 'Backspace' && !el.textContent) {
       var bw2 = el.closest('.pe-b'); if (!bw2) return; var j = +bw2.dataset.i, b2 = P.blocks[j];
       if ((b2.t === 'text' || b2.t === 'heading') && el.dataset.f === 'v' && P.blocks.length > 1) {
-        e.preventDefault(); P.blocks.splice(j, 1); save(); renderStory();
+        e.preventDefault(); var gone = P.blocks.splice(j, 1)[0]; save(); renderStory();
+        toast(KIND[gone.t] + ' removed', function () { P.blocks.splice(j, 0, gone); save(); renderStory(at(j)); });
         var prev = $$('#story [contenteditable]').filter(function (x) { return +x.closest('.pe-b').dataset.i < j; }).pop(); if (prev) { prev.focus(); placeEnd(prev); }
       }
     }
@@ -355,7 +369,14 @@
     var i = +fig.closest('.pe-b').dataset.i, b = P.blocks[i], r = fig.getBoundingClientRect();
     var pos = function (ev) { return [Math.round(Math.max(3, Math.min(97, (ev.clientX - r.left) / r.width * 100))), Math.round(Math.max(3, Math.min(97, (ev.clientY - r.top) / r.height * 100)))]; };
     var d = e.target.closest('.dot');
-    if (!d) { if (b.items.length >= 8) return toast('A look holds up to 8 pieces.'); var p = pos(e); b.items.push({ n: '', d: '', x: p[0], y: p[1] }); save(); renderStory(at(i, '[data-f="items.' + (b.items.length - 1) + '.n"]')); return; }
+    if (!d) {
+      var sx = e.clientX, sy = e.clientY, t0 = Date.now();
+      var tap = function (ev) { fig.removeEventListener('pointerup', tap); fig.removeEventListener('pointercancel', no);
+        if (Math.abs(ev.clientX - sx) > 6 || Math.abs(ev.clientY - sy) > 6 || Date.now() - t0 > 600) return;
+        if (b.items.length >= 8) return toast('A look holds up to 8 pieces.'); r = fig.getBoundingClientRect(); var p = pos(ev); b.items.push({ n: '', d: '', x: p[0], y: p[1] }); save(); renderStory(at(i, '[data-f="items.' + (b.items.length - 1) + '.n"]')); };
+      var no = function () { fig.removeEventListener('pointerup', tap); fig.removeEventListener('pointercancel', no); };
+      fig.addEventListener('pointerup', tap); fig.addEventListener('pointercancel', no); return;
+    }
     e.preventDefault(); d.setPointerCapture(e.pointerId); d.classList.add('pe-drag');
     var x = b.items[+d.dataset.dot];
     var move = function (ev) { var p = pos(ev); x.x = p[0]; x.y = p[1]; d.style.left = p[0] + '%'; d.style.top = p[1] + '%'; };
@@ -414,6 +435,10 @@
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
   });
   scrim.addEventListener('click', function () { setPanel(false); });
+  panel.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return; var f = $$('button, input, [href]', panel).filter(function (x) { return !x.disabled; }), a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
   panel.addEventListener('input', function (e) { if (e.target.dataset.p) { P[e.target.dataset.p] = e.target.value; save(); render(); } });
   panel.addEventListener('click', function (e) { var a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'nda') e.stopPropagation(), (P.nda = !P.nda), save(), renderPanel(), render(), $('[data-act=nda]', panel).focus(); }, true);
 
@@ -429,5 +454,5 @@
   };
 
   render(pid ? null : '[data-p=title]');
-  save();
+  if (pid) save(); /* a new, untouched project isn't kept: it is saved on its first edit */
 })();

@@ -10,7 +10,14 @@
 .pe-bar .saved i{width:7px;height:7px;border-radius:999px;background:var(--mint-fg,#1B6B52)}
 .pe-bar .saved i.busy{background:var(--grey)}.pe-bar .saved i.bad{background:var(--rose,#E8927C)}
 .pe-bar .btn{min-height:40px;padding:0 var(--s4)}
-@media (max-width:760px){.pe-bar{top:64px}.pe-bar .in{padding:var(--s2) var(--s4);gap:var(--s2)}.pe-bar .saved{font-size:0}.pe-bar .saved i{width:9px;height:9px}.pe-bar .btn-2{padding:0 var(--s3)}.pe-bar .btn-2 .pe-i+*{display:none}.pe-bar .pill{display:none}}
+/* phones (30 Oct 2026): the bar is icons and the main button, so it never runs off the screen */
+@media (max-width:760px){
+  .pe-bar{top:64px}.pe-bar .in{padding:var(--s2) var(--s4);gap:var(--s2)}
+  .pe-bar .saved{font-size:0}.pe-bar .saved i{width:9px;height:9px}
+  .pe-bar .lbl,.pe-bar .pill{display:none}
+  .pe-bar .back,.pe-bar .btn-2{min-width:44px;min-height:44px;padding:0;justify-content:center}
+  .pe-bar .btn{min-height:44px}
+}
 
 /* typing in place: a quiet outline on hover, purple while typing, the hint when empty */
 .pe-cover [contenteditable],.pe-colo [contenteditable],.pe-story [contenteditable]{outline:1px dashed transparent;outline-offset:6px;border-radius:4px;cursor:text;transition:outline-color var(--duration-quick,150ms) ease-out}
@@ -203,3 +210,21 @@
 .pe-pk[aria-pressed=true]{outline:3px solid var(--purple)}
 .pe-pk-foot{display:flex;justify-content:flex-end;gap:var(--s2);padding-top:var(--s4)}
 @media (prefers-reduced-motion:reduce){.pe-tools,.pe-ins,.pe-pic,.pe-panel,.pe-scrim{transition:none}}
+
+/* touch screens have no hover: the + between blocks shows as a faint line, and every tool is a full 44px target */
+@media (hover:none){
+  .pe-ins{opacity:.55}
+  .pe-ins::before{background:rgba(173,80,211,.35)}
+}
+@media (max-width:760px),(hover:none){
+  .pe-tools button,.pe-ins button,.pe-ph-acts button,.pe-x,.pe-row-acts button{width:44px;height:44px}
+  .pe-ins{height:44px;margin:-10px 0}
+  .pe-pic,.pe-chip{min-height:44px}
+  .pe-chip{padding:0 12px}
+  .pe-link{min-height:44px}
+  .pe-b .cred li{grid-template-columns:40px minmax(0,1fr) 44px}
+  .pe-b .cred li .pe-x,.pe-row-acts,.pe-item>.pe-x{opacity:1}
+  .pe-look .look-img{touch-action:pan-y}
+}
+/* placeholders read at 4.5:1 and up */
+[contenteditable]:empty::before{opacity:.62}
