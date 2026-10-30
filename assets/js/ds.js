@@ -56,21 +56,24 @@
 
   /* toast with optional Undo (5 seconds) */
   var toastEl, timer, undoFn;
-  FAMA.toast = function (msg, undo) {
+  FAMA.toast = function (msg, undo, label) {
     if (!toastEl) {
       toastEl = document.createElement('div');
       toastEl.className = 'toast'; toastEl.setAttribute('role', 'status'); toastEl.hidden = true;
       toastEl.innerHTML = '<span></span><button type="button"></button>';
       document.body.appendChild(toastEl);
+      document.addEventListener('keydown', function (e) { if (e.altKey && e.code === 'KeyZ' && undoFn && !toastEl.hidden) { e.preventDefault(); toastEl.querySelector('button').click(); } });
       toastEl.querySelector('button').addEventListener('click', function () {
         if (undoFn) undoFn(); toastEl.hidden = true; undoFn = null;
       });
     }
     toastEl.querySelector('span').textContent = msg;
     var b = toastEl.querySelector('button');
-    b.textContent = lang === 'ar' ? 'تراجع' : 'Undo';
+    b.textContent = label || (lang === 'ar' ? 'تراجع' : 'Undo');
     b.hidden = !undo; undoFn = undo || null; toastEl.hidden = false;
-    clearTimeout(timer); timer = setTimeout(function () { toastEl.hidden = true; undoFn = null; }, 5000);
+    /* 30 Oct 2026: it stays while the pointer or the keyboard is on it, so Undo can be reached; Alt+Z also presses it */
+    var hide = function () { clearTimeout(timer); timer = setTimeout(function () { if (toastEl.matches(':hover,:focus-within')) return hide(); toastEl.hidden = true; undoFn = null; }, 6000); };
+    hide();
   };
 
   /* confirm(title, body, okLabel, danger) → Promise<boolean>, using a real <dialog> */

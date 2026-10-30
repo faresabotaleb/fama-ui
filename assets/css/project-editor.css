@@ -228,3 +228,19 @@
 }
 /* placeholders read at 4.5:1 and up */
 [contenteditable]:empty::before{opacity:.62}
+
+/* review follow-ups (30 Oct 2026) */
+.pe-story [contenteditable]:focus{outline:1px dashed rgba(173,80,211,.7);outline-offset:4px} /* one strong ring (the block), a quiet one for the field */
+.pe-grip{cursor:grab;color:var(--grey)}
+.pe-grip:active{cursor:grabbing}
+.pe-b.pe-dragging{opacity:.4}
+.pe-drop-line{position:absolute;left:0;right:0;height:4px;border-radius:2px;background:var(--purple);z-index:20;pointer-events:none}
+.pe-story{position:relative}
+.pe-b .ba-box{cursor:ew-resize}
+.pe-q-line{margin:var(--s1) var(--s3) var(--s2);font-size:12px;color:var(--purple-dk);font-weight:600}
+.pe-menu [hidden]{display:none!important}
+.pe-menu .pe-need{grid-template-columns:1fr;min-height:44px}
+.pe-menu .pe-need b::before{content:"";display:inline-block;width:8px;height:8px;margin-inline-end:10px;border-radius:999px;background:var(--rose,#E8927C);vertical-align:1px}
+.pe-pk{position:relative;display:grid;place-items:center;font:700 22px/1 var(--font-display);color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.pe-pk[aria-pressed=true]::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(173,80,211,.28)}
+@media (hover:none){.pe-grip{display:none}}

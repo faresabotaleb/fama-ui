@@ -66,12 +66,13 @@
     });
   })();
 
-  var saveT, savedEl;
+  var saveT, savedEl, hist = []; /* hist: the project after each save, newest last, for Cmd/Ctrl+Z */
   function save() {
     if (savedEl) savedEl.innerHTML = '<i class="busy"></i>Saving…';
     clearTimeout(saveT);
     saveT = setTimeout(function () {
       var title = P.title; store[P.id] = P;
+      var snap = JSON.stringify(P); if (hist[hist.length - 1] !== snap) { hist.push(snap); if (hist.length > 60) hist.shift(); }
       try { localStorage.setItem(KEY, JSON.stringify(store)); if (savedEl) savedEl.innerHTML = '<i></i>Saved just now'; }
       catch (e) { if (savedEl) savedEl.innerHTML = '<i class="bad"></i>Not saved'; toast('This browser is out of room for pictures. Use smaller ones, or fewer.'); }
     }, 350);
@@ -81,9 +82,9 @@
   /* ---- what can be added, and how it shows on the page ---- */
   var MENU = [
     ['Write', [['text', 'Text', 'A paragraph. Type / in an empty line for this menu', 'text'], ['heading', 'Heading', 'Starts a new chapter on the page', 'heading'], ['quote', 'Quote', 'Set large, with who said it', 'quote']]],
-    ['Show', [['image', 'Image', 'Full width. Text right after it sits beside it', 'image'], ['gallery', 'Photos', '2 sit side by side; 4 or more become the scrolling gallery', 'images'], ['beforeafter', 'Before / After', 'One frame twice, with a line to drag', 'split'], ['look', 'Look with tags', 'Numbered pieces on a photo', 'tags'], ['video', 'Video', 'A YouTube or Vimeo link', 'video'], ['embed', 'Post', 'Instagram, TikTok, Behance or YouTube Shorts', 'reel']]],
+    ['Show', [['image', 'Image', 'Full width. Text right after it sits beside it', 'image'], ['gallery', 'Photos', '2 sit side by side; 4 or more become the scrolling gallery', 'images'], ['beforeafter', 'Before / After', 'One frame twice, with a line to drag', 'split'], ['look', 'Look with tags', 'Numbered pieces on a photo', 'tags'], ['video', 'Video', 'A YouTube or Vimeo link', 'video'], ['embed', 'Social post', 'A post from Instagram, TikTok, Behance or YouTube Shorts', 'reel']]],
     ['Prove', [['results', 'Results', 'Up to four numbers: 1.2M, 68%, +40%', 'chart'], ['credits', 'Credits', 'People you made it with, asked to confirm', 'users']]]];
-  var KIND = { text: 'Text', heading: 'Heading', quote: 'Quote', image: 'Image', gallery: 'Photos', beforeafter: 'Before / After', look: 'Look', video: 'Video', embed: 'Post', results: 'Results', credits: 'Credits' };
+  var KIND = { text: 'Text', heading: 'Heading', quote: 'Quote', image: 'Image', gallery: 'Photos', beforeafter: 'Before / After', look: 'Look', video: 'Video', embed: 'Social post', results: 'Results', credits: 'Credits' };
   var fresh = function (t) {
     return t === 'beforeafter' ? { t: t, has: false, lb: 'Before', la: 'After', cap: '' } : t === 'look' ? { t: t, has: false, title: '', items: [] } :
       t === 'embed' ? { t: t, url: '' } : t === 'quote' ? { t: t, v: '', by: '' } : t === 'gallery' ? { t: t, n: 0, caps: [], srcs: [] } :
@@ -128,7 +129,7 @@
       var it = b.items || [];
       return '<div class="look pe-look"><figure class="look-img" data-look><div class="ph-img" style="background-image:url(' + esc(b.src) + ')"></div>' +
         it.map(function (x, k) { return '<button type="button" class="dot" data-dot="' + k + '" style="left:' + (x.x != null ? x.x : 50) + '%;top:' + (x.y != null ? x.y : 50) + '%" aria-label="' + (k + 1) + '. ' + esc(x.n || 'piece') + '. Arrow keys move it">' + (k + 1) + '</button>'; }).join('') +
-        picBtn('look', 'Replace photo') + '<p class="pe-look-tip">Click the photo to add a piece · drag a number onto its piece</p></figure>' +
+        picBtn('look', 'Replace photo') + '<p class="pe-look-tip">' + (matchMedia('(hover:none)').matches ? 'Tap the photo to add a piece · drag a number onto its piece' : 'Click the photo to add a piece · drag a number onto its piece') + '</p></figure>' +
         '<div class="look-list"><div class="pe-look-h">' + ce('title', 'Name the look', 'span', 'pe-look-name', b.title) + '<span>What’s in it</span></div><ol>' +
         it.map(function (x, k) { return '<li data-tag="' + (k + 1) + '">' + ce('items.' + k + '.n', 'Piece, e.g. Overshirt', 'b', '', x.n) + ce('items.' + k + '.d', 'Brand · material, colour', 'span', '', x.d) +
           '<span class="pe-row-acts">' + (k ? '<button type="button" data-act="itup" data-k="' + k + '" aria-label="Move up">' + I('up') + '</button>' : '') + '<button type="button" data-act="itdel" data-k="' + k + '" aria-label="Remove ' + esc(x.n || 'this piece') + '">' + I('x') + '</button></span></li>'; }).join('') +
@@ -143,7 +144,7 @@
     if (b.t === 'embed') {
       var u = b.url || '', p2 = platform(u), who = (u.match(/@([\w.\-]+)/) || u.match(/instagram\.com\/(?:reel\/)?([\w.\-]+?)(?:-|\/|$)/) || [])[1] || (p2 || 'post').toLowerCase();
       return '<div class="pe-emb">' + (u ? '<div class="emb-card" aria-hidden="true"><span class="emb-top"><span class="av">' + esc(ini(who.replace(/[._-]/g, ' '))) + '</span><span><b>' + esc(who) + '</b><i>' + esc(p2 || 'Link') + '</i></span></span><span class="ph-img" style="background-image:url(' + esc(FAMA_FEATURED.photo(P.id, 11 + i)) + ')"></span></div>' : '') +
-        '<div class="pe-emb-side"><p class="pe-emb-k">' + (ctx.firstEmbed ? 'Also posted · posts next to each other show side by side' : 'Post') + '</p><label class="pe-url">' + I('link') + '<input type="url" dir="ltr" data-f="url" value="' + esc(u) + '" placeholder="Paste an Instagram, TikTok, Behance or YouTube Shorts link" aria-label="Post link">' + (p2 ? '<small>' + p2 + '</small>' : '') + '</label></div></div>';
+        '<div class="pe-emb-side"><p class="pe-emb-k">' + (ctx.firstEmbed ? 'Also posted · posts next to each other show side by side' : 'Social post') + '</p><label class="pe-url">' + I('link') + '<input type="url" dir="ltr" data-f="url" value="' + esc(u) + '" placeholder="Paste an Instagram, TikTok, Behance or YouTube Shorts link" aria-label="Post link">' + (p2 ? '<small>' + p2 + '</small>' : '') + '</label></div></div>';
     }
     if (b.t === 'results') {
       var items = b.items || [];
@@ -159,8 +160,8 @@
       var ppl = b.items || [];
       return '<ul class="cred"><li class="pe-me"><span class="av">DT</span><b>Demo talent</b><span class="r">' + esc(P.role || 'Your role') + '</span><span class="st">Owner</span></li>' +
         ppl.map(function (x, k) {
-          var st = x.st === 'confirmed' ? 'Confirmed' : x.st === 'awaiting' ? 'Waiting to confirm' : x.st === 'listed' ? 'On Fama' : 'Asked when you publish';
-          return '<li><span class="av">' + esc(ini(x.n)) + '</span>' + ce('items.' + k + '.n', 'Name, or search Fama', 'b', '', x.n) + ce('items.' + k + '.r', 'Role, e.g. Photographer', 'span', 'r', x.r) +
+          var st = x.st === 'confirmed' ? 'Confirmed' : x.st === 'awaiting' ? 'Waiting to confirm' : x.st === 'listed' ? 'Shown, not asked' : 'Asked when you publish';
+          return '<li><span class="av">' + esc(ini(x.n)) + '</span>' + ce('items.' + k + '.n', 'Their name', 'b', '', x.n) + ce('items.' + k + '.r', 'Role, e.g. Photographer', 'span', 'r', x.r) +
             '<span class="st pe-st-' + (x.st || 'new') + '">' + st + '</span><button type="button" class="pe-x" data-act="cdel" data-k="' + k + '" aria-label="Remove ' + esc(x.n || 'this person') + '">' + I('x') + '</button></li>'; }).join('') +
         '<li class="pe-add-li"><button type="button" data-act="cadd">' + I('plus') + '<b>Credit someone</b><small>They’re asked to confirm when you publish</small></button></li></ul>';
     }
@@ -169,11 +170,12 @@
 
   function tools(i, b) {
     return '<div class="pe-tools" role="toolbar" aria-label="' + KIND[b.t] + ' block"><span class="pe-kind">' + KIND[b.t] + '</span>' +
+      '<button type="button" class="pe-grip" data-grip aria-label="Drag to move (or use the arrows)" tabindex="-1">' + I('grip') + '</button>' +
       '<button type="button" data-act="up" aria-label="Move up"' + (i === 0 ? ' disabled' : '') + '>' + I('up') + '</button>' +
       '<button type="button" data-act="down" aria-label="Move down"' + (i === P.blocks.length - 1 ? ' disabled' : '') + '>' + I('down') + '</button>' +
       '<button type="button" data-act="more" aria-label="More" aria-haspopup="menu">' + I('more') + '</button></div>';
   }
-  var ins = function (i) { return '<div class="pe-ins"><button type="button" data-act="add" data-at="' + i + '" aria-label="Add a block here">' + I('plus') + '</button></div>'; };
+  var ins = function (i) { return '<div class="pe-ins"><button type="button" data-act="add" data-at="' + i + '" aria-label="Add a block here"' + (i < P.blocks.length - 1 ? ' tabindex="-1"' : '') + '>' + I('plus') + '</button></div>'; };
 
   function storyHTML() {
     var ctx = { ch: 0, fig: 0, leadAt: -1 }, out = ins(-1), seenHead = false;
@@ -205,7 +207,7 @@
       '<div><dt>Role</dt><dd contenteditable="true" data-p="role" data-ph="What did you do on it?">' + esc(P.role) + '</dd></div>' +
       '<div><dt>Skills</dt><dd>' + P.skills.map(function (s) { return '<button type="button" class="pe-chip" data-act="skdel" data-v="' + esc(s) + '" aria-label="Remove ' + esc(s) + '">' + esc(s) + I('x') + '</button>'; }).join('') +
         '<button type="button" class="pe-chip add" data-act="skadd">' + I('plus') + 'Skill</button>' + specs + (P.skills.length ? '<button type="button" class="pe-chip add sm" data-act="specadd">' + I('plus') + 'Speciality</button>' : '') + '</dd></div>' +
-      '<div><dt>See it live</dt><dd><input class="pe-link" type="url" dir="ltr" data-p="link" value="' + esc(P.link) + '" placeholder="Paste a link" aria-label="Link to the live work"></dd></div></dl></div>';
+      '<div><dt>See it live</dt><dd><input class="pe-link" type="url" dir="ltr" data-p="link" value="' + esc(P.link) + '" placeholder="Paste a link" aria-label="Link to the live work"></dd>' + (P.nda ? '<span class="pe-nda">' + I('lock') + 'Hidden on the page: Confidential</span>' : '') + '</div></dl></div>';
   }
 
   function render(focusSel) {
@@ -220,7 +222,7 @@
 
   /* ---- the bar ---- */
   var bar = document.createElement('div'); bar.className = 'pe-bar';
-  bar.innerHTML = '<div class="in"><a class="back" href="' + F.href('projects.html') + '" aria-label="Back to projects">' + I('left') + '<span class="lbl">Projects</span></a><span class="saved" id="peSaved" role="status"><i></i>Saved</span>' +
+  bar.innerHTML = '<div class="in"><a class="back" href="' + F.href('projects.html') + '" aria-label="Back to projects">' + I('left') + '<span class="lbl">Projects</span></a><span class="saved" id="peSaved"><i></i>Saved</span>' +
     '<span class="pill" id="peStatus"></span><button class="btn btn-2" type="button" data-act="settings" aria-haspopup="dialog" aria-label="Settings">' + I('sliders') + '<span class="lbl">Settings</span></button>' +
     '<a class="btn btn-2" id="pePreview" href="#" aria-label="Preview">' + I('eye') + '<span class="lbl">Preview</span></a><button class="btn" type="button" id="pePublish">Publish</button></div>';
   page.parentNode.insertBefore(bar, page);
@@ -260,19 +262,31 @@
   function openMenu(anchor, html, onPick) {
     closeMenu(); menu = document.createElement('div'); menu.className = 'pe-menu'; menu.setAttribute('role', 'menu'); menu.innerHTML = html;
     document.body.appendChild(menu);
-    var r = anchor.getBoundingClientRect(), w = menu.offsetWidth;
-    menu.style.top = (scrollY + r.bottom + 6) + 'px'; menu.style.left = Math.max(8, Math.min(scrollX + r.left + r.width / 2 - w / 2, scrollX + innerWidth - w - 8)) + 'px';
+    var r = anchor.getBoundingClientRect(), w = menu.offsetWidth, h = menu.offsetHeight;
+    /* below the anchor when it fits, above it when it doesn't */
+    menu.style.top = (r.bottom + 6 + h > innerHeight && r.top - h - 6 > 0 ? scrollY + r.top - h - 6 : scrollY + r.bottom + 6) + 'px'; menu.style.left = Math.max(8, Math.min(scrollX + r.left + r.width / 2 - w / 2, scrollX + innerWidth - w - 8)) + 'px';
     var items = $$('[data-v]', menu); if (items[0]) { items[0].classList.add('is-hl'); items[0].focus(); }
     menu.addEventListener('click', function (e) { var b = e.target.closest('[data-v]'); if (!b) return; var v = b.dataset.v; closeMenu(); onPick(v); });
     menu.addEventListener('keydown', function (e) {
       var l = $$('[data-v]', menu), i = l.indexOf(document.activeElement);
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); var n = l[(i + (e.key === 'ArrowDown' ? 1 : -1) + l.length) % l.length]; l.forEach(function (x) { x.classList.remove('is-hl'); }); n.classList.add('is-hl'); n.focus(); }
       if (e.key === 'Escape') { closeMenu(); anchor.focus(); }
+      if (e.key === 'Tab') closeMenu();
+      /* typing narrows the block menu: "im" leaves Image */
+      if (e.key.length === 1 && /\S/.test(e.key) && !e.metaKey && !e.ctrlKey && $('.ico', menu)) { e.preventDefault(); q += e.key.toLowerCase(); filter(); }
+      if (e.key === 'Backspace' && q) { e.preventDefault(); q = q.slice(0, -1); filter(); }
     });
+    var q = '', filter = function () {
+      var shown = 0; $$('[data-v]', menu).forEach(function (b) { var on = b.textContent.toLowerCase().indexOf(q) >= 0; b.hidden = !on; b.classList.remove('is-hl'); if (on) shown++; });
+      $$('p', menu).forEach(function (p) { var n = p.nextElementSibling, any = false; while (n && n.tagName !== 'P') { if (!n.hidden && n.dataset.v) any = true; n = n.nextElementSibling; } p.hidden = !any; });
+      var first = $$('[data-v]', menu).find(function (b) { return !b.hidden; }); if (first) { first.classList.add('is-hl'); first.focus(); }
+      var qq = $('.pe-q-line', menu); if (!qq) { qq = document.createElement('div'); qq.className = 'pe-q-line'; qq.setAttribute('role', 'status'); menu.insertBefore(qq, menu.firstChild); }
+      qq.textContent = q ? (shown ? 'Blocks with “' + q + '”' : 'No block called “' + q + '”') : ''; qq.hidden = !q;
+    };
   }
   var blockMenu = MENU.map(function (g) { return '<p>' + g[0] + '</p>' + g[1].map(function (m) { return '<button role="menuitem" data-v="' + m[0] + '"><span class="ico">' + I(m[3]) + '</span><b>' + m[1] + '</b><small>' + m[2] + '</small></button>'; }).join(''); }).join('');
   var list = function (items) { return items.map(function (x) { return '<button role="menuitem" data-v="' + esc(x[0]) + '"' + (x[2] ? ' class="' + x[2] + '"' : '') + '><b>' + esc(x[1]) + '</b></button>'; }).join(''); };
-  document.addEventListener('click', function (e) { if (menu && !menu.contains(e.target) && !e.target.closest('[data-act=add],[data-act=more],[data-act=skadd],[data-act=specadd]')) closeMenu(); });
+  document.addEventListener('click', function (e) { if (menu && !menu.contains(e.target) && !e.target.closest('[data-act=add],[data-act=more],[data-act=skadd],[data-act=specadd],#pePublish')) closeMenu(); });
 
   /* ---- pictures: the stock pictures, or one from the device (made smaller so the browser can keep it) ---- */
   var picker = document.createElement('dialog'); picker.className = 'pe-picker'; document.body.appendChild(picker);
@@ -280,7 +294,7 @@
     var pool = FAMA_FEATURED.pool(), chosen = [];
     picker.setAttribute('aria-labelledby', 'pePkT'); picker.innerHTML = '<form method="dialog"><div class="pe-pk-h"><h2 id="pePkT">' + esc(title) + '</h2><button class="x" value="cancel" aria-label="Close">' + I('x') + '</button></div>' +
       '<label class="pe-up">' + I('upload') + '<span><b>Upload from your device</b><small>JPG, PNG or WebP' + (many ? ', several at once' : '') + '</small></span><input type="file" accept="image/jpeg,image/png,image/webp"' + (many ? ' multiple' : '') + '></label>' +
-      '<p class="pe-pk-k">Or pick one of yours</p><div class="pe-pk-grid">' + pool.map(function (u, k) { return '<button type="button" class="pe-pk" data-u="' + esc(u) + '" aria-pressed="false" style="background-image:url(' + esc(u) + ')" aria-label="Picture ' + (k + 1) + '"></button>'; }).join('') + '</div>' +
+      '<p class="pe-pk-k">Or pick from your pictures</p><div class="pe-pk-grid">' + pool.map(function (u, k) { return '<button type="button" class="pe-pk" data-u="' + esc(u) + '" aria-pressed="false" style="background-image:url(' + esc(u) + ')" aria-label="Picture ' + (k + 1) + '"></button>'; }).join('') + '</div>' +
       (many ? '<div class="pe-pk-foot"><button class="btn btn-2" value="cancel">Cancel</button><button class="btn" value="ok" id="pePkOk" disabled>Add pictures</button></div>' : '') + '</form>';
     var finish = function (list) { picker.close(); if (list && list.length) done(many ? list : list[0]); };
     picker.onclick = function (e) {
@@ -288,6 +302,7 @@
       if (!many) return finish([b.dataset.u]);
       var on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
       chosen = on ? chosen.concat(b.dataset.u) : chosen.filter(function (u) { return u !== b.dataset.u; });
+      $$('.pe-pk', picker).forEach(function (x) { var n = chosen.indexOf(x.dataset.u); x.textContent = n >= 0 ? n + 1 : ''; });
       $('#pePkOk').disabled = !chosen.length; $('#pePkOk').textContent = chosen.length ? 'Add ' + chosen.length + (chosen.length === 1 ? ' picture' : ' pictures') : 'Add pictures';
     };
     picker.onclose = function () { if (many && picker.returnValue === 'ok' && chosen.length) done(chosen); };
@@ -318,6 +333,7 @@
     var i = +bw.dataset.i, b = P.blocks[i];
     set(b, el.dataset.f, v); save();
     if (b.t === 'results' && /\.0$/.test(el.dataset.f)) { var box = el.closest('.pe-item'), kk = rType(v); if ((box.classList.contains('up') ? 'change' : box.querySelector('.bar') ? 'percent' : 'number') !== kk) { var path = el.dataset.f; renderStory(at(i, '[data-f="' + path + '"]')); } else { var bi = box.querySelector('.bar i'); if (bi) bi.style.width = Math.max(0, Math.min(100, parseFloat(v) || 0)) + '%'; } }
+    if (b.t === 'credits' && /\.n$/.test(el.dataset.f)) { var av = el.parentNode.querySelector('.av'); if (av) av.textContent = ini(v); }
     if (b.t === 'look' && /\.n$/.test(el.dataset.f)) { var dk = +el.dataset.f.split('.')[1], dot = bw.querySelector('[data-dot="' + dk + '"]'); if (dot) dot.setAttribute('aria-label', (dk + 1) + '. ' + (v || 'piece') + '. Arrow keys move it'); }
     if (b.t === 'text' && v === '/') { el.textContent = ''; b.v = ''; openMenu(el, blockMenu, function (t) { if (t === 'text') return el.focus(); P.blocks[i] = fresh(t); save(); renderStory(at(i)); }); }
   });
@@ -377,11 +393,36 @@
       var no = function () { fig.removeEventListener('pointerup', tap); fig.removeEventListener('pointercancel', no); };
       fig.addEventListener('pointerup', tap); fig.addEventListener('pointercancel', no); return;
     }
-    e.preventDefault(); d.setPointerCapture(e.pointerId); d.classList.add('pe-drag');
+    e.preventDefault(); try { d.setPointerCapture(e.pointerId); } catch (er) {} d.classList.add('pe-drag');
     var x = b.items[+d.dataset.dot];
     var move = function (ev) { var p = pos(ev); x.x = p[0]; x.y = p[1]; d.style.left = p[0] + '%'; d.style.top = p[1] + '%'; };
     var up = function () { d.classList.remove('pe-drag'); d.removeEventListener('pointermove', move); d.removeEventListener('pointerup', up); save(); };
     d.addEventListener('pointermove', move); d.addEventListener('pointerup', up);
+  });
+  /* a block drags by its grip: a purple line shows where it will land */
+  page.addEventListener('pointerdown', function (e) {
+    var g = e.target.closest('[data-grip]'); if (!g) return;
+    var from = +g.closest('.pe-b').dataset.i, blocks = $$('#story > .pe-b'), to = from, line = document.createElement('div');
+    line.className = 'pe-drop-line'; $('#story').appendChild(line); e.preventDefault(); try { g.setPointerCapture(e.pointerId); } catch (er) {}
+    blocks[from].classList.add('pe-dragging');
+    var move = function (ev) {
+      to = blocks.length; for (var k = 0; k < blocks.length; k++) { var r = blocks[k].getBoundingClientRect(); if (ev.clientY < r.top + r.height / 2) { to = k; break; } }
+      var sr = $('#story').getBoundingClientRect(), ref = blocks[Math.min(to, blocks.length - 1)].getBoundingClientRect();
+      line.style.top = ((to < blocks.length ? ref.top : ref.bottom) - sr.top - 2) + 'px';
+      if (ev.clientY < 90) scrollBy(0, -12); else if (ev.clientY > innerHeight - 60) scrollBy(0, 12);
+    };
+    var up = function () {
+      g.removeEventListener('pointermove', move); g.removeEventListener('pointerup', up); line.remove(); blocks[from].classList.remove('pe-dragging');
+      var j = to > from ? to - 1 : to; if (j !== from && j >= 0) moveBlock(from, j);
+    };
+    g.addEventListener('pointermove', move); g.addEventListener('pointerup', up);
+  });
+  page.addEventListener('pointerdown', function (e) {
+    var box = e.target.closest('.pe-b .ba-box'); if (!box || e.target.closest('[contenteditable],.pe-pic')) return;
+    var set = function (ev) { var r = box.getBoundingClientRect(); box.style.setProperty('--p', Math.max(0, Math.min(100, (ev.clientX - r.left) / r.width * 100)) + '%'); };
+    set(e); try { box.setPointerCapture(e.pointerId); } catch (er) {}
+    var up = function () { box.removeEventListener('pointermove', set); box.removeEventListener('pointerup', up); };
+    box.addEventListener('pointermove', set); box.addEventListener('pointerup', up);
   });
   /* hovering a piece lights its pin, and the other way round */
   page.addEventListener('pointerover', function (e) {
@@ -400,11 +441,20 @@
     if (act === 'add') { var after = +a.dataset.at; return openMenu(a, blockMenu, function (t) { P.blocks.splice(after + 1, 0, fresh(t)); save(); renderStory(at(after + 1)); }); }
     if (act === 'up' && i > 0) return moveBlock(i, i - 1);
     if (act === 'down' && i < P.blocks.length - 1) return moveBlock(i, i + 1);
-    if (act === 'more') return openMenu(a, list([['dup', 'Duplicate'], ['del', 'Delete', 'del']]), function (v) {
-      if (v === 'dup') { P.blocks.splice(i + 1, 0, clone(b)); save(); renderStory(at(i + 1, '[data-act=more]')); return; }
-      var old = P.blocks.splice(i, 1)[0]; if (!P.blocks.length) P.blocks.push(fresh('text')); save(); renderStory();
-      toast(KIND[old.t] + ' deleted', function () { P.blocks.splice(i, 0, old); save(); renderStory(at(i, '[data-act=more]')); });
-    });
+    if (act === 'more') {
+      var words = ['text', 'heading', 'quote'].indexOf(b.t) >= 0;
+      var opts = [['below', 'Add a block below']].concat(words ? ['text', 'heading', 'quote'].filter(function (t) { return t !== b.t; }).map(function (t) { return ['to-' + t, 'Turn into ' + KIND[t].toLowerCase()]; }) : [])
+        .concat([['dup', 'Duplicate'], ['del', 'Delete', 'del']]);
+      return openMenu(a, list(opts), function (v) {
+        if (v === 'below') return openMenu(a, blockMenu, function (t) { P.blocks.splice(i + 1, 0, fresh(t)); save(); renderStory(at(i + 1)); });
+        if (v.indexOf('to-') === 0) { var t = v.slice(3), keep = b.v || ''; P.blocks[i] = fresh(t); P.blocks[i].v = keep; save(); renderStory(at(i)); return; }
+        if (v === 'dup') { P.blocks.splice(i + 1, 0, clone(b)); save(); renderStory(at(i + 1, '[data-act=more]')); return; }
+        var old = P.blocks.splice(i, 1)[0]; if (!P.blocks.length) P.blocks.push(fresh('text')); save();
+        /* focus lands on the block that took its place, not on the page */
+        renderStory(at(Math.min(i, P.blocks.length - 1), '[data-act=more]'));
+        toast(KIND[old.t] + ' deleted', function () { P.blocks.splice(i, 0, old); save(); renderStory(at(i, '[data-act=more]')); });
+      });
+    }
     if (act === 'cover') return pickPicture(P.cover ? 'Change the cover' : 'Add a cover', function (u) { P.cover = true; P.coverSrc = u; save(); render('[data-act=cover]'); });
     if (act === 'nocover') { var was = P.coverSrc; P.cover = false; save(); render('[data-act=cover]'); toast('Cover removed', function () { P.cover = true; P.coverSrc = was; save(); render(); }); return; }
     if (act === 'skadd') { var left = MY.filter(function (s) { return P.skills.indexOf(s.name) < 0; }); if (!left.length) return toast('All your skills are on it.'); return openMenu(a, list(left.map(function (s) { return [s.name, s.name]; })), function (v) { P.skills.push(v); save(); render('[data-act=skadd]'); }); }
@@ -433,6 +483,14 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !panel.hidden) setPanel(false);
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
+    /* Cmd/Ctrl+Z outside a text field undoes the last change to the project (in a field, typing keeps its own undo) */
+    var typing = e.target.isContentEditable || /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+    if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !typing && panel.hidden) {
+      e.preventDefault(); clearTimeout(saveT);
+      if (hist.length < 2) { toast('Nothing to undo'); return; }
+      hist.pop(); var prev = JSON.parse(hist[hist.length - 1]); Object.keys(P).forEach(function (k) { delete P[k]; }); Object.assign(P, prev);
+      store[P.id] = P; try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (er) {} render(); toast('Undone');
+    }
   });
   scrim.addEventListener('click', function () { setPanel(false); });
   panel.addEventListener('keydown', function (e) {
@@ -444,13 +502,21 @@
 
   /* publish: a project needs a name, a skill and something to look at */
   $('#pePublish').onclick = function () {
-    var need = !(P.title || '').trim() ? 'Name the project first.' : !P.skills.length ? 'Pick at least one skill.' :
-      !(P.cover || P.blocks.some(function (b) { return (b.t === 'gallery' && b.n) || (b.t === 'image' && b.has) || (b.t === 'video' && b.url) || (b.t === 'beforeafter' && b.has) || (b.t === 'look' && b.has) || (b.t === 'embed' && b.url); })) ? 'Add a cover, or some pictures or a video, first.' : '';
-    if (need) { toast(need); return; }
+    /* everything that's missing, at once; each line takes you to its field */
+    var miss = [];
+    if (!(P.title || '').trim()) miss.push(['[data-p=title]', 'Name the project']);
+    if (!P.skills.length) miss.push(['[data-act=skadd]', 'Pick at least one skill']);
+    if (!(P.cover || P.blocks.some(function (b) { return (b.t === 'gallery' && b.n) || (b.t === 'image' && b.has) || (b.t === 'video' && b.url) || (b.t === 'beforeafter' && b.has) || (b.t === 'look' && b.has) || (b.t === 'embed' && b.url); })))
+      miss.push(['[data-act=cover]', 'Add a cover, or some pictures or a video']);
+    if (miss.length) {
+      return openMenu(this, '<p>Before it goes on your profile</p>' + miss.map(function (m) { return '<button role="menuitem" data-v="' + esc(m[0]) + '" class="pe-need"><b>' + esc(m[1]) + '</b></button>'; }).join(''),
+        function (sel) { var el = $(sel); if (el) { el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); el.focus(); } });
+    }
     var first = P.status !== 'published'; P.status = 'published';
     var asked = P.blocks.filter(function (b) { return b.t === 'credits'; }).reduce(function (o, b) { return o.concat(b.items); }, []).filter(function (x) { return x.n && x.st === 'new'; });
     asked.forEach(function (x) { x.st = 'awaiting'; }); save(); renderBar(); renderStory();
-    toast(first ? (asked.length ? 'Published. ' + (asked.length === 1 ? asked[0].n + ' is' : asked.length + ' people are') + ' asked to confirm their credit.' : 'Published to your profile.') : 'Changes are live.');
+    toast(first ? (asked.length ? 'Published. ' + (asked.length === 1 ? asked[0].n + ' is' : asked.length + ' people are') + ' asked to confirm their credit.' : 'Published to your profile.') : 'Changes are live.',
+      function () { location.href = F.href('project.html?p=' + P.id); }, 'See it');
   };
 
   render(pid ? null : '[data-p=title]');
