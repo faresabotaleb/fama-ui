@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Demo talent · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/shell.css?v=73">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="stylesheet" href="assets/css/fields.css?v=9">
 <link rel="stylesheet" href="assets/css/exp.css?v=2">
@@ -62,15 +62,15 @@ dialog.signdlg{max-width:440px}
 .social a:hover{border-color:var(--ink);color:var(--purple-dk)}
 .soc-ic{width:20px;height:20px;flex:none}
 
-/* skill tabs — sticky under the top bar; active tab filled in orchid (dark step for AA) */
-.stabs{position:sticky;top:72px;z-index:20;background:var(--cream);margin-top:var(--s8);border-bottom:var(--border)}
+/* skill tabs — scroll with the page (30 Oct 2026: no longer sticky); active tab filled in orchid (dark step for AA) */
+.stabs{background:var(--cream);margin-top:var(--s8);border-bottom:var(--border)}
 .stabs .row{display:flex;gap:var(--s6);overflow-x:auto;scrollbar-width:none}
 .stabs a{flex:none;min-height:52px;display:inline-flex;align-items:center;gap:var(--s2);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:600;color:var(--grey);text-decoration:none;white-space:nowrap}
 .stabs a:hover{color:var(--ink)}
 .stabs a[aria-selected=true]{color:var(--ink);border-bottom-color:var(--purple-dk)}
 /* 24 Oct 2026: the skill names in the display face, and the FAMA star on the open one */
 .stabs a{font-family:var(--font-display);font-size:19px;letter-spacing:.01em}
-@media (max-width:760px){.stabs a{font-size:16px}.stabs .row{gap:var(--s4)}}
+@media (max-width:760px){.stabs a{font-size:16px;position:relative}.stabs .row{gap:var(--s4)}}
 .stabs .tstar{width:13px;height:12px;fill:var(--yellow);stroke:var(--ink);stroke-width:36;stroke-linejoin:round;flex:none;display:none}
 .stabs a[aria-selected=true] .tstar{display:block}
 .stabs .n{font-family:var(--font-body,inherit);font-size:12px;font-weight:600;min-width:20px;padding:0 6px;border-radius:var(--radius-pill);background:var(--line);color:#4F4A45;text-align:center;letter-spacing:0}
@@ -185,6 +185,8 @@ dialog.signdlg{max-width:440px}
   .ct-top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
   .ct-cover{min-height:220px;order:-1}
   .ct-coverwrap{order:-1;height:auto}
+  /* 31 Oct 2026: the wrap's height:100% rule collapsed the cover to nothing here; give it its own shape */
+  .ct-coverwrap .ct-cover{height:auto;min-height:0;aspect-ratio:4/3}
   #skillBody .projs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .stabs{flex-wrap:wrap;gap:var(--s2)}
   .ct-where{width:100%;padding-bottom:var(--s3)}
@@ -355,7 +357,7 @@ dialog.lb .x{position:fixed;top:var(--s5);inset-inline-end:var(--s5)}
 <script src="assets/js/ds.js?v=31"></script>
 <script src="assets/js/skills.js?v=6"></script>
 <script src="assets/js/fields.js?v=4"></script>
-<script src="assets/js/profile.js?v=24"></script>
+<script src="assets/js/profile.js?v=25"></script>
 <script src="assets/js/featured.js?v=12"></script>
 <script>
 const Q=new URLSearchParams(location.search);
@@ -374,7 +376,7 @@ document.write(GUEST?'<div data-fama-nav data-mode="public"></div>':'<div data-f
   <button class="iconbtn nav" id="lbNext" aria-label="Next"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
   <p><span id="lbCap"></span> <span class="lb-n" id="lbN"></span></p></dialog>
 
-<script src="assets/js/shell.js?v=55"></script>
+<script src="assets/js/shell.js?v=63"></script>
 <script>
 const {t,esc,num,href}=FAMA, ar=false; /* Arabic paused */
 FAMA.T.en={

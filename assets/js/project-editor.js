@@ -225,10 +225,21 @@
   bar.innerHTML = '<div class="in"><a class="back" href="' + F.href('projects.html') + '" aria-label="Back to projects">' + I('left') + '<span class="lbl">Projects</span></a><span class="saved" id="peSaved"><i></i>Saved</span>' +
     '<span class="pill" id="peStatus"></span><button class="btn btn-2" type="button" data-act="settings" aria-haspopup="dialog" aria-label="Settings">' + I('sliders') + '<span class="lbl">Settings</span></button>' +
     '<a class="btn btn-2" id="pePreview" href="#" aria-label="Preview">' + I('eye') + '<span class="lbl">Preview</span></a><button class="btn" type="button" id="pePublish">Publish</button></div>';
-  page.parentNode.insertBefore(bar, page);
+  /* 30 Oct 2026: while editing, the site header steps aside and this bar takes its place: the logo, the way back,
+     the project's name with its save state, and the actions. One bar, not two stacked. */
+  /* 31 Oct 2026: on wide screens the site's side bar stays, and this bar docks at the top of the page panel instead */
+  var head = document.querySelector('.fx-nav'), docked = document.documentElement.classList.contains('fx-has-side') && matchMedia('(min-width:1101px)').matches;
+  if (head) {
+    var inn = $('.in', bar); inn.classList.remove('in'); inn.classList.add('pe-head');
+    var mid = document.createElement('div'); mid.className = 'pe-mid';
+    mid.innerHTML = '<b class="pe-name" id="peName"></b>';
+    var sv = $('.saved', inn); mid.appendChild(sv); $('.back', inn).after(mid);
+    if (docked) { bar.classList.add('pe-docked'); page.parentNode.insertBefore(bar, page); }
+    else { head.classList.add('fx-editor'); $('.fx-in', head).appendChild(inn); }
+  } else page.parentNode.insertBefore(bar, page);
   savedEl = $('#peSaved');
   function renderBar() {
-    var pub = P.status === 'published';
+    var pub = P.status === 'published', nm = $('#peName'); if (nm) nm.textContent = (P.title || '').trim() || 'Untitled project';
     $('#peStatus').textContent = pub ? 'Published' : 'Draft'; $('#peStatus').className = 'pill ' + (pub ? 'p-live' : 'p-off');
     $('#pePublish').textContent = pub ? 'Update' : 'Publish';
     $('#pePreview').href = F.href('project.html?p=' + P.id + '&preview=1');
@@ -327,7 +338,7 @@
   var set = function (o, path, v) { var k = path.split('.'), last = k.pop(), t = k.reduce(function (a, x) { return a[x]; }, o); t[last] = v; };
   page.addEventListener('input', function (e) {
     var el = e.target, v = el.isContentEditable ? el.textContent : el.value;
-    if (el.dataset.p) { P[el.dataset.p] = v; save(); if (el.dataset.p === 'role') { var by = $('.pe-cover .by span:last-child'); if (by) by.innerHTML = '<b>Demo talent</b>' + (v ? ', ' + esc(v.toLowerCase()) : ''); var me = $('.pe-me .r'); if (me) me.textContent = v || 'Your role'; }
+    if (el.dataset.p) { P[el.dataset.p] = v; save(); if (el.dataset.p === 'title') { var nm = $('#peName'); if (nm) nm.textContent = v.trim() || 'Untitled project'; } if (el.dataset.p === 'role') { var by = $('.pe-cover .by span:last-child'); if (by) by.innerHTML = '<b>Demo talent</b>' + (v ? ', ' + esc(v.toLowerCase()) : ''); var me = $('.pe-me .r'); if (me) me.textContent = v || 'Your role'; }
       if (el.dataset.p === 'client') { var k = $('.pe-cover .kick'); if (k) { var keep = k.querySelector('.ytag'); } } return; }
     var bw = el.closest('.pe-b'); if (!bw || !el.dataset.f) return;
     var i = +bw.dataset.i, b = P.blocks[i];

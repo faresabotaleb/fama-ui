@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Credits & recognitions · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/shell.css?v=73">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <style>
 /* Screen: /talent/credits — the collaborator's side of journey 3 in the Fama V1 Blueprint.
@@ -15,7 +15,7 @@
 .cr a.pt:hover b{color:var(--purple-dk)}
 .cr .by{margin-top:var(--s1)}
 .cr .role{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
-.cr .acts{display:flex;gap:var(--s2)}
+.cr .acts{display:flex;flex-wrap:wrap;gap:var(--s2)}
 .cr.is-hidden .ph,.cr.is-hidden b{opacity:.55}
 .note{margin-top:var(--s3);font-size:var(--t-meta);color:var(--grey)}
 .count{background:var(--ink);color:var(--cream);border-radius:var(--radius-pill);font-size:14px;font-weight:600;padding:0 var(--s2);margin-inline-start:var(--s2);vertical-align:middle}
@@ -49,7 +49,7 @@
 <div data-fama-hero data-tone="soft" data-photo="assets/img/banners/credits-star.png" id="hero"></div>
 <script src="assets/js/ds.js?v=31"></script>
 <script src="assets/js/skills.js?v=6"></script>
-<script src="assets/js/profile.js?v=24"></script>
+<script src="assets/js/profile.js?v=25"></script>
 <script>
 FAMA.T.en={label:"What other people say about your work",title:"Credits & recognitions",lead:"Projects other people credited you on, and what peers say about you. Confirm a credit and the project is yours too.",
  showOn:"Show on profile",recHid:"Hidden from your profile",recOff:"Recognitions are hidden from your profile. They keep their content.",recOn:"Recognitions are back on your profile.",
@@ -101,7 +101,7 @@ const H=document.getElementById("hero");H.dataset.label=FAMA.t("label");H.datase
 </main>
 <div data-fama-foot></div>
 
-<script src="assets/js/shell.js?v=55"></script>
+<script src="assets/js/shell.js?v=63"></script>
 <script>
 const {t,esc,href}=FAMA; FAMA.apply();
 /* credits and skills are shared with Preview (assets/js/profile.js), so a confirmed credit shows on the profile */

@@ -256,4 +256,15 @@
     ['links', 'Your Instagram or website', 'Brands look at where else your work lives.', 'profile-structure.html#social'],
     ['bio', 'A short bio', 'A few lines on how you work.', 'profile-structure.html#core']
   ];
+
+  /* 30 Oct 2026: where the talent lands. A complete profile (every Go Live and Stand out step done) opens the Feed;
+     anything less opens Profile structure, where the next step is. Mirrors the checks in profile-structure.html. */
+  window.FAMA_PROFILE_DONE = function () {
+    var st = new URLSearchParams(location.search).get('state');
+    if (st === 'incomplete' || st === 'unlisted') return false; /* demo states: no work to show yet */
+    var p = window.FAMA_PROFILE.load(), has = function (k) { return String(p[k] || '').trim() !== ''; };
+    return has('display') && has('city') && has('headline') && has('bio') && !!p.photo && (p.skills || []).length > 0 &&
+      (p.links || []).some(function (l) { return l.u; }) && (p.brands || []).some(function (b) { return b.n || b.t; });
+  };
+  window.FAMA_HOME = function () { return window.FAMA_PROFILE_DONE() ? 'feed.html' : 'profile-structure.html'; };
 })();

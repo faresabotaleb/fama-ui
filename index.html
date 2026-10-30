@@ -3,6 +3,10 @@
 <title>Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
 <!-- 7 Oct 2026: the dashboard was folded into Profile structure (views, steps to the index).
-     The old page is in _backup-2026-10-07/before-round2/index-dashboard.html -->
-<script>location.replace("profile-structure.html"+location.search+location.hash);</script>
+     The old page is in _backup-2026-10-07/before-round2/index-dashboard.html
+     30 Oct 2026: a complete profile lands on the Feed; an incomplete one on Profile structure (FAMA_HOME in profile.js) -->
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/fields.js?v=4"></script>
+<script src="assets/js/profile.js?v=25"></script>
+<script>location.replace(window.FAMA_HOME()+location.search+location.hash);</script>
 </head><body><p><a href="profile-structure.html">Go to your profile</a></p></body></html>

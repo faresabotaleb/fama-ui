@@ -2,11 +2,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Project · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/shell.css?v=73">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
-<link rel="stylesheet" href="assets/css/project-page.css?v=2">
+<link rel="stylesheet" href="assets/css/project-page.css?v=5">
 </head><body>
 <script src="assets/js/ds.js?v=31"></script>
 <script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
@@ -23,7 +23,7 @@
   <button class="lb-arr lb-prev" id="lbP" aria-label="Previous picture">‹</button><div class="lb-stage" id="lbS"></div><button class="lb-arr lb-next" id="lbNx" aria-label="Next picture">›</button>
   <p class="lb-cap" id="lbC"></p></dialog>
 <div data-fama-foot></div>
-<script src="assets/js/shell.js?v=55"></script>
+<script src="assets/js/shell.js?v=63"></script>
 <script src="assets/js/featured.js?v=12"></script>
 <script>
 const {t,esc,href}=FAMA;
@@ -158,7 +158,7 @@ function render(){
     embeds:list=>{const card=b=>{const u=b.url||"",pl=/instagram/.test(u)?"Instagram":/tiktok/.test(u)?"TikTok":/behance/.test(u)?"Behance":/youtu/.test(u)?"YouTube":"Link",
         who=(u.match(/@([\w.\-]+)/)||u.match(/instagram\.com\/(?:reel\/)?([\w.\-]+?)(?:-|\/|$)/)||[])[1]||pl.toLowerCase();
         return `<figure class="emb" data-nolb><a href="${esc(u)}" target="_blank" rel="noopener" class="emb-card"><span class="emb-top"><span class="av">${esc(ini(who.replace(/[._-]/g," ")))}</span><span><b>${esc(who)}</b><i>${pl==="Instagram"?"Reel · ":""}${pl}</i></span></span><span class="ph-img" style="background-image:url(${pic(pi++)})"></span><span class="emb-play" aria-hidden="true">${PLAY}</span></a><figcaption><a href="${esc(u)}" target="_blank" rel="noopener">View on ${pl} ↗</a></figcaption></figure>`};
-      return `<div class="embeds" style="grid-template-columns:minmax(0,1fr) ${list.map(()=>"260px").join(" ")}"><p class="emb-h"><small>ALSO POSTED</small>Where the work went out</p>${list.map(card).join("")}</div>`},
+      return `<div class="embeds" style="--n:${list.length}"><p class="emb-h"><small>ALSO POSTED</small>Where the work went out</p>${list.map(card).join("")}</div>`},
     gallery:(b,ch)=>{const n=b.n||0, caps=b.caps||[], S=b.srcs||[]; if(!n) return "";
       if(n===1) return fig("full",caps[0],"",S[0]); if(n===2) return `<div class="pair">${fig("",caps[0],"",S[0])}${fig("",caps[1],"",S[1])}</div>`;
       if(n===3) return fig("full",caps[0],"",S[0])+`<div class="pair">${fig("",caps[1],"",S[1])}${fig("",caps[2],"",S[2])}</div>`;
@@ -217,7 +217,7 @@ function render(){
     <div class="cap grid"><div><p class="kick">${tYear?`<span class="ytag">${tYear}</span>`:""}${esc([clientName,p.skills[0]].filter(Boolean).join(" · "))}</p><h1${h1size?` style="font-size:${h1size}"`:""}>${esc(tMain)}${tSub&&!tTitleYear?`<span class="vh"> — </span><span class="h1-sub">${esc(tSub)}</span>`:""}${tYear?`<span class="vh">, ${tYear}</span>`:""}</h1>
       <div class="by"><span class="av" aria-hidden="true">${ini(lead)}</span><span><a href="${profileHref}"><b>${esc(lead)}</b></a>${p.role&&!p.owner?", "+esc(p.role.toLowerCase()):""}${co.length?" · with "+esc(co.join(" and ")):""}</span></div></div>
       <div class="acts"><button class="btn btn-2" type="button" data-share>Share</button><button class="btn btn-2" type="button" data-like aria-pressed="false">♡ Like</button>${mine?`<a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:""}</div></div></header>
-  ${short?"":`<div class="grid"><dl class="colo" style="grid-template-columns:repeat(${facts().length},minmax(0,1fr))">${facts().map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl></div>`}
+  ${short?"":`<div class="grid"><dl class="colo" style="--n:${facts().length}">${facts().map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl></div>`}
   <div class="grid"><article class="story${short?" short":""}">${story}</article></div>
   <div class="grid"><section class="hire" id="hire" aria-labelledby="hireT"><span class="av hav" aria-hidden="true">${ini(lead)}</span>
     <div class="hwho"><p class="hk">${mine&&!p.owner?"Made by you":"Made by"}</p><h2 id="hireT"><a href="${profileHref}">${esc(lead)}</a></h2><p class="hm">${p.owner?"On Fama":"Art director &amp; stylist · Cairo"} <span class="open"><i></i>Open for work</span></p></div>

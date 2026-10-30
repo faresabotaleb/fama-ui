@@ -28,11 +28,11 @@
 .grid{max-width:var(--wide);margin:0 auto;padding-inline:var(--s6)}
 
 /* 2 · colophon: the facts, ruled like a magazine masthead */
-.colo{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;border-bottom:1px solid var(--ink)}
+.colo{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));margin:0;border-bottom:1px solid var(--ink)}
 .colo>div{padding:var(--s5) var(--s5);border-inline-start:1px solid var(--line)}
 .colo>div:first-child{padding-inline-start:0;border-inline-start:0}
-.colo dt{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-bottom:var(--s2)}
-.colo dd{margin:0;font-size:15px;line-height:1.45}
+.colo dt{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-bottom:var(--s2)}
+.colo dd{margin:0;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
 .colo dd a{color:inherit}
 .colo dd small{display:block;color:var(--grey);font-size:14px;margin-top:2px}
 
@@ -129,7 +129,7 @@ figcaption b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 /* motion (GSAP ScrollTrigger). Without JS or with reduced motion, everything simply shows. */
 .frame{overflow:hidden;border-radius:var(--s3)}
 .frame .ph-img{border-radius:0!important;will-change:transform}
-.cover h1 .ln{display:block;overflow:hidden}
+.cover h1 .ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em} /* room for g, j, p, y under the reveal mask */
 .cover h1 .ln>span{display:block}
 .w{display:inline-block}
 @media (max-width:760px){.bleed .frame{border-radius:0}}
@@ -272,7 +272,7 @@ figcaption b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .look-list span{color:var(--grey);font-size:14px}
 
 /* embeds */
-.embeds{display:grid;grid-template-columns:minmax(0,1fr) 260px 260px;gap:var(--s5);align-items:end;margin-top:var(--s8)}
+.embeds{display:grid;grid-template-columns:minmax(0,1fr) repeat(var(--n,2),260px);gap:var(--s5);align-items:end;margin-top:var(--s8)}
 .emb-h{margin:0;font-family:var(--serif);font-size:clamp(28px,3vw,40px);line-height:1.1;align-self:start;border-top:1px solid var(--line);padding-top:var(--s4)}
 .emb-h small{display:block;font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--grey);margin-bottom:var(--s2)}
 .emb-card{position:relative;display:block;aspect-ratio:9/16;border-radius:18px;overflow:hidden;background:#111;color:#fff;text-decoration:none;box-shadow:0 0 0 1px var(--line)}
@@ -309,3 +309,12 @@ figcaption b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .st-prev{position:sticky;top:72px;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:var(--s4);flex-wrap:wrap;padding:var(--s3) var(--s3) var(--s3) var(--s5);background:var(--ink);color:var(--cream)}
 .st-prev b{font-weight:600}.st-prev .btn-2{background:transparent;color:var(--cream);border-color:#4A4440}
 .ed .empty h1{margin:0}
+
+/* 31 Oct 2026: inside the site's shell (a talent on wide screens, and the editor), the cover is a rounded block with the
+   page's margins, like the banners on the other pages; the page's columns keep the same margin */
+@media (min-width:1101px){
+  html.fx-has-side .cover{margin:calc(var(--fx-gap,8px) + var(--fx-gut,48px)) var(--fx-gut,48px) 0;border-radius:20px}
+  html.fx-has-side .cover:not(.none){min-height:440px;height:min(72vh,720px)}
+  html.fx-has-side .grid{max-width:calc(var(--content,1440px) + 2 * var(--fx-gut,48px));padding-inline:var(--fx-gut,48px)}
+  html.fx-has-side .cover .grid{padding-inline:var(--fx-gut,48px)}
+}

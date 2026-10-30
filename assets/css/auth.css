@@ -44,3 +44,12 @@
   .au-show .hstar{height:90px;bottom:110px;right:16px}
   .pane{padding:var(--s5)}
 }
+/* 31 Oct 2026, phones: the form is what people came for, so the showcase shrinks to a short purple band above it
+   (no photo, no star) and the first field shows without scrolling */
+@media (max-width:760px){
+  .auth{margin-top:var(--s4);gap:var(--s4)}
+  .au-photo,.au-show .hstar{display:none}
+  .au-show .au-in{padding:var(--s5) var(--s5) var(--s4);gap:var(--s2)}
+  .au-show h1{font-size:40px}
+  .au-show p{font-size:16px;margin-top:var(--s2)}
+}

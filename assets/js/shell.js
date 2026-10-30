@@ -18,8 +18,10 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
 
   var L = {
     en: {
-      dashboard: 'Dashboard', feed: 'Feed', activity: 'Activity', structure: 'Profile structure',
-      content: 'Profile content', projects: 'Projects', credits: 'Credits', preview: 'Preview profile',
+      dashboard: 'Dashboard', feed: 'Feed', activity: 'Activity', structure: 'Edit profile',
+      content: 'Profile content', projects: 'Projects', credits: 'Credits', preview: 'View profile', viewMine: 'View your profile',
+      activityT: 'Saved, liked, and the people you follow', joinShort: 'Join', fold: 'Collapse', unfold: 'Expand',
+      newProject: 'New project', notifs: 'Notifications', gWork: 'Your work', gProfile: 'Your profile',
       menu: 'Menu', account: 'Your account', logout: 'Log out', role: 'fama.so/demo-talent', login: 'Log in', join: 'Join as talent',
       brand: 'Fama', foot: 'Where creative talent gets seen.',
       gIncomplete: 'Your profile is Private: only you can see it. Complete it to go Live and share your link.',
@@ -35,13 +37,14 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
 
   /* the whole talent space, in the blueprint's menu order.
      Credits has no page yet; Activity opens the Following view for now. */
+  /* 30 Oct 2026: ordered by how often a talent goes there; "Profile structure" reads as "Edit profile" */
   var items = [
-    ['feed', 'feed.html'],
-    ['activity', 'following.html'],
-    ['structure', 'profile-structure.html'],
+    ['feed', 'feed.html', 'home'],
+    ['projects', 'projects.html', 'grid'],
     /* Profile content is folded into Profile structure (brands) and Credits (recognitions), 3 Oct 2026 */
-    ['projects', 'projects.html'],
-    ['credits', 'credits.html']
+    ['structure', 'profile-structure.html', 'upen'],
+    ['credits', 'credits.html', 'award'],
+    ['activity', 'following.html', 'heart']
   ];
 
   function href(file) {
@@ -57,10 +60,63 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
   function acct() {
     return '<span class="fx-acct"><span class="fx-av fx-av-s" aria-hidden="true">DT</span><span class="fx-who"><b>Demo talent</b><span>' + L.role + '</span></span></span>';
   }
-  function list() {
+  function list(ic) {
     return items.map(function (it) {
-      return '<li><a href="' + href(it[1]) + '"' + cur(it[1]) + '>' + L[it[0]] + '</a></li>';
+      return '<li><a href="' + href(it[1]) + '"' + cur(it[1]) + (L[it[0] + 'T'] ? ' title="' + L[it[0] + 'T'] + '"' : '') + '>' +
+        (ic ? '<svg class="fx-icon" aria-hidden="true"><use href="#fx-i-' + it[2] + '"/></svg><span class="fx-sl">' + L[it[0]] + '</span>' : L[it[0]]) + '</a></li>';
     }).join('');
+  }
+  /* 30 Oct 2026: on wide screens the talent's links live in a side bar (as on Upwork and Contra).
+     It folds to an icon rail; the choice is kept in this browser.
+     31 Oct 2026: the project editor sits in the same shell, so it reads as part of the site. */
+  var SIDE_KEY = 'fama-side-folded', side = !!document.querySelector('[data-fama-nav]:not([data-mode])'), folded = false;
+  folded = true; /* folded by default; opening it is remembered in this browser */
+  try { folded = localStorage.getItem(SIDE_KEY) !== '0'; } catch (e) {}
+  if (side) { document.documentElement.classList.add('fx-has-side'); document.documentElement.classList.toggle('fx-folded', folded); }
+  /* 30 Oct 2026, from the Contra and Upwork references: no top bar on wide screens. The side bar holds the account,
+     New project and every link, in three groups; the page sits in a rounded panel beside it.
+     Open, it reads like Contra (icon and name in a row); folded, like Upwork (icon over a short name). */
+  function sItem(file, icon, label, extra) {
+    return '<li><a href="' + href(file) + '"' + cur(file.split('#')[0]) + '>' +
+      '<span class="fx-si"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-' + icon + '"/></svg>' + (extra || '') + '</span>' +
+      '<span class="fx-sl">' + label + '</span></a></li>';
+  }
+  function sideHTML() {
+    return '<aside class="fx-side" aria-label="Main">' +
+      '<div class="fx-shead">' +
+        '<a class="fx-slogo" href="' + href('index.html') + '" aria-label="Fama"><img class="fx-sfull" src="assets/img/fama-logo-tight.svg" alt=""><img class="fx-smark" src="assets/img/fama-emblem-rev.svg" alt=""></a>' +
+        '<button type="button" class="fx-fold" id="fxFold" aria-pressed="' + folded + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-panel"/></svg></button>' +
+      '</div>' +
+      '<button type="button" class="fx-sme" id="fxSMe" aria-expanded="false" aria-controls="fxSPop">' +
+        '<span class="fx-av fx-av-s" aria-hidden="true">DT</span><span class="fx-sl">Demo talent</span>' +
+        '<svg class="fx-icon fx-chev" aria-hidden="true"><use href="#fx-i-chev"/></svg></button>' +
+      '<a class="fx-snew" href="' + href('project-edit.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-plus"/></svg><span class="fx-sl">' + L.newProject + '</span></a>' +
+      '<nav class="fx-snav" aria-label="' + L.menu + '">' +
+        '<ul class="fx-slinks">' +
+          sItem('feed.html', 'home', L.feed) +
+          sItem('notifications.html', 'bell', L.notifs, '<span class="fx-count" id="fxSCount" aria-hidden="true" hidden></span>') +
+          sItem('following.html', 'heart', L.activity) +
+        '</ul>' +
+        '<p class="fx-sgroup">' + L.gWork + '</p><ul class="fx-slinks">' +
+          sItem('projects.html', 'grid', L.projects) + sItem('credits.html', 'award', L.credits) +
+        '</ul>' +
+        '<p class="fx-sgroup">' + L.gProfile + '</p><ul class="fx-slinks">' +
+          sItem('profile-structure.html', 'upen', L.structure) + sItem('preview.html', 'eye', L.preview) +
+        '</ul>' +
+      '</nav>' +
+      '<div class="fx-spop" id="fxSPop" hidden>' +
+        '<div class="fx-spop-h">' + acct() + '</div>' +
+        '<a href="' + href('preview.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-eye"/></svg>' + L.viewMine + '</a>' +
+        '<a href="' + href('profile-structure.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-upen"/></svg>' + L.structure + '</a>' +
+        '<a class="fx-sout" href="login.html"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-out"/></svg>' + L.logout + '</a>' +
+      '</div>' +
+      /* 30 Oct 2026: hovering Notifications opens the latest six beside the bar; the link itself still opens the page */
+      '<div class="fx-npop fx-snpop" id="fxSNPop" hidden role="region" aria-label="' + L.notifs + '">' +
+        '<div class="fx-nh"><b>' + L.notifs + '</b><button type="button" class="fx-nall">Mark all as read</button></div>' +
+        '<ul class="fx-nlist" id="fxSNList"></ul>' +
+        '<a class="fx-nmore" href="' + href('notifications.html') + '">See all notifications</a>' +
+      '</div>' +
+    '</aside>';
   }
 
   var icons =
@@ -78,6 +134,13 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
     '<symbol id="fx-i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol>' +
     '<symbol id="fx-i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>' +
     '<symbol id="fx-i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>' +
+    '<symbol id="fx-i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>' +
+    '<symbol id="fx-i-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></symbol>' +
+    '<symbol id="fx-i-upen" viewBox="0 0 24 24"><path d="M11.5 15H7a4 4 0 0 0-4 4v2"/><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="7" r="4"/></symbol>' +
+    '<symbol id="fx-i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>' +
+    '<symbol id="fx-i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>' +
+    '<symbol id="fx-i-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></symbol>' +
+    '<symbol id="fx-i-panel" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></symbol>' +
     '<symbol id="fx-i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>' +
     '</svg>';
 
@@ -118,19 +181,20 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
     var b = document.getElementById('fxBell'); if (!b) return;
     var u = window.FAMA_NOTIFS.unread(), c = b.querySelector('.fx-count');
     c.textContent = u > 9 ? '9+' : u; c.hidden = !u;
+    var sc = document.getElementById('fxSCount'); if (sc) { sc.textContent = c.textContent; sc.hidden = !u; }
     b.setAttribute('aria-label', 'Notifications' + (u ? ', ' + u + ' unread' : ''));
-    var l = document.getElementById('fxNList'); if (l) l.innerHTML = NOTIFS.slice(0, 6).map(notifItem).join('');
+    var html = NOTIFS.slice(0, 6).map(notifItem).join('');
+    ['fxNList', 'fxSNList'].forEach(function (id) { var l = document.getElementById(id); if (l) l.innerHTML = html; });
   }
 
   var navHTML =
     icons +
     '<div class="fx-wrap fx-in">' +
-      '<a class="fx-logo" href="' + href('profile-structure.html') + '"><img src="assets/img/fama-logo-tight.svg" alt="Fama"></a>' +
+      '<a class="fx-logo" href="' + href('index.html') + '"><img src="assets/img/fama-logo-tight.svg" alt="Fama"></a>' +
       '<ul class="fx-links">' + list() + '</ul>' +
       '<div class="fx-end">' +
         '<a class="fx-preview" href="' + href('preview.html') + '"' + cur('preview.html') + '>' +
-          '<svg class="fx-icon" aria-hidden="true"><use href="#fx-i-eye"/></svg><span class="fx-lbl">' + L.preview + '</span>' +
-          '<svg class="fx-icon fx-flip"><use href="#fx-i-ext"/></svg></a>' +
+          '<svg class="fx-icon" aria-hidden="true"><use href="#fx-i-eye"/></svg><span class="fx-lbl">' + L.preview + '</span></a>' +
         '<div class="fx-bellw">' +
           '<button class="fx-bell" id="fxBell" aria-expanded="false" aria-controls="fxNPop" aria-label="Notifications">' +
             '<svg class="fx-icon" aria-hidden="true"><use href="#fx-i-bell"/></svg><span class="fx-count" aria-hidden="true"></span></button>' +
@@ -143,7 +207,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
         '<div class="fx-me">' +
           '<button class="fx-av" id="fxMe" aria-expanded="false" aria-controls="fxPop" aria-label="' + L.account + '">DT</button>' +
           '<ul class="fx-pop" id="fxPop" hidden>' +
-            '<li>' + acct() + '</li>' +
+            '<li><a class="fx-acct-link" href="' + href('preview.html') + '">' + acct() + '<span class="fx-acct-go">' + L.viewMine + '</span></a></li>' +
             '<li><a class="fx-out" href="login.html">' + L.logout + '</a></li>' +
           '</ul>' +
         '</div>' +
@@ -153,7 +217,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
     '</div>' +
     /* 24 Oct 2026: the menu opens over the page (it no longer pushes it down) and carries the account,
        so phones need one menu, not two */
-    '<div class="fx-dwrap"><nav class="fx-drawer" id="fxDrawer" hidden aria-label="' + L.menu + '"><div class="fx-wrap"><ul>' + list() + '</ul>' +
+    '<div class="fx-dwrap"><nav class="fx-drawer" id="fxDrawer" hidden aria-label="' + L.menu + '"><div class="fx-wrap"><ul>' + list(true) + '</ul>' +
       '<div class="fx-dacc">' + acct() + '<a class="fx-dlink fx-out" href="login.html">' + L.logout + '</a></div>' +
     '</div></nav></div>' +
     notice();
@@ -188,7 +252,8 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       /* sign-in pages: no nav tabs, just a quiet way out for someone who only wants to look */
       (auth ? '<div class="fx-end"><a class="fx-browse" href="' + href('feed.html?view=guest') + '"><span class="fx-lbl2">Just looking? </span><b>Browse the feed</b>' +
         '<svg class="fx-icon fx-flip" aria-hidden="true"><use href="#fx-i-arrow"/></svg></a></div>' : '<ul class="fx-links fx-keep"><li><a href="' + href('feed.html?view=guest') + '"' + cur('feed.html') + '>' + L.feed + '</a></li></ul>' +
-      '<div class="fx-end"><a class="fx-preview fx-login" href="' + href('login.html') + '"' + cur('login.html') + '>' + L.login + '</a></div>') + '</div>';
+      '<div class="fx-end"><a class="fx-preview fx-login" href="' + href('login.html') + '"' + cur('login.html') + '>' + L.login + '</a>' +
+      '<a class="fx-join" href="' + href('register.html') + '">' + L.joinShort + '</a></div>') + '</div>';
     nav.replaceWith(ph);
     nav = null;
   }
@@ -197,6 +262,64 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
     header.className = 'fx-nav';
     header.innerHTML = navHTML;
     nav.replaceWith(header);
+    if (side) {
+      header.insertAdjacentHTML('beforebegin', sideHTML());
+      var fold = document.getElementById('fxFold');
+      var paintFold = function () {
+        fold.setAttribute('aria-pressed', String(folded));
+        fold.setAttribute('aria-label', (folded ? L.unfold : L.fold) + ' the menu');
+        fold.dataset.tip = (folded ? L.unfold : L.fold) + ' the menu';
+      };
+      paintFold();
+      fold.addEventListener('click', function () {
+        folded = !folded;
+        document.documentElement.classList.add('fx-side-anim'); /* the fold animates; the first paint does not */
+        document.documentElement.classList.toggle('fx-folded', folded);
+        try { localStorage.setItem(SIDE_KEY, folded ? '1' : '0'); } catch (e) {}
+        paintFold();
+        setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 260); /* banners refit their star once the fold settles */
+      });
+      /* the account menu opens beside the bar (as on Upwork), lined up with the account button */
+      var sme = document.getElementById('fxSMe'), spop = document.getElementById('fxSPop');
+      var closeS = function () { if (spop.hidden) return; (window.FX_SHUT ? window.FX_SHUT(spop) : (spop.hidden = true)); sme.setAttribute('aria-expanded', 'false'); };
+      sme.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!spop.hidden) return closeS();
+        var r = sme.getBoundingClientRect();
+        spop.style.top = r.top + 'px';
+        spop.classList.remove('is-closing'); spop.hidden = false; sme.setAttribute('aria-expanded', 'true');
+        var f = spop.querySelector('a'); if (f) f.focus();
+      });
+      document.addEventListener('click', function (e) { if (!spop.contains(e.target)) closeS(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !spop.hidden) { closeS(); sme.focus(); } });
+
+      /* notifications on hover: opens after a short wait (so passing over it does nothing), and stays open
+         while the pointer moves from the link into the panel */
+      var nlink = document.querySelector('.fx-slinks a[href^="notifications.html"]'), snpop = document.getElementById('fxSNPop'), nT;
+      if (nlink && here !== 'notifications.html') {
+        nlink.setAttribute('aria-haspopup', 'true'); nlink.setAttribute('aria-expanded', 'false');
+        var openN = function () {
+          clearTimeout(nT); if (!snpop.hidden) return;
+          var r = nlink.getBoundingClientRect();
+          snpop.style.top = Math.max(8, Math.min(r.top - 8, window.innerHeight - 560)) + 'px';
+          snpop.classList.remove('is-closing'); snpop.hidden = false; nlink.setAttribute('aria-expanded', 'true');
+        };
+        var shutN = function () { clearTimeout(nT); if (snpop.hidden) return; (window.FX_SHUT ? window.FX_SHUT(snpop) : (snpop.hidden = true)); nlink.setAttribute('aria-expanded', 'false'); };
+        var later = function (fn, ms) { return function () { clearTimeout(nT); nT = setTimeout(fn, ms); }; };
+        nlink.addEventListener('mouseenter', later(openN, 120));
+        nlink.addEventListener('mouseleave', later(shutN, 220));
+        snpop.addEventListener('mouseenter', function () { clearTimeout(nT); });
+        snpop.addEventListener('mouseleave', later(shutN, 220));
+        /* keyboard: the down arrow opens it from the link */
+        nlink.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown') { e.preventDefault(); openN(); var f = snpop.querySelector('a'); if (f) f.focus(); } });
+        snpop.addEventListener('focusout', function (e) { if (!snpop.contains(e.relatedTarget) && e.relatedTarget !== nlink) shutN(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !snpop.hidden) { shutN(); nlink.focus(); } });
+        snpop.addEventListener('click', function (e) {
+          var a = e.target.closest('[data-nid]'); if (a) window.FAMA_NOTIFS.read(a.dataset.nid);
+          if (e.target.closest('.fx-nall')) { e.stopPropagation(); window.FAMA_NOTIFS.readAll(); }
+        });
+      }
+    }
 
     var me = document.getElementById('fxMe'), pop = document.getElementById('fxPop');
     var burger = document.getElementById('fxBurger'), drawer = document.getElementById('fxDrawer');
@@ -246,6 +369,9 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       if (e.key === 'Escape' && !pop.hidden) { closePop(); me.focus(); }
     });
   }
+
+  /* 30 Oct 2026: the header lifts off the page once it scrolls under it */
+  (function () { var h = document.querySelector('.fx-nav'); if (!h) return; var on = function () { h.classList.toggle('fx-lifted', scrollY > 4); }; on(); addEventListener('scroll', on, { passive: true }); })();
 
   /* carry ?state= (and a visitor's ?view=guest) through links the page builds itself */
   if (state || guestView) document.addEventListener('click', function (e) {

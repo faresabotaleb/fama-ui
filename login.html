@@ -2,12 +2,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Log in · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/shell.css?v=73">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
-<link rel="stylesheet" href="assets/css/auth.css?v=31b">
+<link rel="stylesheet" href="assets/css/auth.css?v=32">
 </head><body>
 <div data-fama-nav data-mode="auth"></div>
 <script src="assets/js/ds.js?v=31"></script>
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/fields.js?v=4"></script>
+<script src="assets/js/profile.js?v=25"></script>
 <script src="assets/js/auth.js?v=31"></script>
 <main class="wrap"><div class="auth">
   <section class="au-show" id="show" aria-hidden="true"></section>
@@ -25,7 +28,7 @@
   </section>
 </div></main>
 <div data-fama-foot></div>
-<script src="assets/js/shell.js?v=55"></script>
+<script src="assets/js/shell.js?v=63"></script>
 <script>
 FAMA.T.en={eyebrow:"Log in",title:"Welcome back.",email:"Email",pw:"Password",show:"Show",remember:"Remember me",forgot:"Forgot password?",cta:"Log in",new:"New here?",create:"Create an account",
  next:"Log in to finish following Demo talent. We'll bring you straight back.",eEmail:"Enter the email you signed up with.",ePw:"Enter your password.",eWrong:"That email and password don't match. Try again, or reset your password."};
@@ -39,7 +42,8 @@ $("form").addEventListener("submit",e=>{e.preventDefault();
   const b=FAMA.fieldError($("pw"),$("pw").value?(($("pw").value==="wrong")?t("eWrong"):""):t("ePw"));
   if(!a){$("email").focus();return} if(!b){$("pw").focus();return}
   /* a guest sent here from a Follow or Like: finish the action once, then return them */
-  location.href=FAMA.href(Q.get("next")==="preview"?"preview.html?followed=1":"profile-structure.html");
+  /* otherwise: a complete profile opens the Feed, an incomplete one Profile structure (30 Oct 2026) */
+  location.href=FAMA.href(Q.get("next")==="preview"?"preview.html?followed=1":window.FAMA_HOME());
 });
 </script>
 </body></html>

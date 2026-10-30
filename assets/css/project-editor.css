@@ -39,7 +39,7 @@
 .pe-cover-acts{position:absolute;top:var(--s5);right:var(--s6);z-index:3;display:flex;gap:var(--s2)}
 .pe-cover-acts .btn{background:rgba(255,255,255,.94);border-color:transparent;color:var(--ink);min-height:40px}
 .pe-cover.none .pe-cover-acts .btn{background:var(--white);border:var(--border)}
-.pe-auto{margin-inline-start:var(--s3);font-size:11px;letter-spacing:.02em;text-transform:none;font-weight:500;opacity:.75}
+.pe-auto{margin-inline-start:var(--s3);font-size:12px;letter-spacing:.02em;text-transform:none;font-weight:500;opacity:.75}
 .pe-cover h1{min-width:4ch}
 
 /* colophon */
@@ -244,3 +244,39 @@
 .pe-pk{position:relative;display:grid;place-items:center;font:700 22px/1 var(--font-display);color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .pe-pk[aria-pressed=true]::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(173,80,211,.28)}
 @media (hover:none){.pe-grip{display:none}}
+
+/* the editor's own header (30 Oct 2026): the site's links, View profile, bell and account step aside */
+.fx-nav.fx-editor .fx-links,.fx-nav.fx-editor .fx-end,.fx-nav.fx-editor .fx-dwrap{display:none}
+.fx-nav.fx-editor .fx-in{gap:var(--s4)}
+/* the bar lines up with the page under it: same width and side padding as .grid */
+.fx-nav.fx-editor .fx-wrap{max-width:1180px;padding-inline:var(--s6)}
+@media (max-width:760px){.fx-nav.fx-editor .fx-wrap{padding-inline:var(--s4)}}
+.pe-head{flex:1;min-width:0;display:flex;align-items:center;gap:var(--s3);padding:var(--s2) 0}
+.pe-head .back{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 var(--s3) 0 var(--s2);border-radius:var(--radius);font-weight:600;color:var(--grey);text-decoration:none;border-inline-start:var(--border);margin-inline-start:var(--s1)}
+.pe-head .back:hover{color:var(--ink);background:var(--white)}
+.pe-mid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.pe-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:15px}
+.pe-head .saved{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--grey);margin:0}
+.pe-head .saved i{width:6px;height:6px;border-radius:999px;background:var(--mint-fg,#1B6B52)}
+.pe-head .saved i.busy{background:var(--grey)}.pe-head .saved i.bad{background:var(--rose,#E8927C)}
+.pe-head .btn{min-height:40px;padding:0 var(--s4)}
+.fx-editor~.pe-bar{display:none}
+@media (max-width:760px){
+  .fx-nav.fx-editor .fx-logo{display:none}
+  .pe-head{gap:var(--s2)}
+  .pe-head .back{border:0;min-width:44px;min-height:44px;justify-content:center;padding:0}
+  .pe-head .lbl,.pe-head .pill{display:none}
+  .pe-head .btn-2{min-width:44px;min-height:44px;padding:0;justify-content:center}
+  .pe-head .btn{min-height:44px}
+  .pe-mid{align-items:flex-start}
+  .pe-name{font-size:14px}
+}
+
+/* 31 Oct 2026: the editor inside the site's shell (wide screens). The bar docks at the top of the page panel,
+   lined up with the content under it */
+@media (min-width:1101px){
+  html.fx-has-side .pe-bar.pe-docked{top:var(--fx-gap,8px);border-radius:16px 16px 0 0}
+  html.fx-has-side .pe-docked .pe-head{max-width:calc(1440px + 2 * var(--fx-gut,48px));margin:0 auto;padding:var(--s2) var(--fx-gut,48px)}
+  html.fx-has-side .pe-docked .pe-head .back{border:0;margin:0;padding-inline-start:0}
+  html.fx-has-side .pe-docked + #page .pe-cover,html.fx-has-side .pe-docked + * .pe-cover{margin-top:var(--fx-gut,48px)}
+}
