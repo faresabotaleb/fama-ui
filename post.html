@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Post · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="stylesheet" href="assets/css/posts.css?v=32">
+<style>
+/* Screen: /posts/{id} — "Post & comments" in the Fama V1 Blueprint.
+   Newest comments first, 10 at a time. Each shows 3 replies and "View more replies".
+   Replies go one level deep and start with the person's @username. Comments can be liked.
+   Authors can edit for 15 minutes (a countdown shows) and delete at any time. A deleted
+   comment that has replies stays as a "Comment deleted" placeholder. A failed send shows Retry.
+   A hidden or removed post shows "not found". Review: ?id=4812 · ?view=guest · ?id=0 */
+.col{max-width:720px;margin-inline:auto}
+.back{display:inline-flex;align-items:center;gap:var(--s2);text-decoration:none;font-weight:600;color:var(--purple-dk);min-height:44px;margin-bottom:var(--s3)}
+.bk{transform:scaleX(-1)}[dir=rtl] .bk{transform:none}
+.thread{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s5);margin-top:var(--s4)}
+.add{display:flex;gap:var(--s3);align-items:flex-start}
+.add form{flex:1;min-width:0}
+.add .ta{min-height:52px;resize:vertical}
+.add .row{display:flex;justify-content:space-between;align-items:center;margin-top:var(--s2);gap:var(--s3)}
+.cm{list-style:none;margin:var(--s5) 0 0;padding:0}
+.c{display:grid;grid-template-columns:40px minmax(0,1fr);gap:var(--s3);padding-block:var(--s4);border-top:var(--border)}
+.c.reply{border-top:0;padding-block:var(--s2)}
+.c .bubble b{font-weight:600}
+.c .bubble .meta{margin-inline-start:var(--s2)}
+.c p.tx{margin-top:var(--s1);white-space:pre-wrap}
+.c .acts{display:flex;align-items:center;gap:var(--s4);margin-top:var(--s2);flex-wrap:wrap;font-size:var(--t-meta)}
+.c .acts button{border:0;background:none;padding:0;min-height:32px;font-weight:600;color:var(--grey);cursor:pointer;display:inline-flex;align-items:center;gap:var(--s1)}
+.c .acts button:hover{color:var(--ink)}
+.c .acts button[aria-pressed=true]{color:var(--purple-dk)}
+.c .acts .icon{width:16px;height:16px}
+.c .timer{color:var(--purple-dk);font-weight:600}
+.c.deleted>div>.tx{color:var(--grey);font-style:italic}
+.c.failed .tx{color:var(--grey)}
+.c .fail{color:var(--rose-fg);font-weight:600}
+.replies{list-style:none;margin:var(--s2) 0 0;padding:0;border-inline-start:2px solid var(--line);padding-inline-start:var(--s4)}
+.moreR{border:0;background:none;color:var(--purple-dk);font-weight:600;cursor:pointer;min-height:36px;padding:0}
+.loadmore{display:block;margin:var(--s4) auto 0}
+.editbox .ta{min-height:72px}
+.editbox .row{display:flex;gap:var(--s2);justify-content:flex-end;margin-top:var(--s2)}
+.gone{text-align:center;padding:var(--s9) var(--s5)}
+/* comments, spaced and grouped (7 Oct 2026): a titled thread, the composer in its own box, one comment per row
+   with its name, words and actions stacked on a steady rhythm, replies indented under the words they answer */
+.thread{padding:var(--s6)}
+.thread-h{font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.2;margin:0 0 var(--s4)}
+.thread-h span{font-family:var(--font-body);font-weight:500;font-size:var(--t-meta);color:var(--grey);margin-inline-start:var(--s2)}
+.thread>.cm:first-of-type .add{margin-top:0!important;background:var(--cream);border-radius:var(--s4);padding:var(--s4)}
+.add .ta{background:var(--white)}
+.add .row .meta[data-count]:empty{visibility:hidden}
+.cm{margin-top:var(--s4)}
+.c{gap:var(--s4);padding-block:var(--s5)}
+.cm>.c:first-child{border-top:0}
+.c .bubble{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 var(--s2)}
+.c .bubble .meta{margin-inline-start:0}
+.c p.tx{margin-top:var(--s1);line-height:1.55}
+.c .acts{gap:var(--s5);margin-top:var(--s2)}
+.replies{margin-top:var(--s3);padding-inline-start:var(--s5)}
+.c.reply{grid-template-columns:32px minmax(0,1fr);gap:var(--s3);padding-block:var(--s3)}
+.c.reply>.av{width:32px;height:32px;font-size:12px}
+.moreR{margin-top:var(--s1);padding-inline-start:var(--s5)}
+/* composer: one rounded box with the send button inside (11 Oct 2026) */
+.thread>.cm:first-of-type .add{background:none!important;padding:0!important}
+.add{margin-top:var(--s3)}
+.add .av{width:32px;height:32px;font-size:12px;margin-top:6px}
+.cbox{display:flex;align-items:flex-end;gap:var(--s2);border:1px solid var(--line);border-radius:24px;padding:4px;padding-inline-start:var(--s4);background:var(--white)}
+.cbox:focus-within{border-color:var(--ink)}
+.cbox .ta{flex:1;min-width:0;border:0;background:none;resize:none;min-height:40px;max-height:160px;padding:9px 0;font-size:15px;line-height:1.45;outline:0;box-shadow:none}
+.rto{display:flex;align-items:center;gap:var(--s1);margin:0 0 var(--s1);font-size:13px;color:var(--grey)}
+.rto b{color:var(--ink);font-weight:600}
+.rto .iconbtn{width:28px;height:28px}
+.add [data-count]{display:block;margin-top:var(--s1)}
+.add [data-count]:empty{display:none}
+@media (max-width:760px){
+  .thread{padding:var(--s5) var(--s4)}
+  .c{grid-template-columns:32px minmax(0,1fr);gap:var(--s3)}
+  .c>.av{width:32px;height:32px;font-size:12px}
+  .replies,.moreR{padding-inline-start:var(--s3)}
+}
+</style></head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/posts.js?v=34y"></script>
+<script>document.write(FAMA.ICONS)</script>
+<main class="wrap main"><div class="col" id="page"></div></main>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search), GUEST=FAMA.guest;
+Object.assign(FAMA.T.en,{replyingTo:"Replying to",back:"Back to the feed",add:"Add a comment…",reply:"Reply",replyTo:u=>`Reply to @${u}`,send:"Post",cancel:"Cancel",save:"Save",like:"Like",
+ edit:"Edit",del:"Delete",editLeft:(m,s)=>`edit ${m}:${s} left`,edited:"edited",deleted:"Comment deleted",delT:"Delete this comment?",delB:"Replies to it stay, under a “Comment deleted” note.",delOk:"Delete",
+ report:"Report",viewMore:n=>`View ${FAMA.num(n)} more ${n===1?"reply":"replies"}`,loadMore:"Show older comments",failed:"Couldn't send.",retry:"Retry",
+ max:"Up to 2,200 characters.",slow:"You're commenting fast. Wait a moment and try again.",gone:"This post isn't available.",goneP:"It may have been hidden or removed.",
+ counter:n=>`${n} / 2,200`,now:"now",signin:"comment"});
+Object.assign(FAMA.T.ar,{replyingTo:"بترد على",back:"ارجع للمستجدات",add:"اكتب تعليق…",reply:"رد",replyTo:u=>`رد على @${u}`,send:"نشر",cancel:"إلغاء",save:"حفظ",like:"إعجاب",
+ edit:"تعديل",del:"حذف",editLeft:(m,s)=>`تعديل · فاضل ${m}:${s}`,edited:"اتعدّل",deleted:"التعليق اتحذف",delT:"حذف التعليق؟",delB:"الردود عليه هتفضل، تحت ملاحظة «التعليق اتحذف».",delOk:"حذف",
+ report:"إبلاغ",viewMore:n=>`عرض ${FAMA.num(n)} ${n===1?"رد":"ردود"} كمان`,loadMore:"عرض تعليقات أقدم",failed:"مابعتش.",retry:"جرّب تاني",
+ max:"لحد ٢٢٠٠ حرف.",slow:"بتعلّق بسرعة. استنى شوية وجرّب تاني.",gone:"المنشور ده مش متاح.",goneP:"ممكن يكون اتخفى أو اتشال.",
+ counter:n=>`${n} / ٢٢٠٠`,now:"الآن",signin:"التعليق"});
+FAMA.apply();
+const page=document.getElementById("page");
+const post=FAMA.POSTS.find(p=>String(p.id)===(Q.get("id")||"4812"));
+const init=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+const ME=FAMA.ME;
+/* newest first */
+let C=[
+ {id:1,a:{name:"Omar Saleh",user:"omar-saleh"},ago:"1h",text:"That light is unreal.",likes:4,replies:[
+   {id:11,a:ME,mine:true,ago:"12m",text:"@omar-saleh all thanks to your rail.",likes:1,editUntil:Date.now()+12*60e3+41e3},
+   {id:12,a:{name:"Lina Haddad",user:"lina-haddad"},ago:"50m",text:"@omar-saleh agreed, golden hour did half the work.",likes:2},
+   {id:13,a:{name:"Rania K.",user:"rania-k"},ago:"45m",text:"@lina-haddad which hour exactly?",likes:0},
+   {id:14,a:{name:"Karim F.",user:"karim-f"},ago:"40m",text:"@rania-k 5:40, Siwa.",likes:0}]},
+ {id:2,deleted:true,a:{name:"",user:""},ago:"2h",text:"",likes:0,replies:[{id:21,a:{name:"Nour Adel",user:"nour-adel"},ago:"2h",text:"@karim-f fair point.",likes:1}]},
+ {id:3,a:{name:"Rania K.",user:"rania-k"},ago:"3h",text:"Would love the palette notes for the 2026 beauty story.",likes:3,replies:[]}
+];
+for(let i=4;i<=14;i++)C.push({id:i,a:{name:["Karim F.","Nour Adel","Tarek Sobhy"][i%3],user:["karim-f","nour-adel","tarek-sobhy"][i%3]},ago:(i)+"h",text:["Beautiful sequence.","Who did the set?","The second frame is the one."][i%3],likes:i%4,replies:[]});
+let shown=10, expanded=new Set(), replyingTo=null, editing=null, sentTimes=[];
+
+function commentHTML(c,isReply,parent){
+  if(c.deleted)return `<li class="c deleted${isReply?" reply":""}" data-id="${c.id}"><span class="av" aria-hidden="true">—</span><div><p class="tx">${t("deleted")}</p>${repliesHTML(c)}</div></li>`;
+  const left=c.editUntil?Math.max(0,c.editUntil-Date.now()):0, m=Math.floor(left/60e3), s=String(Math.floor(left%60e3/1e3)).padStart(2,"0");
+  const body=editing===c.id?`<form class="editbox" data-editf="${c.id}"><label class="vh" for="e${c.id}">${t("edit")}</label><textarea class="ta" id="e${c.id}" maxlength="2200">${esc(c.text)}</textarea><div class="row"><button type="button" class="btn btn-2" data-canceledit>${t("cancel")}</button><button class="btn">${t("save")}</button></div></form>`
+    :`<p class="tx" dir="auto">${FAMA.fmt(c.text)}</p>`;
+  const own=c.mine&&!GUEST; /* a visitor never gets Edit or Delete, only Report */
+  return `<li class="c${isReply?" reply":""}${c.failed?" failed":""}" data-id="${c.id}"${parent?` data-parent="${parent.id}"`:""}>
+    <span class="av" aria-hidden="true">${init(c.a.name)}</span>
+    <div><div class="bubble"><b dir="auto">${esc(c.a.name)}</b><span class="meta"><span dir="ltr">@${c.a.user}</span> · ${c.ago}${c.edited?" · "+t("edited"):""}</span></div>
+      ${body}
+      <div class="acts">${c.failed?`<span class="fail">${t("failed")}</span><button data-retry>${t("retry")}</button>`:`
+        <button data-clike aria-pressed="${!!c.liked}"><svg class="icon"><use href="#${c.liked?"i-heart-f":"i-heart"}"/></svg>${c.likes?num(c.likes):t("like")}</button>
+        <button data-reply>${t("reply")}</button>
+        ${own&&left>0?`<button data-cedit>${t("edit")}</button><span class="timer" data-timer="${c.id}">${t("editLeft",m,s)}</span>`:""}
+        ${own?`<button data-cdel>${t("del")}</button>`:`<button data-creport>${t("report")}</button>`}`}
+      </div>
+      ${isReply?"":repliesHTML(c)}
+    </div></li>`;
+}
+function repliesHTML(c){
+  if(!c.replies||!c.replies.length)return replyingTo===c.id?`<ul class="replies">${composer(c)}</ul>`:"";
+  const all=expanded.has(c.id), list=all?c.replies:c.replies.slice(0,3), rest=c.replies.length-list.length;
+  return `<ul class="replies">${list.map(r=>commentHTML(r,true,c)).join("")}</ul>${rest?`<button class="moreR" data-morer="${c.id}">${t("viewMore",rest)}</button>`:""}${replyingTo===c.id?`<ul class="replies">${composer(c)}</ul>`:""}`;
+}
+function composer(parent){
+  const who=replyingUser||(parent&&parent.a.user), pre=parent?"@"+who+" ":"";
+  /* one rounded box with the send button inside; a reply says who it answers, with a cross to drop it (11 Oct 2026) */
+  return `<li class="add"><span class="av" aria-hidden="true">DT</span><form data-send="${parent?parent.id:""}" novalidate>
+    ${parent?`<p class="rto">${t("replyingTo")} <b dir="auto">${esc(replyingName||parent.a.name)}</b><button type="button" class="iconbtn plain" data-cancelreply aria-label="${t("cancel")}"><svg class="icon sm"><use href="#i-x"/></svg></button></p>`:""}
+    <label class="vh" for="ta${parent?parent.id:"root"}">${parent?t("replyTo",who):t("add")}</label>
+    <div class="cbox"><textarea class="ta" rows="1" id="ta${parent?parent.id:"root"}" maxlength="2400" placeholder="${parent?esc(t("replyTo",who)):t("add")}">${pre}</textarea><button class="csend" aria-label="${t("send")}"${pre?"":" disabled"}><svg class="icon"><use href="#i-send-up"/></svg></button></div>
+    <span class="meta" data-count>${pre.length?t("counter",num(pre.length)):""}</span><p class="err" data-err role="alert"></p></form></li>`;
+}
+let replyingUser=null, replyingName=null;
+function render(){
+  if(!post){page.innerHTML=`<div class="gone"><h1 class="h1">${t("gone")}</h1><p class="lead" style="margin-inline:auto">${t("goneP")}</p><a class="btn" href="${href("feed.html")}" style="margin-top:var(--s5)">${t("back")}</a></div>`;return}
+  document.title=`${post.a.name} · Fama`;
+  page.innerHTML=`<a class="back" href="${href("feed.html"+(GUEST?"?view=guest":""))}"><svg class="icon bk"><use href="#i-arrow"/></svg>${t("back")}</a>
+    ${FAMA.postHTML(post,true)}
+    <section class="thread" aria-label="${t("p.comments",post.comments)}">
+      <h2 class="thread-h">Comments<span>${num(post.comments)}</span></h2>
+      ${GUEST?"":`<ul class="cm" style="margin-top:0">${composer(null)}</ul>`}
+      <ul class="cm">${C.slice(0,shown).map(c=>commentHTML(c,false)).join("")}</ul>
+      ${C.length>shown?`<button class="btn btn-2 loadmore" data-older>${t("loadMore")}</button>`:""}
+    </section>`;
+  const focusId=document.activeElement&&document.activeElement.id;
+}
+document.write('<svg width="0" height="0" style="position:absolute"><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol></svg>');
+const list=post?[post]:[];
+FAMA.bindPosts(page,list,()=>render());
+const find=id=>{for(const c of C){if(c.id==id)return[c,null];for(const r of c.replies||[])if(r.id==id)return[r,c]}return[]};
+
+page.addEventListener("click",async e=>{
+  if(e.target.closest("[data-focus-comment]")){if(GUEST)return;page.querySelector("#taroot")?.focus();return}
+  if(e.target.closest("[data-older]")){shown+=10;render();return}
+  const mr=e.target.closest("[data-morer]");if(mr){expanded.add(+mr.dataset.morer);render();return}
+  const li=e.target.closest(".c");if(!li)return;const[c,parent]=find(li.dataset.id);
+  if(GUEST&&e.target.closest("[data-clike],[data-reply],[data-creport]")){FAMA.signInPrompt(li,"signin");return}
+  if(e.target.closest("[data-clike]")){c.liked=!c.liked;c.likes+=c.liked?1:-1;render();return}
+  if(e.target.closest("[data-reply]")){const top=parent||c;replyingTo=top.id;replyingUser=c.a.user;replyingName=c.a.name;expanded.add(top.id);render();const ta=page.querySelector(`#ta${top.id}`);ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);return}
+  if(e.target.closest("[data-cancelreply]")){replyingTo=null;render();return}
+  if(e.target.closest("[data-cedit]")){editing=c.id;render();page.querySelector(`#e${c.id}`).focus();return}
+  if(e.target.closest("[data-canceledit]")){editing=null;render();return}
+  if(e.target.closest("[data-cdel]")&&await FAMA.confirm(t("delT"),t("delB"),t("delOk"),true)){
+    if(parent){parent.replies=parent.replies.filter(x=>x!==c)}else if(c.replies&&c.replies.length){c.deleted=true}else{C=C.filter(x=>x!==c)}render();return}
+  if(e.target.closest("[data-creport]")){await FAMA.report("comment");return}
+  if(e.target.closest("[data-retry]")){c.failed=false;render();FAMA.toast("✓");return}
+});
+page.addEventListener("input",e=>{const f=e.target.closest("[data-send]");if(!f)return;const ta=e.target;f.querySelector("[data-count]").textContent=ta.value.length?t("counter",num(ta.value.length)):"";
+  f.querySelector(".csend").disabled=!ta.value.trim();ta.style.height="auto";ta.style.height=Math.min(ta.scrollHeight,160)+"px"});
+page.addEventListener("submit",e=>{e.preventDefault();const f=e.target;
+  if(f.dataset.editf){const[c]=find(f.dataset.editf);c.text=f.querySelector("textarea").value.trim()||c.text;c.edited=true;editing=null;render();return}
+  if(f.dataset.send===undefined)return;
+  const ta=f.querySelector("textarea"),v=ta.value.trim(),err=f.querySelector("[data-err]");
+  if(!v)return ta.focus();
+  if(v.length>2200){err.textContent=t("max");return}
+  sentTimes=sentTimes.filter(x=>Date.now()-x<60e3);if(sentTimes.length>=10){err.textContent=t("slow");return}sentTimes.push(Date.now());
+  const nc={id:Date.now(),a:ME,mine:true,ago:t("now"),text:v,likes:0,replies:[],editUntil:Date.now()+15*60e3,failed:/fail/i.test(v)};
+  if(f.dataset.send){const p=C.find(x=>x.id==f.dataset.send);p.replies.push(nc);replyingTo=null}else C.unshift(nc);
+  post.comments++;render();
+});
+/* the edit countdown ticks */
+setInterval(()=>page.querySelectorAll("[data-timer]").forEach(el=>{const[c]=find(el.dataset.timer);const left=Math.max(0,c.editUntil-Date.now());
+  if(!left){render();return}el.textContent=t("editLeft",Math.floor(left/60e3),String(Math.floor(left%60e3/1e3)).padStart(2,"0"))}),1000);
+render();
+</script>
+</body></html>

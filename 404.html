@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<style>
+/* One clear way out (UX audit #22): back to the profile for talents, the feed for guests. */
+.nf{max-width:640px;margin:var(--s9) auto 0;text-align:center}
+.nf .code{font-family:var(--font-display);font-weight:600;font-size:clamp(96px,16vw,160px);line-height:1;color:var(--purple)}
+.nf .h1{margin-top:var(--s3)}
+.nf p{color:var(--grey);margin:var(--s3) auto var(--s6);max-width:44ch}
+</style></head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<div data-fama-nav></div>
+<main class="wrap"><section class="nf">
+  <p class="code" aria-hidden="true">404</p>
+  <h1 class="h1" data-t="title"></h1>
+  <p data-t="body"></p>
+  <a class="btn" href="profile-structure.html"><svg class="icon" aria-hidden="true"><use href="#a-home"/></svg><span data-t="cta"></span></a>
+</section></main>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+FAMA.T.en={title:"This page isn't here",body:"The link may be old, or the page was moved. Your profile and work are safe.",cta:"Go to your profile"};
+FAMA.T.ar={title:"الصفحة دي مش موجودة",body:"ممكن الرابط قديم، أو الصفحة اتنقلت. بروفايلك وشغلك في أمان.",cta:"روح لبروفايلك"};
+FAMA.apply();
+</script>
+</body></html>

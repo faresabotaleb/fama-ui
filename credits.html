@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Credits & recognitions · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<style>
+/* Screen: /talent/credits — the collaborator's side of journey 3 in the Fama V1 Blueprint.
+   Nothing appears on anyone's profile without their confirmation. */
+.cr{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:var(--s5);align-items:center;padding-block:var(--s5);border-top:var(--border)}
+.cr:first-child{border-top:0;padding-top:0}
+.cr .ph{aspect-ratio:4/3;border-radius:var(--s3)}
+.cr b{display:block;font-weight:600;font-size:var(--t-h3)}
+.cr a.pt{text-decoration:none}
+.cr a.pt:hover b{color:var(--purple-dk)}
+.cr .by{margin-top:var(--s1)}
+.cr .role{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.cr .acts{display:flex;gap:var(--s2)}
+.cr.is-hidden .ph,.cr.is-hidden b{opacity:.55}
+.note{margin-top:var(--s3);font-size:var(--t-meta);color:var(--grey)}
+.count{background:var(--ink);color:var(--cream);border-radius:var(--radius-pill);font-size:14px;font-weight:600;padding:0 var(--s2);margin-inline-start:var(--s2);vertical-align:middle}
+.rc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s5);align-items:center;padding-block:var(--s5);border-top:var(--border)}
+.rc:first-child{border-top:0;padding-top:0}
+.rc q{display:block;font-size:17px}
+.rc q::before,.rc q::after{content:none}
+.rc .by{margin-top:var(--s2)}
+.rc.is-hidden q{opacity:.55}
+.rc .note{margin-top:var(--s2)}
+@media (max-width:760px){
+  .rc{grid-template-columns:minmax(0,1fr)}
+  .cr{grid-template-columns:80px minmax(0,1fr)}
+  .cr .acts{grid-column:1/-1}
+}
+.rhead{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);flex-wrap:wrap}
+.rhead .h2{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+.showsw{display:inline-flex;align-items:center;gap:var(--s3);font-size:var(--t-meta);font-weight:500;color:var(--grey);cursor:pointer;min-height:44px}
+.switch{width:48px;height:28px;border-radius:999px;border:1px solid var(--purple);background:var(--purple);position:relative;cursor:pointer;flex:none;padding:0}
+.switch i{position:absolute;top:3px;inset-inline-start:23px;width:20px;height:20px;border-radius:999px;background:var(--white);transition:inset-inline-start 120ms}
+.switch[aria-checked=false]{background:var(--line);border-color:var(--line)}
+.switch[aria-checked=false] i{inset-inline-start:3px}
+#recs.is-off{opacity:.55}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><!-- Lucide, ISC -->
+<symbol id="c-eye-off" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></symbol>
+<symbol id="c-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+<symbol id="c-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="c-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol></svg>
+<div data-fama-nav></div>
+<div data-fama-hero data-tone="soft" data-photo="assets/img/banners/credits-star.png" id="hero"></div>
+<script src="assets/js/ds.js?v=30"></script>
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/profile.js?v=24"></script>
+<script>
+FAMA.T.en={label:"What other people say about your work",title:"Credits & recognitions",lead:"Projects other people credited you on, and what peers say about you. Confirm a credit and the project is yours too.",
+ showOn:"Show on profile",recHid:"Hidden from your profile",recOff:"Recognitions are hidden from your profile. They keep their content.",recOn:"Recognitions are back on your profile.",
+ recs:"Recognitions",recsLead:"Peers vouching for you. They show on your profile; hide any you'd rather not show.",recBy:(w,r)=>`${w} · ${r}`,
+ tRecHidden:w=>`${w}'s recognition is hidden from your profile`,tRecShown:w=>`${w}'s recognition is back on your profile`,recHiddenNote:"Hidden from your profile.",
+ recHideA:w=>`Hide ${w}'s recognition from your profile`,recShowA:w=>`Show ${w}'s recognition on your profile again`,emptyR:"No recognitions yet",emptyRP:"When a peer recognises your work, it shows up here.",
+ waiting:"Waiting for you",onProfile:"Projects you co-own",
+ from:(who)=>`from ${who}`,confirm:"Confirm",decline:"Decline",withdraw:"Leave project",hide:"Hide",show:"Show",hideA:p=>`Hide ${p} from your profile`,showA:p=>`Show ${p} on your profile again`,
+ hiddenTag:"Hidden",hiddenNote:"Hidden. Still shows on the project page.",
+ tHidden:p=>`${p} is hidden from your profile`,tShown:p=>`${p} is back on your profile`,
+ confirmA:p=>`Confirm credit on ${p}`,declineA:p=>`Decline credit on ${p}`,withdrawA:p=>`Leave ${p}`,
+ noskill:s=>`${s} isn't one of your skills yet. Add it, and the project shows in its tab.`,addSkill:s=>`Add ${s}`,
+ coown:"Confirming makes you a co-owner: it shows on your profile, you can edit it, and you can leave it any time. Nobody can delete a project that has other owners.",
+ tConfirmed:p=>`You co-own ${p} now`,tDeclined:p=>`Declined ${p}`,tWithdrawn:p=>`You left ${p}`,
+ wTitle:p=>`Leave ${p}?`,wBody:"You stop being an owner, and it comes off your profile and your name comes off the project. The project stays for its other owners. They can credit you again. To take it off your profile only, hide it instead.",wOk:"Leave project",
+ emptyW:"Nothing waiting",emptyWP:"When someone credits you on a project, it shows up here for you to confirm.",
+ emptyP:"No shared projects yet",emptyPP:"Projects you confirm show on your profile, in the tab of the skill you were credited for.",
+ confirmed:d=>`Confirmed ${d}`,see:"See it on your profile",whereTab:s=>`Shows in your ${s} tab.`,owners:n=>`${n} owners`};
+FAMA.T.ar={label:"تعاونات",title:"المشاركات",lead:"أعمال ذكرك فيها آخرون. أكّدها عشان تظهر على بروفايلك.",
+ waiting:"بانتظارك",onProfile:"على بروفايلك",
+ from:(who)=>`من ${who}`,confirm:"تأكيد",decline:"رفض",withdraw:"سحب",
+ confirmA:p=>`تأكيد مشاركتك في ${p}`,declineA:p=>`رفض مشاركتك في ${p}`,withdrawA:p=>`سحب مشاركتك من ${p}`,
+ noskill:s=>`مهارة ${s} مش ضمن مهاراتك، فهتظهر في الجزء العام من بروفايلك.`,
+ tConfirmed:p=>`${p} بقى على بروفايلك`,tDeclined:p=>`رفضت ${p}`,tWithdrawn:p=>`اتشال ${p} من بروفايلك`,
+ wTitle:p=>`سحب مشاركتك من ${p}؟`,wBody:"هتتشال من بروفايلك ومن صفحة المشروع، وهنبلّغ اللي ذكرك. مش هتقدر تتراجع بعدين، بس هو يقدر يذكرك تاني.",wOk:"سحب",
+ emptyW:"مفيش حاجة مستنياك",emptyWP:"لما حد يذكرك في مشروع، هتلاقيه هنا عشان تأكده.",
+ emptyP:"لسه مفيش مشاركات مؤكدة",emptyPP:"المشاركات اللي بتأكدها بتظهر في بروفايلك تحت المهارة اللي اتذكرت بيها.",
+ confirmed:d=>`اتأكدت ${d}`};
+const H=document.getElementById("hero");H.dataset.label=FAMA.t("label");H.dataset.title=FAMA.t("title");H.dataset.lead=FAMA.t("lead");
+</script>
+
+<main class="wrap main">
+  <section class="card">
+    <h2 class="h2 sm"><span data-t="waiting"></span><span class="count" id="wCount"></span></h2>
+    <p class="meta" style="margin-top:var(--s2);max-width:70ch" data-t="coown"></p>
+    <div id="waiting" style="margin-top:var(--s5)"></div>
+  </section>
+  <section class="card" style="margin-top:var(--s5)">
+    <h2 class="h2 sm" data-t="onProfile"></h2>
+    <div id="onprofile" style="margin-top:var(--s5)"></div>
+  </section>
+  <!-- recognitions (moved from Profile content, 3 Oct 2026) -->
+  <section class="card" style="margin-top:var(--s5)" id="recognitions">
+    <div class="rhead"><h2 class="h2 sm"><span data-t="recs"></span><span class="count" id="rCount"></span><span class="pill p-off" id="rHid" data-t="recHid" hidden></span></h2>
+      <label class="showsw"><span data-t="showOn"></span><button type="button" class="switch" role="switch" id="rShow" aria-checked="true"><i></i></button></label></div>
+    <p class="meta" style="margin-top:var(--s2)" data-t="recsLead"></p>
+    <div id="recs" style="margin-top:var(--s5)"></div>
+  </section>
+</main>
+<div data-fama-foot></div>
+
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const {t,esc,href}=FAMA; FAMA.apply();
+/* credits and skills are shared with Preview (assets/js/profile.js), so a confirmed credit shows on the profile */
+const MY=FAMA_PROFILE.load().skills.map(s=>s.id);
+const CR=FAMA_CREDITS.load(); let W=CR.waiting, C=CR.confirmed;
+const save=()=>FAMA_CREDITS.save({waiting:W,confirmed:C});
+const skn=id=>FAMA_SKILL[id]?FAMA_SKILL[id].name:id;
+
+function row(c,waiting){
+  const other=!MY.includes(c.skill), where=other?"":t("whereTab",skn(c.skill));
+  return `<article class="cr${c.hidden?" is-hidden":""}" data-id="${c.id}">
+    <a class="pt" href="${href("project.html?p="+c.slug)}" aria-hidden="true" tabindex="-1"><div class="ph"></div></a>
+    <div><a class="pt" href="${href("project.html?p="+c.slug)}"><b>${esc(c.p)}</b></a>
+      <p class="meta by">${t("from",esc(c.who))}${waiting?"":" · "+t("confirmed",FAMA.date(c.d))}</p>
+      <div class="role"><span class="tag">${esc(skn(c.skill))}</span><span class="tag">${esc(c.role)}</span>${c.hidden?`<span class="pill p-off">${t("hiddenTag")}</span>`:""}</div>
+      <p class="note">${c.hidden?t("hiddenNote"):(other?t("noskill",esc(skn(c.skill))):where)+(waiting?"":other?` <a class="link" href="${href("profile-structure.html#skills")}">${t("addSkill",esc(skn(c.skill)))}</a>`:` <a class="link" href="${href("preview.html?skill="+c.skill+"#cr-"+c.id)}">${t("see")}</a>`)}</p></div>
+    <div class="acts">${waiting
+      ?`<button class="btn" data-confirm aria-label="${esc(t("confirmA",c.p))}"><svg class="icon" aria-hidden="true"><use href="#a-check"/></svg>${t("confirm")}</button><button class="btn btn-2" data-decline aria-label="${esc(t("declineA",c.p))}"><svg class="icon" aria-hidden="true"><use href="#c-x"/></svg>${t("decline")}</button>`
+      :`<button class="btn btn-2" data-hide aria-label="${esc(t(c.hidden?"showA":"hideA",c.p))}"><svg class="icon" aria-hidden="true"><use href="#${c.hidden?"c-eye":"c-eye-off"}"/></svg>${t(c.hidden?"show":"hide")}</button><button class="btn btn-2" data-withdraw aria-label="${esc(t("withdrawA",c.p))}"><svg class="icon" aria-hidden="true"><use href="#c-trash"/></svg>${t("withdraw")}</button>`}</div>
+  </article>`;
+}
+let R=FAMA_RECS.load();
+function renderRecs(){ FAMA_RECS.save(R);
+  const n=R.filter(r=>!r.hidden).length; document.getElementById("rCount").textContent=FAMA.num(n); document.getElementById("rCount").hidden=!R.length;
+  document.getElementById("recs").innerHTML=R.length?R.map(r=>`<article class="rc${r.hidden?" is-hidden":""}" data-rid="${r.id}">
+    <div><q dir="auto">${esc(r.q)}</q><p class="meta by">${t("recBy",esc(r.who),esc(r.role))} · ${FAMA.date(r.d)}</p>${r.hidden?`<p class="note"><span class="pill p-off">${t("hiddenTag")}</span> ${t("recHiddenNote")}</p>`:""}</div>
+    <div class="acts"><button class="btn btn-2" data-rhide aria-label="${esc(t(r.hidden?"recShowA":"recHideA",r.who))}"><svg class="icon" aria-hidden="true"><use href="#${r.hidden?"c-eye":"c-eye-off"}"/></svg>${t(r.hidden?"show":"hide")}</button></div>
+  </article>`).join(""):`<div class="empty"><h3 class="h2">${t("emptyR")}</h3><p>${t("emptyRP")}</p></div>`;
+}
+document.getElementById("recs").addEventListener("click",e=>{const b=e.target.closest("[data-rhide]");if(!b)return;const id=b.closest(".rc").dataset.rid,r=R.find(x=>x.id===id);
+  r.hidden=!r.hidden;renderRecs();FAMA.toast(t(r.hidden?"tRecHidden":"tRecShown",r.who),()=>{r.hidden=!r.hidden;renderRecs()});
+  document.querySelector(`[data-rid="${id}"] [data-rhide]`).focus()});
+function render(){ save();
+  document.getElementById("wCount").textContent=W.length?FAMA.num(W.length):"";
+  document.getElementById("wCount").hidden=!W.length;
+  document.getElementById("waiting").innerHTML=W.length?W.map(c=>row(c,true)).join(""):`<div class="empty"><h3 class="h2">${t("emptyW")}</h3><p>${t("emptyWP")}</p></div>`;
+  document.getElementById("onprofile").innerHTML=C.length?C.map(c=>row(c,false)).join(""):`<div class="empty"><h3 class="h2">${t("emptyP")}</h3><p>${t("emptyPP")}</p></div>`;
+}
+document.querySelector("main").addEventListener("click",async e=>{
+  const art=e.target.closest(".cr"); if(!art)return; const id=art.dataset.id;
+  if(e.target.closest("[data-confirm]")){const i=W.findIndex(c=>c.id===id),c=W.splice(i,1)[0];c.d=new Date().toISOString();C.unshift(c);render();
+    FAMA.toast(t("tConfirmed",c.p),()=>{C.shift();W.splice(i,0,c);render()})}
+  if(e.target.closest("[data-decline]")){const i=W.findIndex(c=>c.id===id),c=W.splice(i,1)[0];render();
+    FAMA.toast(t("tDeclined",c.p),()=>{W.splice(i,0,c);render()})}
+  /* hide: off the profile only, still on the project page, back any time */
+  if(e.target.closest("[data-hide]")){const c=C.find(x=>x.id===id);c.hidden=!c.hidden;render();
+    FAMA.toast(t(c.hidden?"tHidden":"tShown",c.p),()=>{c.hidden=!c.hidden;render()});
+    document.querySelector(`[data-id="${id}"] [data-hide]`).focus()}
+  if(e.target.closest("[data-withdraw]")){const c=C.find(x=>x.id===id);
+    if(await FAMA.confirm(t("wTitle",c.p),t("wBody"),t("wOk"),true)){C=C.filter(x=>x.id!==id);render();FAMA.toast(t("tWithdrawn",c.p))}}
+});
+/* 9 Oct 2026: the whole Recognitions part can be switched off here, where it's managed (was in Profile structure's Sections) */
+const PRF=FAMA_PROFILE.load(), recRow=()=>(PRF.groups.pw||[]).find(x=>x.b==="recognitions");
+function renderRecShow(){const r=recRow(),on=!r||r.v;document.getElementById("rShow").setAttribute("aria-checked",on);document.getElementById("rHid").hidden=on;
+  document.getElementById("recs").classList.toggle("is-off",!on)}
+document.getElementById("rShow").onclick=()=>{const r=recRow();if(!r)return;r.v=!r.v;FAMA_PROFILE.save(PRF);renderRecShow();
+  FAMA.toast(t(r.v?"recOn":"recOff"),()=>{r.v=!r.v;FAMA_PROFILE.save(PRF);renderRecShow()})};
+render(); renderRecs(); renderRecShow();
+</script>
+</body></html>

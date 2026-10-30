@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>States for review · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<style>
+/* Review page for the client: every approval state, each opening the real screens full page
+   (?state=…&review=1 adds a bar to step through the states). Not part of the product. */
+body{background:var(--cream);margin:0}
+.wrap{max-width:1108px;margin:0 auto;padding:var(--s7) var(--s5) var(--s8)}
+h1{font-family:var(--font-display);font-weight:600;font-size:var(--t-h1);line-height:1.1;margin:var(--s1) 0 var(--s2)}
+.grp{margin-top:var(--s8)}
+.grp h2{font-family:var(--font-display);font-weight:600;font-size:var(--t-h2);line-height:1.1;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gutter);margin-top:var(--s5)}
+.st{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3)}
+.st .n{font-size:var(--t-meta);color:var(--grey)}
+.st b{font-weight:600;font-size:var(--t-h3)}
+.st ul{margin:0;padding-inline-start:var(--s5);color:var(--grey);font-size:15px}
+.st li+li{margin-top:var(--s1)}
+.st .go{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:auto;padding-top:var(--s3)}
+.st .go a{text-decoration:none}
+@media (max-width:960px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:30px}.grp{margin-top:var(--s7)}}
+</style></head><body>
+
+<main class="wrap">
+  <span class="label">For review</span>
+  <h1>Screens in every state</h1>
+  <p class="meta">Every profile is live at its own link from day one. Completing it lists it in the Creatives Index, where brands search. Nobody reviews or approves it. Open a state to see the real screens, full page.</p>
+  <div id="groups"></div>
+</main>
+
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/profile.js?v=24"></script>
+<script>
+const GROUPS=[
+ ["The Creatives Index",[
+  ["incomplete","Not in the index yet",["The profile is live at fama.so/demo-talent from the first day.","A notice at the top of every page, and the dashboard, show what's left to be listed.","Nothing waits for approval: the last step lists it."]],
+  ["complete","Listed",["The profile is complete and in the Creatives Index.","Brands find it when they search. Profile views show on the dashboard."]]]]
+];
+/* a visitor who isn't logged in: what they can see, and where they're asked to sign in */
+const GUESTS=[
+ ["The feed",["Anyone can scroll the feed and filter it by skill.","The hero invites them to join or log in.","Like, save, comment or follow opens a small sign-in prompt in place."],[["Open the feed","feed.html?view=guest"]]],
+ ["A post",["The post and its comments are readable.","Replying or liking asks them to sign in first, then brings them back."],[["Open a post","post.html?id=4812&view=guest"]]],
+ ["A talent's profile",["The full public profile, with no edit links.","Follow and Recognise ask them to sign in. Share works for anyone."],[["Open a profile","preview.html?view=guest"]]],
+];
+/* credits: someone else's project names the talent. Each card opens the real page at the right spot. */
+const CREDITS=[
+ ["A credit waits for you",["Lina Haddad credited you as Lead stylist on her project, and Rania K. as Makeup assistant.","Nothing shows on your profile until you confirm.","Confirm or decline, with Undo."],[["Open Credits","credits.html"]]],
+ ["Confirmed, in a skill you have",["Styling is one of your skills, so the credit joins your Styling tab's projects.","It says who credited you."],[["See it on the profile","preview.html?skill=styling#cr-atlas"],["In Credits","credits.html"]]],
+ ["Confirmed, in a skill you don't have",["You don't list Hair, so it goes in the profile-wide Credits section instead.","It shows on every tab."],[["See it on the profile","preview.html#credits"],["In Credits","credits.html"]]],
+ ["Hidden, declined or removed",["Hide a confirmed credit to take it off your profile only. It stays on the project page, and you can show it again.","Remove it to take it off the project too. The person is told, and it can't be undone.","Decline a waiting credit and it's never shown."],[["Try it in Credits","credits.html"]]]
+];
+let i=0;
+document.getElementById("groups").innerHTML=GROUPS.map(([g,list])=>`<section class="grp"><h2>${g}</h2><div class="grid">${list.map(([k,title,notes])=>`
+  <article class="st"><span class="n">${++i} of 2</span><b>${title}</b><ul>${notes.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="go"><a class="btn" href="profile-structure.html?state=${k}&review=1">Profile structure</a></div>
+  </article>`).join("")}</div></section>`).join("")+
+ `<section class="grp"><h2>Visitor, not logged in</h2><p class="meta" style="margin-top:var(--s2)">How the product looks to someone who isn't on Fama yet. Every link they follow keeps them in the visitor view.</p><div class="grid">${GUESTS.map(([title,notes,links])=>`
+  <article class="st"><b>${title}</b><ul>${notes.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="go">${links.map(([l,u],j)=>`<a class="btn${j?" btn-2":""}" href="${u}">${l}</a>`).join("")}</div>
+  </article>`).join("")}</div></section>`+
+ `<section class="grp"><h2>Credits</h2><p class="meta" style="margin-top:var(--s2)">What happens when someone credits the talent on their project. Try the steps in order; <a class="link" href="states.html?reset=1">start over</a> puts the example back.</p><div class="grid">${CREDITS.map(([title,notes,links],n)=>`
+  <article class="st"><span class="n">Step ${n+1}</span><b>${title}</b><ul>${notes.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="go">${links.map(([l,u],j)=>`<a class="btn${j?" btn-2":""}" href="${u}">${l}</a>`).join("")}</div>
+  </article>`).join("")}</div></section>`;
+</script>
+</body></html>

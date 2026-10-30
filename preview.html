@@ -1,0 +1,708 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demo talent · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="stylesheet" href="assets/css/fields.css?v=9">
+<link rel="stylesheet" href="assets/css/exp.css?v=2">
+<style>
+/* Screen: /{username}?skill={skill} — "Talent profile" in the Fama V1 Blueprint.
+   Also the talent's own Preview (with a strip that says so).
+   Review states: ?view=guest (a visitor, public top bar) · ?state=unpublished · ?skill=modelling */
+.pv-strip{background:var(--ink);color:var(--cream)}
+.pv-strip .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:52px;flex-wrap:wrap;padding-block:var(--s2)}
+.pv-strip a{color:var(--yellow);font-weight:600;text-decoration:none}
+
+/* profile header — the purple block and the one pattern on this page */
+.phero{margin-top:var(--s6);background:var(--purple);color:var(--white);border-radius:var(--radius);overflow:hidden}
+.phero .body{padding:var(--s7);display:flex;align-items:center;gap:var(--s6);flex-wrap:wrap}
+.phero .ring{width:112px;height:112px;flex:none;border-radius:var(--radius-pill);background:var(--white);color:var(--purple-dk);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:40px}
+.phero .id{flex:1;min-width:240px}
+.phero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(40px,5vw,64px);line-height:1}
+.phero .who{font-weight:600;font-size:20px;margin-top:var(--s2)}
+.now{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4)}
+.now span{background:var(--white);color:var(--ink);border-radius:var(--radius-pill);padding:2px var(--s3);font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.now .on::before{content:"";width:8px;height:8px;border-radius:var(--radius-pill);background:var(--mint-fg)}
+.acts{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center;position:relative}
+.acts .ionly{width:48px;padding-inline:0;justify-content:center}
+.band{height:20px;background:url("assets/img/pattern-stars.png") repeat-x;background-size:auto 100%}
+/* photo hero (6 Oct 2026): the talent's details on purple, a photo on the right, the logo star on the seam */
+.phero.ph{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 40%;min-height:280px}
+.phero.ph .body{position:relative;z-index:2;align-self:center}
+.phero.ph .acts{flex-basis:100%;margin-top:var(--s2)}
+.phero.ph .photo{align-self:stretch;min-height:280px;background:#CBBBA8 url("assets/img/banners/profile.jpg?v=2") center/cover no-repeat}
+.phero.ph .hstar{position:absolute;z-index:1;height:200px;left:calc(60% - 110px);bottom:-36px;fill:var(--yellow)}
+.guestpop{position:relative}
+dialog.signdlg{max-width:440px}
+.signdlg p{color:var(--grey);margin-top:var(--s3)}
+.signdlg .acts{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s5)}
+.signdlg .acts .btn{justify-content:center}
+@media (max-width:480px){.signdlg .acts{grid-template-columns:1fr}}
+.signin{position:absolute;z-index:5;inset-inline-end:0;top:calc(100% + var(--s2));width:300px;background:var(--white);color:var(--ink);border:var(--border);border-radius:var(--radius);padding:var(--s5)}
+.signin b{display:block;font-weight:600;font-size:var(--t-h3)}
+.signin p{color:var(--grey);margin:var(--s1) 0 var(--s4);font-size:15px}
+.signin .row{display:flex;gap:var(--s2);flex-wrap:wrap}
+
+/* intro: bio, point of view, links + stats */
+.intro{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--s6);margin-top:var(--s7);align-items:start}
+.bio{font-size:18px;max-width:62ch}
+/* point of view: plain text with its own heading, not a quote */
+.pov{margin-top:var(--s6);max-width:62ch}
+.pov h2{font-weight:600;font-size:15px;color:var(--grey);margin:0 0 var(--s1)}
+.pov p{font-size:18px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);text-align:center}
+.stats div+div{border-inline-start:var(--border)}
+.stats b{display:block;font-family:var(--font-display);font-weight:600;font-size:30px;line-height:1.1}
+[dir=rtl] .stats b{font-family:var(--ar);font-weight:700}
+.stats span{font-size:var(--t-meta);color:var(--grey)}
+/* social links: icons only, the platform read from each link */
+.social{list-style:none;margin:var(--s5) 0 0;padding:var(--s5) 0 0;border-top:var(--border);display:flex;flex-wrap:wrap;gap:var(--s2);justify-content:center}
+.social a{width:44px;height:44px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);color:var(--ink);display:flex;align-items:center;justify-content:center}
+.social a:hover{border-color:var(--ink);color:var(--purple-dk)}
+.soc-ic{width:20px;height:20px;flex:none}
+
+/* skill tabs — sticky under the top bar; active tab filled in orchid (dark step for AA) */
+.stabs{position:sticky;top:72px;z-index:20;background:var(--cream);margin-top:var(--s8);border-bottom:var(--border)}
+.stabs .row{display:flex;gap:var(--s6);overflow-x:auto;scrollbar-width:none}
+.stabs a{flex:none;min-height:52px;display:inline-flex;align-items:center;gap:var(--s2);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:600;color:var(--grey);text-decoration:none;white-space:nowrap}
+.stabs a:hover{color:var(--ink)}
+.stabs a[aria-selected=true]{color:var(--ink);border-bottom-color:var(--purple-dk)}
+/* 24 Oct 2026: the skill names in the display face, and the FAMA star on the open one */
+.stabs a{font-family:var(--font-display);font-size:19px;letter-spacing:.01em}
+@media (max-width:760px){.stabs a{font-size:16px}.stabs .row{gap:var(--s4)}}
+.stabs .tstar{width:13px;height:12px;fill:var(--yellow);stroke:var(--ink);stroke-width:36;stroke-linejoin:round;flex:none;display:none}
+.stabs a[aria-selected=true] .tstar{display:block}
+.stabs .n{font-family:var(--font-body,inherit);font-size:12px;font-weight:600;min-width:20px;padding:0 6px;border-radius:var(--radius-pill);background:var(--line);color:#4F4A45;text-align:center;letter-spacing:0}
+.stabs a[aria-selected=true] .n{background:var(--ink);color:var(--cream)}
+.stabs a:focus-visible{outline:2px solid var(--purple-dk);outline-offset:-2px;border-radius:var(--s1)}
+.specs{margin-top:var(--s6)}
+
+/* sections */
+.blk{margin-top:var(--s8)}
+/* Contra-style top (9 Oct 2026) */
+.ct-top{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:var(--s7);align-items:start;margin-top:var(--s6)}
+.ct-id{display:flex;flex-direction:column;align-items:flex-start;padding-block:var(--s4)}
+.ct-av{position:relative;width:80px;height:80px;border-radius:var(--radius-pill);background:var(--purple) center/cover;color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:28px}
+.ct-on{position:absolute;right:2px;bottom:2px;width:16px;height:16px;border-radius:var(--radius-pill);background:#2BB673;border:3px solid var(--cream)}
+.ct-id h1{font-family:var(--font-display);font-weight:600;font-size:44px;line-height:1.05;margin-top:var(--s4)}
+.ct-who{color:var(--grey);margin-top:var(--s2);font-size:17px;display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s4)}
+.ct-place{display:inline-flex;align-items:center;gap:6px;font-size:15px}
+.ct-place .icon{width:16px;height:16px}
+.ct-links{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:var(--s2);flex-basis:100%}
+.ct-links a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border:var(--border);border-radius:var(--radius-pill);background:var(--white);color:var(--ink);font-size:14px;font-weight:600;text-decoration:none}
+.ct-links a:hover{border-color:var(--ink)}
+.ct-links .soc-ic{width:18px;height:18px}
+.ct-acts{display:flex;gap:var(--s2);margin-top:var(--s5);flex-wrap:wrap;align-items:center}
+.signalt{margin:var(--s4) 0 0;font-size:14px;color:var(--grey)}
+.ct-stats{display:flex;gap:var(--s6);margin:var(--s4) 0 0}
+.ct-stats div{padding:0}
+
+.ct-stats dd{margin:0;font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.1;order:-1}
+.ct-stats dt{font-size:12px;color:var(--grey)}
+.ct-stats div{display:flex;flex-direction:column}
+.ct-chips{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+.ct-chips span{display:inline-flex;align-items:center;gap:6px;border:var(--border);background:var(--white);border-radius:var(--s3);padding:var(--s2) var(--s3);font-size:14px;font-weight:600}
+.ct-chips .on::before{content:"";width:8px;height:8px;border-radius:var(--radius-pill);background:var(--ink)}
+.ct-chips .on{background:var(--yellow);border-color:var(--yellow)} /* 24 Oct 2026: availability is the yellow signal */
+.ct-skills{display:flex;flex-wrap:wrap;gap:var(--s2);list-style:none;margin:var(--s4) 0 0;padding:0}
+.ct-skills a{display:inline-flex;align-items:center;min-height:36px;padding:0 var(--s3);border-radius:var(--radius-pill);background:var(--lavender,#F3EAF8);color:var(--purple-dk);font-weight:600;font-size:14px;text-decoration:none;transition:background-color var(--duration-quick,150ms) ease-out}
+.ct-skills a:hover{background:var(--lavender-line,#E9DAF2)}
+.ct-skills a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.ct-with{margin:var(--s3) 0 0;font-size:15px;line-height:1.5;color:var(--ink);max-width:44ch}
+.ct-with span{color:var(--grey)}
+.ct-bio{margin:var(--s3) 0 0;font-size:17px;line-height:1.5;color:var(--ink);max-width:40ch;text-wrap:pretty}
+#page p,#page li{text-wrap:pretty}
+.povq{margin:var(--s4) 0 0;max-width:62ch;font-size:20px;line-height:1.5}
+.wide-sections>.h1{margin:0}
+@media (max-width:760px){.ct-stats{gap:var(--s5)}.ct-links a{width:44px;height:44px}}
+.ct-cover{position:relative;border-radius:var(--radius);background:#CBBBA8 url("assets/img/banners/profile.jpg?v=2") center/cover no-repeat;min-height:340px;overflow:hidden}
+.ct-cover{display:block;text-decoration:none;color:var(--white);background-size:cover;background-position:center;transition:transform var(--slow) var(--ease)}
+.ct-cover.empty{background:var(--lavender,#F3EAF8)}
+/* the featured project, with its frosted bar (24 Oct 2026) */
+.ct-tags{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2);margin-top:var(--s4)}
+.ct-tags .ct-chips,.ct-tags .ct-skills{margin:0}
+/* 24 Oct 2026: the hero fits one screen: the cover is as tall as the screen allows (below the nav and strip), never taller,
+   so its featured-project bar is always in view */
+/* the year of a project, as a tag on its picture (24 Oct 2026) */
+.ptag{position:absolute;top:var(--s3);inset-inline-start:var(--s3);z-index:2;display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:var(--radius-pill);background:rgba(255,255,255,.94);color:var(--ink);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em;pointer-events:none;box-shadow:0 1px 4px rgba(20,17,15,.12)}
+.ct-coverwrap>.ptag{top:var(--s4);inset-inline-start:var(--s4);height:30px;padding:0 12px;font-size:13px}
+.ct-coverwrap{position:relative;min-width:0;height:clamp(340px,calc(100svh - 260px),620px)}
+.ct-coverwrap .ct-cover{height:100%;min-height:0}
+.ct-feat{position:absolute;inset:auto var(--s4) var(--s4);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:2px var(--s4);align-items:center;padding:var(--s3) var(--s4);border-radius:var(--s4);background:rgba(20,17,15,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.ct-badge{grid-column:1/-1;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--yellow);letter-spacing:.02em}
+.ct-badge svg{width:14px;height:13px;fill:var(--yellow)}
+.ct-ft b{display:block;font-weight:600;font-size:17px}
+.ct-ft small{display:block;font-size:13px;color:rgba(255,255,255,.9)}
+.ct-go{width:40px;height:40px;border-radius:var(--radius-pill);background:var(--white);color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform var(--fast) var(--ease)}
+.ct-go .icon{width:18px;height:18px}
+.ct-cover:hover .ct-go{transform:translateX(3px)}
+.ct-cover:focus-visible{outline:2px solid var(--purple-dk);outline-offset:3px}
+/* one tab row: skills and About, with the place and links at its end */
+.stabs{display:flex;align-items:center;gap:var(--s5);margin-top:var(--s7)}
+.stabs .row{flex:1;min-width:0}
+.ct-where{display:flex;align-items:center;gap:var(--s2);flex:none;color:var(--grey);font-size:14px}
+.ct-where>span{display:inline-flex;align-items:center;gap:6px;margin-inline-end:var(--s2)}
+.ct-where .icon{width:16px;height:16px}
+.stabs .ct-where a{min-height:0;margin:0;border-bottom:var(--border);padding:0;flex:none;width:32px;height:32px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.ct-where a .soc-ic{width:15px;height:15px}
+.ct-where a:hover{border-color:var(--ink)}
+/* the work: a tight grid, the title shows on hover and focus */
+#skillBody .specs-row{margin-top:var(--s5)}
+#skillBody .blk:first-of-type{margin-top:var(--s4)}
+#skillBody .blk-projects>.pv-sh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap} /* the tab already names it; screen readers still get the heading */
+#skillBody .blk-projects{margin-top:var(--s4)}
+#skillBody .projs{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;margin-top:0}
+.proj{position:relative;overflow:hidden}
+.proj .ph{aspect-ratio:4/3;border-radius:0}
+.ph.cover{background-size:cover;background-position:center}
+.proj b,.proj .meta{position:absolute;inset-inline:0;padding-inline:var(--s3);color:var(--white);opacity:0;transform:translateY(6px);transition:opacity var(--fast) var(--ease),transform var(--fast) var(--ease);margin:0;font-size:15px}
+.proj b{bottom:24px}
+.proj .meta{bottom:8px;font-size:13px;color:rgba(255,255,255,.85)}
+.proj::after{content:"";position:absolute;inset:auto 0 0;height:60%;background:linear-gradient(transparent,rgba(20,17,15,.7));opacity:0;transition:opacity var(--fast) var(--ease);pointer-events:none}
+.proj b,.proj .meta{z-index:1}
+.proj:hover::after,.proj:focus-visible::after,.proj:hover b,.proj:hover .meta,.proj:focus-visible b,.proj:focus-visible .meta{opacity:1;transform:none}
+.proj:hover b{color:var(--white)}
+/* each project is its own card, the title and client always under the picture: on phones since 11 Oct 2026
+   (Muhammad's review), and on desktop too since 24 Oct 2026, so a brand scanning the grid reads the clients without hovering */
+@media all{
+  #skillBody .projs{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6) var(--s4)}
+  .proj{overflow:visible;text-decoration:none;display:flex;flex-direction:column;gap:2px}
+  .proj .ph{aspect-ratio:4/3;border-radius:var(--s3);margin-bottom:var(--s2);transition:transform var(--slow) var(--ease)}
+  .proj:hover .ph{transform:scale(.985)}
+  .proj::after{display:none}
+  .proj b,.proj .meta{position:static;opacity:1;transform:none;padding:0;color:var(--ink);font-weight:600;font-size:15px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .proj .meta{color:var(--grey);font-weight:400;font-size:13px;-webkit-line-clamp:1}
+  .proj:hover b{color:var(--purple-dk)}
+}
+@media (max-width:760px){#skillBody .projs{gap:var(--s5) var(--s3)}.proj .ph{aspect-ratio:1}.proj b,.proj .meta{font-size:14px}.proj .meta{font-size:12px}}
+.ct-about{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--s7);margin-top:var(--s7);padding-top:var(--s6);border-top:var(--border)}
+.ct-about .bio{font-size:20px;line-height:1.55;margin:0}
+.ct-about .pov{margin:0}
+.ct-about .pov p{font-size:16px;line-height:1.6;color:var(--ink)}
+@media (max-width:760px){.ct-about{grid-template-columns:minmax(0,1fr);gap:var(--s4);margin-top:var(--s5)}.ct-about .bio{font-size:18px}}
+@media (max-width:960px){
+  .ct-top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .ct-cover{min-height:220px;order:-1}
+  .ct-coverwrap{order:-1;height:auto}
+  #skillBody .projs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stabs{flex-wrap:wrap;gap:var(--s2)}
+  .ct-where{width:100%;padding-bottom:var(--s3)}
+}
+/* two columns (9 Oct 2026) */
+.pv-cols{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:var(--s7);margin-top:var(--s7);align-items:start}
+.pv-main .stabs{margin-top:0}
+.pv-main .blk:first-of-type{margin-top:var(--s6)}
+.pv-side{display:grid;gap:var(--s4)}
+.side-rest{display:grid;gap:var(--s4)}
+.pv-card{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s5)}
+.side-about .bio{font-size:16px;line-height:1.55}
+.side-about .pov{margin-top:var(--s3);color:var(--grey);font-size:15px;line-height:1.55}
+.side-about .stats{margin-top:var(--s5);padding-top:var(--s4);border-top:var(--border);text-align:start;grid-template-columns:repeat(2,minmax(0,1fr))}
+.side-about .stats div+div{border:0}
+.side-about .social{justify-content:flex-start;margin-top:var(--s4);padding-top:0;border-top:0}
+.side-h{font-weight:600;font-size:15px;color:var(--grey);margin:0 0 var(--s3)}
+.side-xp{list-style:none;margin:0;padding:0}
+.side-xp li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding:var(--s3) 0;border-top:var(--border)}
+.side-xp li:first-child{border-top:0;padding-top:0}
+.side-xp .lg svg{width:18px;height:18px;color:var(--purple-dk)}
+.side-xp .lg{width:36px;height:36px;border-radius:10px;background:var(--cream);border:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.side-xp b{display:block;font-weight:600;font-size:15px;line-height:1.3}
+.side-xp small{display:block;color:var(--grey);font-size:13px}
+.side-xp em{font-style:normal;color:var(--grey);font-size:13px;white-space:nowrap}
+.side-q{display:block;font-size:16px;line-height:1.5}
+.pv-card .by{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3)}
+.pv-card .by b{display:block;font-weight:600;font-size:14px}
+.pv-card .by .meta{display:block;font-size:13px}
+.side-more{display:inline-flex;align-items:center;min-height:44px;margin-top:var(--s2);margin-bottom:calc(-1 * var(--s2));border:0;background:none;padding:0;font:inherit;font-weight:600;font-size:15px;color:var(--purple-dk);cursor:pointer}
+.side-more:hover{color:var(--ink)}
+.side-ex{list-style:none;margin:0;padding:0}
+.side-ex li+li{margin-top:var(--s3);padding-top:var(--s3);border-top:var(--border)}
+.side-ex b{font-weight:600}.side-ex span{color:var(--grey)}
+.side-ex small{display:block;color:var(--grey);font-size:14px;margin-top:2px}
+dialog.sheet{max-width:720px;width:calc(100% - 32px);padding:0;max-height:86vh}
+dialog.sheet .dh{display:flex;justify-content:space-between;align-items:center;padding:var(--s5) var(--s6);border-bottom:var(--border)}
+dialog.sheet .dh h2{font-family:var(--font-display);font-weight:600;font-size:26px;margin:0}
+dialog.sheet .sheet-b{padding:var(--s5) var(--s6);overflow:auto;max-height:calc(86vh - 80px)}
+.sheet-recs{list-style:none;margin:0;padding:0}
+.sheet-recs li{padding:var(--s4) 0;border-top:var(--border)}.sheet-recs li:first-child{border-top:0;padding-top:0}
+.sheet-recs q{display:block;font-size:17px;line-height:1.5}
+.sheet-recs .by{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3)}.sheet-recs .by b{display:block;font-weight:600;font-size:14px}.sheet-recs .meta{display:block;font-size:13px}
+@media (max-width:960px){
+  /* phone and tablet: about first, then the work, then the rest */
+  .pv-cols{display:flex;flex-direction:column;gap:var(--s5)}
+  .pv-side{display:contents}
+  .side-about{order:0}.pv-main{order:1;width:100%}.side-rest{order:2}
+}
+/* profile-wide part (7 Oct 2026): under the skill tabs, set apart, so nothing here reads as belonging to the open skill */
+.wide-sections{margin-top:var(--s9);padding-top:var(--s7);border-top:2px solid var(--ink)}
+.wide-head .label{display:block;font-weight:500;font-size:var(--t-label);color:var(--purple-dk)}
+.wide-head .h1{font-family:var(--font-display);font-weight:600;font-size:var(--t-h1);line-height:1.05;margin:var(--s2) 0 0}
+.wide-sections>.blk:first-of-type{margin-top:var(--s6)}
+.blk .h2{font-size:26px}
+.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);margin-top:var(--s5)}
+.gal button{border:0;padding:0;background:none;cursor:zoom-in;text-align:start}
+.gal .ph{aspect-ratio:4/5;border-radius:var(--s3)}
+.gal .ph.wide{aspect-ratio:auto;height:100%}
+.gal small{display:block;margin-top:var(--s2);font-size:var(--t-meta);color:var(--grey)}
+.gal .first{grid-row:span 2}
+.looks{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s4);margin-top:var(--s5)}
+.look .strip{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:4px;aspect-ratio:4/3}
+.look .strip .ph:first-child{grid-row:span 2}
+.look b{display:block;margin-top:var(--s2);font-weight:600}
+.dig{display:grid;grid-template-columns:repeat(4,minmax(0,160px));gap:var(--s3);margin-top:var(--s4)} /* a casting set reads as a row of four, not a wall */
+@media (max-width:760px){.dig{grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2)}.dig b{font-size:13px}}
+.dig .ph{aspect-ratio:3/4}
+.dig b{display:block;margin-top:var(--s2);font-weight:600;font-size:15px}
+.projs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--s4);margin-top:var(--s5)}
+.proj{text-decoration:none;color:inherit;display:block}
+.proj .ph{aspect-ratio:4/3}
+.proj b{display:block;margin-top:var(--s3);font-weight:600;font-size:var(--t-h3)}
+.proj:hover b{color:var(--purple-dk)}
+.revsum{display:flex;align-items:baseline;gap:var(--s3);margin-top:var(--s2)}
+.revsum b{font-family:var(--font-display);font-weight:600;font-size:30px}
+.revs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s4);margin-top:var(--s5)}
+.rev q{display:block;margin-top:var(--s3);font-size:17px}
+.rev .who{margin-top:var(--s3);font-size:var(--t-meta);color:var(--grey)}
+.recs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:var(--s4);margin:var(--s5) 0 0;padding:0;list-style:none}
+.rec{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s4);margin:0}
+.rec q{display:block;font-size:17px;line-height:1.55}
+.rec .by{display:flex;align-items:center;gap:var(--s3);margin-top:auto}
+.rec .by b{display:block;font-weight:600;font-size:15px}
+.rec .by span.meta{display:block}
+.recs .more[hidden]{display:none}
+.recmore{margin-top:var(--s4)}
+.sidelinks{display:flex;gap:var(--s5);flex-wrap:wrap}
+.wtel{list-style:none;margin:var(--s4) 0 0;padding:0;display:flex;flex-wrap:wrap;gap:var(--s3)}
+.wtel li{display:flex;flex-direction:column;gap:2px;padding:var(--s3) var(--s4);background:var(--white);border:var(--border);border-radius:var(--s3);max-width:360px}
+.wtel-s{font-weight:600}
+.wtel-s span{font-weight:400;color:var(--grey)}
+.wtel-n{font-size:var(--t-meta);color:var(--grey)}
+.wte li{display:flex;gap:var(--s3);align-items:baseline;flex-wrap:wrap}
+.notlive{text-align:center;padding:var(--s9) var(--s5)}
+.notlive .h1{font-size:clamp(34px,5vw,44px)}
+.notlive p{color:var(--grey);margin-top:var(--s3)}
+dialog.lb{border:0;padding:0;background:transparent;max-width:min(900px,calc(100% - 32px));width:100%}
+dialog.lb::backdrop{background:rgba(20,17,15,.88)}
+dialog.lb .ph{aspect-ratio:4/5;max-height:78vh;margin-inline:auto;border-radius:var(--radius)}
+dialog.lb p{color:var(--cream);text-align:center;margin-top:var(--s3)}
+dialog.lb .x{position:fixed;top:var(--s5);inset-inline-end:var(--s5)}
+
+.gal button,.dig button,.look{border:0;padding:0;background:none;cursor:zoom-in;text-align:start;color:inherit;font:inherit;display:block;width:100%}
+.gal button:hover .ph,.dig button:hover .ph,.look:hover .ph,.proj:hover .ph{opacity:.9}
+.gal button:focus-visible,.dig button:focus-visible,.look:focus-visible,.proj:focus-visible{outline:2px solid var(--purple-dk);outline-offset:3px;border-radius:var(--s3)}
+.look .strip .ph{border-radius:var(--s2)}
+.intro.solo{grid-template-columns:minmax(0,1fr) 320px}
+.lb-stage{display:flex;align-items:center;gap:var(--s4)}
+.lb-stage .ph{flex:1;width:100%}
+.lb .nav{flex:none;background:var(--white)}
+.lb p{color:var(--cream);text-align:center;margin-top:var(--s3)}
+.lb .lb-n{opacity:.7;margin-inline-start:var(--s2)}
+.notlive .btn{display:inline-flex}
+
+/* own preview: where each part is edited. Visitors (?view=guest) never see these. */
+.pv-sh{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);flex-wrap:wrap}
+.specs-row{margin-top:var(--s6);align-items:center}
+.specs-row .specs{margin-top:0}
+.pv-edit{display:inline-flex;align-items:center;gap:6px;color:var(--purple-dk);font-weight:600;font-size:var(--t-meta);text-decoration:none;min-height:32px}
+.pv-edit .icon{width:16px;height:16px}
+.pv-edit:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.pv-editrow{display:flex;gap:var(--s5);flex-wrap:wrap;margin-top:var(--s3)}
+.pv-editrow:empty{display:none}
+.pv-empty{margin-top:var(--s4);padding:var(--s5);border:1px dashed var(--line);border-radius:var(--radius);color:var(--grey)}
+.pv-empty b{color:var(--ink);font-weight:600}
+.crl{text-decoration:none;color:inherit}
+.crl:hover b{color:var(--purple-dk)}
+.proj:target,.rows li:target{outline:2px solid var(--purple-dk);outline-offset:4px;border-radius:var(--s3)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:960px){
+  .intro{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .phero{margin-top:var(--s5)}
+  .phero .body{padding:var(--s5);gap:var(--s4)}
+  .phero .id{min-width:0;flex-basis:calc(100% - 96px)}
+  .acts{width:100%}
+  .phero .ring{width:72px;height:72px;font-size:28px}
+  .band{height:32px}
+  .phero.ph{grid-template-columns:1fr;min-height:0}
+  .phero.ph .photo{order:-1;height:160px;min-height:0}
+  .phero.ph .hstar{height:80px;left:auto;right:-14px;bottom:auto;top:96px}
+  .stabs{top:64px;margin-inline:calc(-1 * var(--s4));padding-inline:var(--s4)}
+  .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gal .first{grid-row:auto}
+  .dig{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .lb-stage{gap:var(--s2)}
+  .signin{width:min(300px,calc(100vw - 32px))}
+  .acts .btn{padding-inline:var(--s3);white-space:normal;text-align:center}
+}
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<!-- Lucide icons, ISC licence -->
+<symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></symbol>
+<symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+</svg>
+
+<script src="assets/js/ds.js?v=30"></script>
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/fields.js?v=4"></script>
+<script src="assets/js/profile.js?v=24"></script>
+<script src="assets/js/featured.js?v=12"></script>
+<script>
+const Q=new URLSearchParams(location.search);
+const GUEST=Q.get("view")==="guest", UNPUB=Q.get("state")==="unpublished";
+document.write(GUEST?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>');
+</script>
+
+<div class="pv-strip" id="strip" hidden><div class="wrap"><span></span><a href="profile-structure.html" data-t="strip.back"></a></div></div>
+
+<main class="wrap" id="page"></main>
+<div data-fama-foot></div>
+
+<dialog class="lb" id="lb" aria-label="Picture viewer"><button class="iconbtn x" id="lbX" aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button>
+  <div class="lb-stage"><button class="iconbtn nav" id="lbPrev" aria-label="Previous"><svg class="icon flip" style="transform:scaleX(-1)"><use href="#i-arrow"/></svg></button>
+  <div class="ph"><svg class="icon" style="width:48px;height:48px"><use href="#i-image"/></svg></div>
+  <button class="iconbtn nav" id="lbNext" aria-label="Next"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
+  <p><span id="lbCap"></span> <span class="lb-n" id="lbN"></span></p></dialog>
+
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const {t,esc,num,href}=FAMA, ar=false; /* Arabic paused */
+FAMA.T.en={
+ strip:"This is how everyone sees your profile.","strip.private":"Your profile is private. This is how people will see it once it's public.","strip.back":"Edit profile",close:"Close",prev:"Previous",next:"Next",
+ taking:"Open for work",notTaking:"Not open for work",travel:"Will travel",changed:w=>`changed ${w}`,ago:"3 days ago",
+ follow:"Follow",following:"Following",share:"Share profile",copied:"Link copied",review:"Leave a review",recognise:"Recognise",
+ signin:a=>`Sign in to ${a}`,signinP2:(a,n)=>a==="follow"?`Log in or join Fama to follow ${n}. We\u2019ll bring you back here and finish the follow.`:`Log in or join Fama to recognise ${n}. We\u2019ll bring you back here to write it.`,signinP:"We'll finish it for you, then bring you back here.",login:"Log in",join:"Join as talent",joinBrand:"Join as a brand",
+ ownNote:"This is your own profile. Visitors use this button.",
+ projects:"Projects",views:"Views",rating:"Rating",noRating:"New",pov:"Point of view",
+ skillsNav:"Skills",
+ gallery:"Gallery",looks:"Looks",digitals:"Digitals",taken:d=>`Taken ${d}`,showreel:"Showreel",equipment:"Equipment",software:"Software",
+ allRoles:n=>`Show all ${n} roles`,seeRole:"See the role",wideLabel:"Across every skill",brandsN:"Brands",workedWith:"Worked with",andMore:n=>`and ${n} more`,wideTitle:n=>`About ${n}`,credits:"Credits",recMore:n=>`Show all ${n} recognitions`,recLess:"Show fewer",creditedBy:w=>`with ${w}`,reviews:"Reviews",revSum:(r,n)=>`from ${n} reviews`,allReviews:"All reviews",recognitions:"Recognitions",brands:"Experience",explore:"Willing to explore",
+ photos:n=>`${n} photos`,of:(i,n)=>`${i} of ${n}`,
+ notlive:"This profile is still being set up.",notliveP:"Check back soon.",notliveCta:"Browse the feed"
+};
+
+/* the profile comes from Profile structure (assets/js/profile.js); what's in each section
+   comes from Profile content (placeholder here). Nothing about the profile is typed twice.
+   Review: ?view=guest (a visitor) · ?state=… (approval states: a visitor sees "not live") · ?skill= */
+const PR=FAMA_PROFILE.load();
+const STATE=Q.get("state")||"";
+/* Live once Go Live is done (24 Oct 2026); ?state=private shows a profile that isn't yet: visitors get the not-live page */
+const LIVE=!["private","unpublished"].includes(STATE);
+const specName=(sk,id)=>{const x=FAMA_SKILL[sk]&&FAMA_SKILL[sk].specs.find(s=>s.id===id);return x?x.name:""};
+const C={ /* placeholder content, keyed by skill */
+ gallery:{styling:["Nomad Coffee — autumn tailoring","Nefertari 2026 backstage","Rail to set, in 40 seconds","Modest evening edit","Behance case study"],modelling:["Runway — Cairo Fashion Week","Beach editorial","Beauty close-up"],photography:["Desert light","Studio portrait","Siwa, 6am"]},
+ looks:{styling:[["Autumn tailoring",8],["Modest evening",6],["Street layers",5]],modelling:[["Runway 2026",12]]},
+ digitals:{modelling:[["Front","2026-09-12"],["Side","2026-09-12"],["Full length","2026-09-12"],["Headshot","2026-09-12"]]},
+ projects:{styling:[["desert-light","Desert Light — 2026","Maison Nour"],["nomad-autumn","Nomad Coffee — Autumn launch","Nomad Coffee Co."],["nefertari-ss26","Nefertari Cosmetics — 2026","Nefertari Cosmetics"],["linen","Cairo Linen — Heritage","Personal project"]],modelling:[["nefertari-ss26","Nefertari Cosmetics — 2026","Nefertari Cosmetics"],["cfw24","Cairo Fashion Week 2024","CFW"]],photography:[["desert-light","Desert Light — 2026","Maison Nour"],["studio","Studio portraits","Personal project"]]},
+ equipment:{photography:["Sony A7 IV","Profoto B10 kit","35mm and 85mm primes"]},
+ reviews:[[5,"Calm on set, sharp eye for light, and the rail was ready before we were.","Mariam Fouad · Creative director · Studio Nile"],[5,"Brought our autumn campaign to life and delivered a week early.","Omar Sherif · Brand manager · Nomad Coffee"],[4,"Great range across looks. We'd book again.","Yara Adel · Stylist"]],
+ /* recognitions come from Credits & recognitions, brands from Profile structure (assets/js/profile.js) */
+ recs:FAMA_RECS.load().filter(r=>!r.hidden).map(r=>[r.q,r.who,r.role]),
+ brands:(PR.brands||[]).filter(b=>(b.n||"").trim()||(b.t||"").trim())
+};
+const P={
+ name:PR.display||PR.user,user:PR.user,headline:PR.headline,city:[PR.city,PR.country].filter(Boolean).join(", "),
+ bio:PR.bio,pov:PR.pov,taking:PR.taking,travel:PR.travel,views:1963,
+ links:PR.links.filter(l=>l.u&&FAMA_SOCIAL.detect(l.u)).map(l=>{const d=FAMA_SOCIAL.detect(l.u);return [d.name,d.id,FAMA_SOCIAL.href(l.u)]}),place:PR.place,groups:PR.groups,
+ skills:PR.skills.map(s=>({id:s.id,name:FAMA_SKILL[s.id].name,primary:s.primary,specs:s.specs.map(sp=>specName(s.id,sp)).filter(Boolean)})),
+ explore:(PR.wte||[]).filter(w=>FAMA_SKILL[w.s]).map(w=>[FAMA_SKILL[w.s].name,specName(w.s,w.sp),w.n])
+};
+const OWN=!GUEST;
+/* confirmed credits: in the skill's tab when the talent holds that skill, otherwise in the profile-wide Credits section */
+const HELD=P.skills.map(s=>s.id), CRD=FAMA_CREDITS.load().confirmed.filter(c=>!c.hidden); /* hidden credits stay off the profile */
+const crIn=id=>CRD.filter(c=>c.skill===id&&HELD.includes(c.skill));
+const crWide=()=>CRD.filter(c=>!HELD.includes(c.skill));
+const skn=id=>FAMA_SKILL[id]?FAMA_SKILL[id].name:id;
+const shown=g=>(P.groups[g]||[]).filter(x=>x.v).map(x=>x.b);
+/* what a section holds for a skill; a section with nothing is hidden from visitors */
+const has=(b,id)=>({gallery:(C.gallery[id]||[]).length,looks:(C.looks[id]||[]).length,digitals:(C.digitals[id]||[]).length,projects:(C.projects[id]||[]).length+crIn(id).length,credits:crWide().length,
+  equipment:(C.equipment[id]||[]).length,reviews:C.reviews.length,recognitions:C.recs.length,brands:C.brands.length,explore:P.explore.length})[b]||0;
+/* a visitor only gets a skill tab that has something in it */
+const tabsFor=()=>P.skills.slice().filter(s=>OWN||shown(s.id).some(b=>has(b,s.id)));
+const primary=P.skills.find(s=>s.primary)||P.skills[0];
+let sel=tabsFor().find(s=>s.id===Q.get("skill"))||tabsFor()[0];
+const allProjects=new Set(Object.values(C.projects).flat().map(p=>p[0])).size;
+const avg=(C.reviews.reduce((a,r)=>a+r[0],0)/C.reviews.length);
+const initials=n=>n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+const edit=()=>""; /* one way to edit: "Edit profile" in the strip (3 Oct 2026) */
+const editLink=(url,what)=>OWN?`<a class="pv-edit" href="${href(url)}"><svg class="icon" aria-hidden="true"><use href="#i-pen"/></svg><span>${esc(what)}</span></a>`:"";
+const profileUrl="fama.so/"+P.user;
+
+/* image placeholder, the same grey frame and icon as the Projects page; real uploads replace it */
+/* prototype only: projects get sample covers so the grid reads like a portfolio; everything else keeps the grey frame */
+const SAMPLE=["dashboard","feed","projects","activity","credits","notifications","profile-structure","signin","profile"].map(n=>`assets/img/banners/${n}.jpg`);
+const SEEN={}; const hashKey=k=>SEEN[k]??=Object.keys(SEEN).length;
+const img=(key,cls="",label="")=>/^[pc]/.test(String(key))&&cls!=="wide"?`<div class="ph cover ${cls}" style="background-image:url(${FAMA_FEATURED.pic(String(key).slice(1))})"${label?` role="img" aria-label="${esc(label)}"`:' aria-hidden="true"'}></div>`
+  :`<div class="ph ${cls}"${label?` role="img" aria-label="${esc(label)}"`:' aria-hidden="true"'}><svg class="icon"><use href="#i-image"/></svg></div>`;
+
+/* 9 Oct 2026 (Contra-style): who the person is on the left, a big cover picture on the right,
+   then one tab row (each skill, and About) with the place and links at its end, then the work as a tight grid. */
+/* 10 Oct 2026: the cover is the talent's featured project (their first one), not a stock picture,
+   with its name on a frosted bar and a link to it */
+function cover(){
+  /* 24 Oct 2026: the talent picks it in Projects or Profile structure (FAMA_FEATURED); with no pick, the latest project.
+     It isn't changed from the profile itself */
+  const r=FAMA_FEATURED.resolve(PR.featured), f=r.project;
+  if(!f) return `<div class="ct-cover empty" aria-hidden="true"></div>`;
+  const n=FAMA_FEATURED.split(f.title);
+  return `<div class="ct-coverwrap">${FAMA_FEATURED.year(f.id,f.title,f.date)?`<span class="ptag">${FAMA_FEATURED.year(f.id,f.title,f.date)}</span>`:""}<a class="ct-cover" href="${href("project.html?p="+f.id)}" style="background-image:url(${FAMA_FEATURED.pic(f.id)})">
+    <span class="ct-feat"><span class="ct-badge"><svg viewBox="10 80 760 690" aria-hidden="true"><polygon points="314.63 635.59 16.74 747.68 217.29 533.15 86.97 370.29 403.26 356.02 701.63 87.21 636.51 355.76 760 356.91 574.68 534.04 422.33 756.79 314.63 635.59"/></svg>Featured project</span>
+      <span class="ct-ft"><b>${esc(n.name)}</b><small>${esc(f.client)}</small></span><span class="ct-go" aria-hidden="true"><svg class="icon"><use href="#i-arrow"/></svg></span></span></a></div>`;
+}
+/* 24 Oct 2026: the hero answers a brand's questions in the order they ask them:
+   who is this, what do they do and where, are they free, which crafts, in their words, who have they worked for,
+   how much work is here, then what to do (follow, recognise, share). The featured project is the proof beside it. */
+function hero(){
+  const nP=allProjects+CRD.filter(c=>HELD.includes(c.skill)).length;
+  const firms=[...new Set(C.brands.map(b=>(b.n||"").trim()).filter(Boolean))];
+  const with_=firms.length?`<p class="ct-with"><span>${t("workedWith")}</span> ${firms.slice(0,3).map(esc).join(", ")}${firms.length>3?` ${t("andMore",firms.length-3)}`:""}</p>`:"";
+  return `<section class="ct-top">
+    <div class="ct-id">
+      <span class="ct-av" aria-hidden="true"${PR.photo?` style="background-image:url(${PR.photo});color:transparent"`:""}>${esc(initials(P.name))}${P.taking?'<i class="ct-on"></i>':""}</span>
+      <h1 dir="auto">${esc(P.name)}</h1>
+      <p class="ct-who" dir="auto">${esc(P.headline||(primary?primary.name:""))}${P.city?`<span class="ct-place"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>${esc(P.city)}</span>`:""}</p>
+      <div class="ct-tags"><div class="ct-chips"><span class="${P.taking?"on":""}">${P.taking?t("taking"):t("notTaking")}</span>${P.travel?`<span>${t("travel")}</span>`:""}</div>
+      ${P.skills.length?`<ul class="ct-skills" aria-label="${t("skillsNav")}">${P.skills.map(s=>`<li><a href="${href("preview.html?skill="+s.id+(GUEST?"&view=guest":""))}" data-goskill="${s.id}">${esc(s.name)}</a></li>`).join("")}</ul>`:""}</div>
+      ${P.bio?`<p class="ct-bio" dir="auto">${esc(P.bio)}</p>`:""}
+      ${with_}
+      <dl class="ct-stats"><div><dt>${t("projects")}</dt><dd>${num(nP)}</dd></div><div><dt>${t("brandsN")}</dt><dd>${num(firms.length)}</dd></div><div><dt>${t("recognitions")}</dt><dd>${num(C.recs.length)}</dd></div></dl>
+      <div class="ct-acts">
+        <div class="guestpop"><button class="btn" data-act="follow" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg><span>${t("follow")}</span></button></div>
+        <a class="btn btn-2" href="${href("recognise.html")}" data-act="recognise"><svg class="icon" aria-hidden="true"><use href="#i-award"/></svg><span>${t("recognise")}</span></a>
+        <button class="btn btn-2 ionly" data-act="share" aria-label="${t("share")}" title="${LIVE?t("share"):"Your link can be shared once your profile is Live"}"${LIVE?"":' aria-disabled="true" style="opacity:.45;cursor:not-allowed"'}><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg><span class="vh">${t("share")}</span></button>
+        ${P.links.length?`<ul class="ct-links">${P.links.map(l=>{const label=l[1]==="web"?l[2].replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""):l[0];
+        return `<li><a href="${esc(l[2])}" rel="me noopener" target="_blank" aria-label="${esc(label)}" title="${esc(label)}">${FAMA_SOCIAL.icon(l[1])}</a></li>`}).join("")}</ul>`:""}
+      </div>
+    </div>
+    ${cover()}
+  </section>`;
+}
+/* 9 Oct 2026: two columns. The work fills the wide column; who the person is sits in a side panel:
+   about, numbers and links first, then short versions of experience, recognitions and what they'd explore,
+   each opening its full list in a dialog. On a phone: about, then the work, then the rest. */
+function sideAbout(){
+  const text=P.bio||P.pov;
+  return `<section class="pv-card side-about" aria-label="About">
+    ${P.bio?`<p class="bio" dir="auto">${esc(P.bio)}</p>`:""}
+    ${P.pov?`<p class="pov" dir="auto">“${esc(P.pov)}”</p>`:""}
+    <div class="stats"><div><b>${num(allProjects+CRD.filter(c=>HELD.includes(c.skill)).length)}</b><span>${t("projects")}</span></div>
+      ${FAMA_FEATURES.reviews?`<div><b>${C.reviews.length?num(avg.toFixed(1))+" ★":t("noRating")}</b><span>${t("rating")}</span></div>`:`<div><b>${num(C.recs.length)}</b><span>${t("recognitions")}</span></div>`}</div>
+    ${P.links.length?`<ul class="social">${P.links.map(l=>`<li><a href="${esc(l[2])}" rel="me noopener" target="_blank" aria-label="${esc(l[0])}" title="${esc(l[0])}">${FAMA_SOCIAL.icon(l[1])}</a></li>`).join("")}</ul>`:""}
+  </section>`;
+}
+const yrs=g=>{const a=Math.min(...g.roles.map(x=>x.r.sy||9999)),cur=g.roles.some(x=>x.r.cur),b=Math.max(...g.roles.map(x=>x.r.ey||x.r.sy||0));
+  return a===9999?"":cur?`${a} – now`:a===b?`${a}`:`${a} – ${b}`};
+function sideRest(){
+  const out=[];
+  ["brands","recognitions","explore"].filter(b=>shown("pw").includes(b)).forEach(b=>{
+    if(b==="brands"&&C.brands.length){const G=FAMA_EXP.groups(C.brands),n=C.brands.length;
+      out.push(`<section class="pv-card"><h2 class="side-h">${t("brands")}</h2><ul class="side-xp">${G.slice(0,4).map(g=>`<li><span class="lg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></span>
+        <span><b>${esc(g.roles.map(x=>x.r.t).join(", "))}</b><small>${esc(g.n)}${g.roles.length>1?` · ${g.roles.length} roles`:g.roles[0].r.et?` · ${esc(g.roles[0].r.et)}`:""}</small></span><em>${yrs(g)}</em></li>`).join("")}</ul>
+        <button class="side-more" data-sheet="brands">${n>1?t("allRoles",n):t("seeRole")}</button></section>`)}
+    if(b==="recognitions"&&C.recs.length){const r=C.recs[0];
+      out.push(`<section class="pv-card"><h2 class="side-h">${t("recognitions")}</h2><q class="side-q" dir="auto">${esc(r[0])}</q>
+        <span class="by"><span class="av">${esc(initials(r[1]))}</span><span><b>${esc(r[1])}</b><span class="meta">${esc(r[2])}</span></span></span>
+        ${C.recs.length>1?`<button class="side-more" data-sheet="recognitions">${t("recMore",C.recs.length)}</button>`:""}</section>`)}
+    if(b==="explore"&&P.explore.length)
+      out.push(`<section class="pv-card"><h2 class="side-h">${t("explore")}</h2><ul class="side-ex">${P.explore.map(w=>`<li><b>${esc(w[0])}</b>${w[1]?`<span> · ${esc(w[1])}</span>`:""}${w[2]?`<small dir="auto">${esc(w[2])}</small>`:""}</li>`).join("")}</ul></section>`);
+  });
+  return `<div class="side-rest">${out.join("")}</div>`;
+}
+/* the full list, in a dialog over the profile */
+function openSheet(kind,from){
+  const d=document.createElement("dialog"); d.className="dlg sheet";
+  const title=kind==="brands"?t("brands"):t("recognitions");
+  const inner=kind==="brands"?FAMA_EXP.html(C.brands,{skill:id=>FAMA_SKILL[id]?FAMA_SKILL[id].name:""})
+    :`<ul class="sheet-recs">${C.recs.map(r=>`<li><q dir="auto">${esc(r[0])}</q><span class="by"><span class="av">${esc(initials(r[1]))}</span><span><b>${esc(r[1])}</b><span class="meta">${esc(r[2])}</span></span></span></li>`).join("")}</ul>`;
+  d.innerHTML=`<div class="dh"><h2>${esc(title)}</h2><button type="button" class="iconbtn plain" data-x aria-label="${t("close")}"><svg class="icon"><use href="#i-x"/></svg></button></div><div class="sheet-b">${inner}</div>`;
+  document.body.appendChild(d); d.querySelector("[data-x]").onclick=()=>d.close();
+  d.addEventListener("click",e=>{if(e.target===d)d.close()}); d.addEventListener("close",()=>{d.remove();from&&from.focus()});
+  d.showModal();
+}
+
+const TITLE={gallery:"gallery",looks:"looks",digitals:"digitals",projects:"projects",showreel:"showreel",equipment:"equipment",software:"software",reviews:"reviews",recognitions:"recognitions",credits:"credits",brands:"brands",explore:"explore"};
+const secTitle=b=>TITLE[b]?t(TITLE[b]):({audio:"Audio",samples:"Writing samples"})[b]||b;
+function body(b,id){
+  switch(b){
+   case "gallery":{const g=C.gallery[id]||[];return g.length&&`<div class="gal">${g.map((c,i)=>`<button class="${i===0?"first":""}" data-lb="gallery:${id}" data-i="${i}" aria-label="${esc(c)}, open">${img(id+c,i===0?"wide":"")}<small>${esc(c)}</small></button>`).join("")}</div>`}
+   case "looks":{const g=C.looks[id]||[];return g.length&&`<div class="looks">${g.map((l,i)=>`<button class="look" data-lb="look:${id}:${i}" data-i="0" aria-label="${esc(l[0])}, ${t("photos",l[1])}, open"><div class="strip">${img(l[0]+"1")}${img(l[0]+"2")}${img(l[0]+"3")}</div><b>${esc(l[0])}</b><span class="meta">${t("photos",num(l[1]))}</span></button>`).join("")}</div>`}
+   case "digitals":{const g=C.digitals[id]||[];return g.length&&`<p class="meta" style="margin-top:var(--s2)">Unretouched, natural light. ${t("taken",FAMA.date(g[0][1]))}.</p><div class="dig">${g.map((d,i)=>`<button data-lb="digitals:${id}" data-i="${i}" aria-label="${esc(d[0])}, open">${img("dig"+d[0])}<b>${esc(d[0])}</b></button>`).join("")}</div>`}
+   case "projects":{const g=C.projects[id]||[], cr=crIn(id), T=x=>FAMA_FEATURED.split(x), Y=y=>y?`<span class="ptag">${y}</span>`:"";
+     return (g.length||cr.length)&&`<div class="projs">${g.map(p=>{const n=T(p[1]);return `<a class="proj" href="${href("project.html?p="+p[0])}">${Y(FAMA_FEATURED.year(p[0],p[1]))}${img("p"+p[0])}<b>${esc(n.name)}</b><span class="meta">${esc(p[2])}</span></a>`}).join("")}${cr.map(c=>{const n=T(c.p);return `<a class="proj" id="cr-${c.id}" href="${href("project.html?p="+c.slug)}">${Y(FAMA_FEATURED.year(c.slug,c.p,c.d))}${img("c"+c.id)}<b>${esc(n.name)}</b><span class="meta">${esc(c.role)} · ${t("creditedBy",esc(c.who))}</span></a>`}).join("")}</div>`}
+   case "credits":{const g=crWide();return g.length&&`<ul class="rows card tight" style="margin-top:var(--s5)">${g.map(c=>`<li id="cr-${c.id}"><span class="av">${esc(initials(c.who))}</span><span class="grow"><a class="crl" href="${href("project.html?p="+c.slug)}"><b style="font-weight:600">${esc(c.p)}</b></a><span class="meta" style="display:block">${esc(skn(c.skill))} · ${esc(c.role)} · ${t("creditedBy",esc(c.who))}</span></span></li>`).join("")}</ul>`}
+   case "equipment":case "software":{const g=(C[b]||{})[id]||[];return g.length&&`<ul class="chips" style="margin-top:var(--s4);list-style:none;padding:0">${g.map(x=>`<li class="chip">${esc(x)}</li>`).join("")}</ul>`}
+   case "reviews":return `<div class="revs">${C.reviews.map(r=>`<article class="card tight rev"><span class="stars" aria-label="${r[0]} out of 5">${"★".repeat(r[0])}<span>${"★".repeat(5-r[0])}</span></span><q>${esc(r[1])}</q><p class="who">${esc(r[2])}</p></article>`).join("")}</div>`;
+   case "recognitions":{const max=3,more=C.recs.length-max;return `<ul class="recs" id="recList">${C.recs.map((r,i)=>`<li class="rec${i>=max?" more":""}"${i>=max?" hidden":""}><q dir="auto">${esc(r[0])}</q>
+      <span class="by"><span class="av">${esc(initials(r[1]))}</span><span><b>${esc(r[1])}</b><span class="meta">${esc(r[2])}</span></span></span></li>`).join("")}</ul>
+      ${more>0?`<button class="btn btn-2 recmore" data-recmore aria-controls="recList" aria-expanded="false">${t("recMore",C.recs.length)}</button>`:""}`}
+   case "brands":{if(!C.brands.length)return "";const G=FAMA_EXP.groups(C.brands),keep=new Set(G.slice(0,3).map(g=>g.n)),few=C.brands.filter(b=>keep.has(b.n));
+     return `<div class="card" style="margin-top:var(--s5)">${FAMA_EXP.html(few,{skill:id=>FAMA_SKILL[id]?FAMA_SKILL[id].name:""})}</div>${G.length>3?`<button class="btn btn-2 recmore" data-sheet="brands">${t("allRoles",C.brands.length)}</button>`:""}`}
+   case "explore":return P.explore.length&&`<ul class="wtel">${P.explore.map(w=>`<li><span class="wtel-s">${esc(w[0])}${w[1]?` <span>· ${esc(w[1])}</span>`:""}</span>${w[2]?`<span class="wtel-n" dir="auto">${esc(w[2])}</span>`:""}</li>`).join("")}</ul>`;
+  }
+  return "";
+}
+function section(b,id){
+  const inner=body(b,id);
+  if(!inner&&!OWN) return "";
+  const side=b==="reviews"?`<span class="sidelinks"><a class="link" href="${href("review.html")}" data-act="review">${t("review")}</a><a class="link" href="${href("reviews.html")}">${t("allReviews")}<svg class="icon flip" style="width:16px;height:16px"><use href="#i-arrow"/></svg></a></span>`:
+    b==="recognitions"?edit("credits.html#recognitions","Manage recognitions"):b==="brands"?edit("profile-structure.html#brands","Edit"):b==="explore"?edit("profile-structure.html#explore","Edit"):b==="credits"?edit("credits.html","Manage credits"):
+    "";
+  const sum=b==="reviews"?`<p class="revsum"><b>${num(avg.toFixed(1))}</b><span class="stars" aria-hidden="true">★★★★★</span><span class="meta">${t("revSum",avg,C.reviews.length)}</span></p>`:"";
+  return `<section class="blk blk-${b}"${b==="credits"?' id="credits"':""}><div class="pv-sh"><div><h2 class="h2">${esc(secTitle(b))}</h2>${sum}</div>${side}</div>${inner||
+    `<div class="pv-empty"><b>Nothing here yet.</b> Visitors won't see this section until you add to it.</div>`}</section>`;
+}
+/* 24 Oct 2026: what is true for every skill shows once, after the tabs, under the person's name: their point of view,
+   experience, recognitions and what they'd explore. Before, it repeated inside each tab (stylist roles under Modelling). */
+const wide=()=>{const pov=P.pov?`<section class="blk blk-pov"><div class="pv-sh"><h3 class="h2">${t("pov")}</h3></div><p class="povq" dir="auto">${esc(P.pov)}</p></section>`:"";
+  const pw=shown("pw"), sec=b=>pw.includes(b)?section(b,primary?primary.id:"pw"):"";
+  const h=sec("brands")+sec("recognitions")+pov+sec("explore");
+  return h?`<section class="wide-sections" aria-labelledby="wideH"><h2 class="h1" id="wideH">${esc(t("wideTitle",P.name))}</h2>${h}</section>`:""};
+function tabsBar(){
+  const list=tabsFor();
+  const cnt=s=>{if(s.id==="about")return "";const n=(C.projects[s.id]||[]).length+crIn(s.id).length;return `<span class="n"><span class="vh">, </span>${n}<span class="vh"> ${n===1?"project":"projects"}</span></span>`};
+  return `<nav class="stabs" aria-label="${t("skillsNav")}"><div class="row" role="tablist">${list.map(s=>`<a role="tab" id="tab-${s.id}" aria-controls="skillBody" href="${href("preview.html?skill="+s.id+(GUEST?"&view=guest":""))}" data-skill="${s.id}" aria-selected="${s===sel}"${s===sel?"":' tabindex="-1"'}><svg class="tstar" viewBox="10 80 760 690" aria-hidden="true"><polygon points="314.63 635.59 16.74 747.68 217.29 533.15 86.97 370.29 403.26 356.02 701.63 87.21 636.51 355.76 760 356.91 574.68 534.04 422.33 756.79 314.63 635.59"/></svg>${esc(s.name)}${cnt(s)}</a>`).join("")}</div></nav>`;
+}
+/* About: who they are, their roles, what peers say and what they'd like to try next */
+/* 10 Oct 2026: the bio sits at the top, under the name and cover, before the work */
+function aboutTop(){
+  if(!P.bio&&!P.pov) return "";
+  return `<section class="ct-about" aria-label="About">${P.bio?`<p class="bio" dir="auto">${esc(P.bio)}</p>`:"<span></span>"}${P.pov?`<div class="pov"><h2>${t("pov")}</h2><p dir="auto">“${esc(P.pov)}”</p></div>`:""}</section>`;
+}
+function aboutBody(){
+  const pw=shown("pw"), parts=[];
+  ["brands","recognitions","explore"].filter(b=>pw.includes(b)).forEach(b=>parts.push(section(b,primary?primary.id:"pw")));
+  return parts.join("");
+}
+function skillBody(){
+  if(!sel) return "";
+  const id=sel.id;
+  const specs=`<div class="pv-sh specs-row">${sel.specs.length?`<div class="chips specs">${sel.specs.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}</div>`:"<span></span>"}${edit("profile-structure.html#skills","Edit skills and specialities")}</div>`;
+  /* the skill's custom fields, as short facts. Comfort and coverage is for signed-in brands, not visitors. */
+  const fx=FAMA_FIELDS.forSkill(id).filter(f=>!(GUEST&&f.id==="comfort")&&f.id!=="digitals").map(f=>FAMA_FIELDS.view(f.id,PR.fields[f.id],PR.fields)).filter(Boolean);
+  /* 24 Oct 2026: a model's digitals are pictures a casting opens, not a fact: their own block, into the viewer */
+  const dig=FAMA_FIELDS.forSkill(id).some(f=>f.id==="digitals")&&(PR.fields.digitals||{}).d&&(C.digitals[id]||[]).length?section("digitals",id):"";
+  /* 9 Oct 2026: the work comes first; the practice details follow it, under their own heading */
+  const facts=fx.length?`<section class="blk"><div class="pv-sh"><h2 class="h2">About the practice</h2></div><dl class="fx-facts" aria-label="About the practice">${fx.join("")}</dl></section>`:"";
+  const order=OWN?`<p class="pv-editrow" style="margin-top:var(--s7)">${edit("profile-structure.html#sections","Change which sections show, and their order")}</p>`:"";
+  return specs+shown(id).map(b=>section(b,id)).join("")+dig+facts+order;
+}
+const skillTab=()=>`<div id="skillArea">${tabsBar()}<div id="skillBody" role="tabpanel"${sel?` aria-labelledby="tab-${sel.id}"`:""}>${skillBody()}</div></div>`;
+
+function render(){
+  document.title=`${P.name} · Fama`;
+  const strip=document.getElementById("strip");
+  if(OWN){strip.hidden=false;strip.querySelector("span").textContent=LIVE?t("strip"):t("strip.private");}
+  if(GUEST&&!LIVE){$page.innerHTML=`<section class="notlive"><h1 class="h1">${t("notlive")}</h1><p>${t("notliveP")}</p><a class="btn" style="margin-top:var(--s5)" href="${href("feed.html")}">${t("notliveCta")}</a></section>`;return}
+  $page.innerHTML=hero()+skillTab()+wide();
+}
+const $page=document.getElementById("page");
+FAMA.apply(); render();
+/* links like preview.html#credits land on the part they name, once it's drawn */
+if(location.hash){const el=document.getElementById(location.hash.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:"center"}),50)}
+/* Profile structure open in another tab: its edits show here straight away */
+addEventListener("storage",e=>{if(e.key==="fama-profile-v1") location.reload()});
+/* back from logging in to follow: the follow is done once, and we say so */
+if(Q.get("followed")==="1"){const b=$page.querySelector('[data-act=follow]');if(b){b.setAttribute("aria-pressed","true");b.classList.add("btn-2");b.querySelector("use").setAttribute("href","#a-user-check");b.querySelector("span:last-child").textContent=t("following")}
+  FAMA.toast("You're now following "+P.name)}
+
+/* skill tabs switch in place: the URL follows, the page doesn't jump */
+function pickSkill(id,focus){
+  const s=tabsFor().find(x=>x.id===id); if(!s||s===sel) return;
+  const L=tabsFor(), dir=L.indexOf(s)>L.indexOf(sel)?1:-1;
+  sel=s; const area=document.getElementById("skillArea"), top=area.getBoundingClientRect().top;
+  area.outerHTML=skillTab();
+  const u=new URL(location.href); u.searchParams.set("skill",id); history.replaceState(null,"",u);
+  const na=document.getElementById("skillArea"), stick=document.querySelector(".stabs");
+  if(top<0) scrollTo({top:scrollY+na.getBoundingClientRect().top-(parseInt(getComputedStyle(stick).top)||0)});
+  if(focus) na.querySelector('[aria-selected="true"]').focus();
+  if(window.famaProfileMotion) famaProfileMotion.tab(dir);
+}
+$page.addEventListener("keydown",e=>{
+  const tab=e.target.closest('[role=tab]'); if(!tab||!["ArrowRight","ArrowLeft","Home","End"].includes(e.key)) return;
+  e.preventDefault(); const l=[...document.querySelectorAll('[role=tab]')], i=l.indexOf(tab);
+  const n=e.key==="Home"?0:e.key==="End"?l.length-1:(i+(e.key==="ArrowRight"?1:-1)+l.length)%l.length;
+  pickSkill(l[n].dataset.skill,true);
+});
+
+/* actions */
+$page.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-skill]"); if(tab){e.preventDefault();pickSkill(tab.dataset.skill);return}
+  const go=e.target.closest("[data-goskill]"); if(go){e.preventDefault();pickSkill(go.dataset.goskill);const a=document.getElementById("skillArea");
+    a.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});const tb=document.getElementById("tab-"+go.dataset.goskill);if(tb)tb.focus({preventScroll:true});return}
+  const a=e.target.closest("[data-act]"); if(a){
+    const act=a.dataset.act;
+    if(act==="share"){e.preventDefault();share(a);return}
+    if(GUEST&&(act==="follow"||act==="recognise")){e.preventDefault();signIn(a,act==="follow"?"follow":"recognise");return}
+    if(!GUEST&&Q.get("followed")!=="1"){e.preventDefault();FAMA.toast(t("ownNote"));return}
+    if(act==="follow"){const on=a.getAttribute("aria-pressed")!=="true";a.setAttribute("aria-pressed",on);a.querySelector("span:last-child").textContent=on?t("following"):t("follow");a.querySelector("use").setAttribute("href",on?"#a-user-check":"#a-user-plus");a.classList.toggle("btn-2",on)}
+    return;
+  }
+  const g=e.target.closest("[data-lb]"); if(g) openLb(g.dataset.lb,+g.dataset.i,g);
+  const sh=e.target.closest("[data-sheet]"); if(sh){openSheet(sh.dataset.sheet,sh);return}
+  const rm=e.target.closest("[data-recmore]"); if(rm){const open=rm.getAttribute("aria-expanded")!=="true";
+    document.querySelectorAll("#recList .more").forEach(x=>x.hidden=!open);rm.setAttribute("aria-expanded",open);rm.textContent=open?t("recLess"):t("recMore",C.recs.length)}
+});
+/* share: the phone's share sheet when there is one, otherwise copy the link */
+async function share(btn){
+  /* a Private profile isn't complete: its link can't be shared yet (9 Oct 2026) */
+  if(!LIVE){FAMA.toast("Complete your profile to go Live. Then you can share your link.");return}
+  const url="https://"+profileUrl, sp=btn.querySelector("span");
+  if(navigator.share){try{await navigator.share({title:P.name+" on Fama",url});return}catch(_){return}}
+  let ok=true; try{await navigator.clipboard.writeText(url)}catch(_){ok=false}
+  FAMA.toast(ok?t("copied")+": "+profileUrl:"Your link: "+profileUrl);
+  if(ok&&sp&&!sp.classList.contains("vh")){sp.textContent=t("copied");setTimeout(()=>sp.textContent=t("share"),2000)}
+}
+/* guests: follow and recognise ask them to sign in, in a small dialog.
+   The action is remembered and finished after login. */
+function signIn(btn,what){
+  const d=document.createElement("dialog"); d.className="dlg signdlg";
+  d.innerHTML=`<form method="dialog"><div class="dh"><h2>${t("signin",what)}</h2><button type="button" class="iconbtn plain" data-x aria-label="${t("close")}"><svg class="icon"><use href="#i-x"/></svg></button></div>
+    <p>${t("signinP2",what,P.name)}</p>
+    <div class="acts"><a class="btn" href="${href("login.html?next=preview&do="+btn.dataset.act)}"><svg class="icon" aria-hidden="true"><use href="#a-log-in"/></svg><span>${t("login")}</span></a>
+    <a class="btn btn-2" href="${href("register.html?as=brand")}"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg><span>${t("joinBrand")}</span></a></div>
+    <p class="signalt">Creative talent? <a class="link" href="${href("register.html")}">${t("join")}</a></p></form>`;
+  document.body.appendChild(d);
+  d.querySelector("[data-x]").onclick=()=>d.close();
+  d.addEventListener("click",e=>{if(e.target===d)d.close()});
+  d.addEventListener("close",()=>{d.remove();btn.focus()});
+  d.showModal(); d.querySelector(".acts a").focus();
+}
+
+/* lightbox: every picture in a section, with previous / next, arrow keys and a count */
+const lb=document.getElementById("lb"); let lbSet=[], lbI=0, lbFrom=null;
+function lbItems(key){
+  const [kind,id,n]=key.split(":");
+  if(kind==="gallery") return (C.gallery[id]||[]).map(c=>[id+c,c]);
+  if(kind==="digitals") return (C.digitals[id]||[]).map(d=>["dig"+d[0],d[0]+" · "+t("taken",FAMA.date(d[1]))]);
+  if(kind==="look"){const l=C.looks[id][+n];return Array.from({length:l[1]},(_,i)=>[l[0]+(i+1),`${l[0]} · ${i+1}`])}
+  return [];
+}
+function lbShow(){
+  const [k,cap]=lbSet[lbI];
+  document.getElementById("lbCap").textContent=cap;
+  document.getElementById("lbN").textContent=lbSet.length>1?t("of",lbI+1,lbSet.length):"";
+  document.getElementById("lbPrev").hidden=document.getElementById("lbNext").hidden=lbSet.length<2;
+}
+function openLb(key,i,from){lbSet=lbItems(key);if(!lbSet.length)return;lbI=i||0;lbFrom=from;lbShow();lb.showModal();document.getElementById("lbNext").focus()}
+const step=d=>{lbI=(lbI+d+lbSet.length)%lbSet.length;lbShow()};
+document.getElementById("lbPrev").onclick=()=>step(-1);
+document.getElementById("lbNext").onclick=()=>step(1);
+document.getElementById("lbX").onclick=()=>lb.close();
+lb.addEventListener("keydown",e=>{if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1)});
+lb.addEventListener("click",e=>{if(e.target===lb)lb.close()});
+lb.addEventListener("close",()=>lbFrom&&lbFrom.focus());
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="assets/js/profile-motion.js?v=3"></script>
+</body></html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feed · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="stylesheet" href="assets/css/posts.css?v=32">
+<style>
+/* Screen: /feed — "Feed" in the Fama V1 Blueprint. A fresh mix on every visit that
+   stays stable while scrolling; more loads at the bottom. "Talent to follow" sits beside
+   the feed on wide screens and becomes a strip between posts on narrow ones.
+   "Talent to discover" every 6th post. Floating buttons: Filters · Back to top · New post.
+   Review states: ?view=guest · ?empty=1 · ?skill=styling · ?following=1 */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--gutter);align-items:start}
+.side{position:sticky;top:96px}
+.side .rows>li{padding-block:var(--s3);align-items:flex-start}
+.side b{font-weight:600;display:block}
+.side a{text-decoration:none}
+.side a:hover b{color:var(--purple-dk)}
+.why{font-size:13px;color:var(--grey);display:block}
+.filterbar{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s4)}
+.composer{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s4) var(--s5) var(--s2)}
+.composer .top{display:flex;align-items:center;gap:var(--s3)}
+.start{flex:1;min-width:0;min-height:52px;padding:0 var(--s5);border-radius:var(--radius-pill);border:1px solid var(--grey);background:var(--white);text-align:start;font-weight:600;color:var(--grey);cursor:pointer}
+.start:hover{background:var(--cream);border-color:var(--ink);color:var(--ink)}
+.quick{display:flex;justify-content:space-around;gap:var(--s1);margin-top:var(--s2)}
+.quick button{display:inline-flex;align-items:center;gap:var(--s2);min-height:48px;padding:0 var(--s4);border:0;border-radius:var(--s3);background:none;font-weight:600;cursor:pointer}
+.quick button:hover{background:var(--cream)}
+.quick .icon{color:var(--purple-dk);width:22px;height:22px}
+#posts{margin-top:var(--s4)}
+.strip{background:var(--lavender,#F3EAF8);border:1px solid var(--lavender-line,#E9DAF2);border-radius:var(--radius);padding:var(--s5) 0 var(--s5) var(--s5)}
+[dir=rtl] .strip{padding:var(--s5) var(--s5) var(--s5) 0}
+.strip-h{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);padding-inline-end:var(--s5)}
+.strip-h .why{margin:2px 0 0}
+.strip .people{display:flex;gap:10px;margin-top:var(--s4);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-inline-end:var(--s5)}
+.strip .people::-webkit-scrollbar{display:none}
+.strip .pp{flex:0 0 156px;scroll-snap-align:start;background:var(--white);border:var(--border);border-radius:16px;padding:var(--s5) var(--s3) var(--s3);text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.strip .pp .av{width:56px;height:56px;margin-bottom:var(--s2)}
+.strip .pp b{font-weight:600}
+.strip .pp .role{font-size:13px;color:var(--grey)}
+.strip .pp .why{color:var(--purple-dk);font-weight:500;font-size:13px}
+.strip .pp .btn{margin-top:var(--s3);width:100%;min-height:40px;justify-content:center}
+.strip .pp .px{position:absolute;top:4px;inset-inline-end:4px;width:32px;height:32px;opacity:.6}
+.quick .sm{display:none}
+.end{text-align:center;color:var(--grey);padding:var(--s6) 0}
+.loading{text-align:center;color:var(--grey);padding:var(--s5)}
+.mobile-follow{display:none}
+.np{position:relative}
+.np .sugg{position:absolute;z-index:30;margin:0;width:max-content;min-width:240px;max-width:min(320px,calc(100% - 32px));max-height:240px;overflow:auto}
+.np .who{display:flex;gap:var(--s3);align-items:center;margin-top:var(--s4)}
+.np .who b{font-weight:600;display:block}
+.np .ta{min-height:140px;margin-top:var(--s4)}
+.np .ta.short{min-height:88px}
+.np .row{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s2)}
+.sugg{list-style:none;margin:var(--s1) 0 0;padding:var(--s1);border:var(--border);border-radius:var(--s3);background:var(--white)}
+.sugg button{display:flex;gap:var(--s3);align-items:center;width:100%;border:0;background:none;padding:var(--s2);border-radius:var(--s2);cursor:pointer;text-align:start}
+.sugg button:hover,.sugg button:focus-visible{background:var(--cream)}
+.sugg b{font-weight:600}
+.sugg.tagmenu{width:max-content;min-width:220px;max-width:min(320px,100%);padding:4px}
+.sugg.tagmenu button{gap:var(--s2);padding:6px var(--s2);min-height:36px;font-size:14px}
+.sugg.tagmenu button.on{background:var(--cream)}
+.sugg.tagmenu .hash{font-weight:600;color:var(--purple-dk)}
+.sugg.tagmenu .nm{font-weight:600}
+.sugg.tagmenu .sub{margin-inline-start:auto;padding-inline-start:var(--s3);font-size:12px;color:var(--grey);white-space:nowrap}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s3);margin-top:var(--s3)}
+.mtile{border:var(--border);border-radius:var(--s3);overflow:hidden;background:var(--white)}
+.mtile .ph{aspect-ratio:1;border-radius:0;position:relative;cursor:grab}
+.mtile .ph .iconbtn{position:absolute;top:var(--s1);inset-inline-end:var(--s1);width:32px;height:32px}
+.mtile input{border:0;border-top:var(--border);border-radius:0;min-height:40px;font-size:14px;padding:var(--s2)}
+.projpick{list-style:none;margin:var(--s3) 0 0;padding:0;border:var(--border);border-radius:var(--s3);max-height:260px;overflow:auto}
+.projpick label{display:flex;gap:var(--s3);align-items:center;padding:var(--s3) var(--s4);border-top:var(--border);cursor:pointer;min-height:56px}
+.projpick li:first-child label{border-top:0}
+.projpick input{accent-color:var(--purple-dk);width:18px;height:18px}
+.np .foot{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s5);padding-top:var(--s4);border-top:var(--border)}
+.np .foot .need{margin-inline-end:auto;color:var(--grey);font-size:var(--t-meta)}
+.locked{background:var(--cream);border-radius:var(--s3);padding:var(--s3) var(--s4);font-size:var(--t-meta);color:var(--grey);margin-top:var(--s3)}
+.fab{position:fixed;bottom:var(--s5);inset-inline-end:var(--s5);z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:var(--s2)}
+.fab button{position:relative;width:56px;height:56px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;border:var(--border);background:var(--white);color:var(--ink)}
+.fab button.pri{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.fab .icon{width:24px;height:24px}
+.fab button::after{content:attr(data-tip);position:absolute;inset-inline-end:calc(100% + 12px);top:50%;transform:translateY(-50%);background:var(--ink);color:var(--cream);font-weight:600;font-size:14px;padding:6px 12px;border-radius:var(--radius-pill);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--fast)}
+.fab button:hover::after,.fab button:focus-visible::after{opacity:1}
+.fab .dot{position:absolute;top:10px;inset-inline-end:10px;width:10px;height:10px;border-radius:var(--radius-pill);background:var(--purple-dk);border:2px solid var(--white)}
+@media (max-width:960px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .mobile-follow{display:block}
+}
+@media (max-width:760px){
+  .quick{justify-content:stretch;border-top:var(--border);padding-top:var(--s1)}
+  .quick button{flex:1;justify-content:center}
+  .quick .lg{display:none}.quick .sm{display:inline}
+  .fab{bottom:var(--s4);inset-inline-end:var(--s4)}
+  .fab button{width:52px;height:52px}
+  .quick button{padding:0 var(--s2);font-size:14px}
+}
+</style></head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<script src="assets/js/skills.js?v=6"></script>
+<script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
+<div data-fama-hero data-tone="soft" data-photo="assets/img/banners/feed-star.png" id="hero"></div>
+<script src="assets/js/posts.js?v=34y"></script>
+<script>
+Object.assign(FAMA.T.en,{"g.label":"Creative talent on Fama","g.lead":"Work from stylists, models, photographers and more. Join to post your own.","g.join":"Join as talent","g.login":"Log in","h.label":"Your people","h.title":"Feed","h.lead":"See what your network is working on, and share your own.",
+ start:"Start a post",photo:"Photo",video:"Video",shareProj:"Share a project",
+ follow:"Follow",following:"Following",dismiss:n=>`Hide ${n} from suggestions`,hidden:n=>`${n} won't be suggested again`,
+ toFollow:"Talent to follow",toDiscover:"Talent to discover",followSub:"People near your work",discoverSub:"New faces in your skills",projShort:"Project",whyFollows:"Follows you",whyAlso:s=>`Also in ${s}`,
+ end:"You're all caught up.",loading:"Loading more…",empty:"Be the first — share your work.",emptyP:"Posts from people on Fama show here. Share a set, a note or a project.",
+ filters:"Filters",filtersT:"Filter the feed",filtersP:"Show everything, only people you follow, or one skill. The link updates so you can share it.",all:"All",fFollowing:"Following",fSearch:"Search skills",show:"Show posts",cancel:"Cancel",clear:"Clear filter",
+ top:"Back to top",newPost:"New post",showing:f=>`Showing: ${f}`,noMatch:"No posts match this filter yet.",
+ npTitle:"New post",npEdit:"Edit post",modePost:"Post",modeProj:"Share a project",textPh:"What are you working on? Type @ to credit someone, # to tag a skill.",
+ addMedia:"Add photos or video",mediaH:"Up to 10. Drag to reorder.",alt:"Alt text",altPh:"Describe this image",remove:"Remove",
+ skills:"Skills",yourSkill:"yours",skillsH:"Your skills are here. Add any other, say if you\u2019re looking for someone.",skAdd:"Add another skill",projTextPh:"Say something about it (optional). Type @ to credit someone, # to tag a skill.",pickProj:"Pick one of your projects",projNote:"Your profile must be published to share a project.",
+ publish:"Publish",postedN:n=>`Posted. ${n.length===1?n[0]:n.length===2?n.join(" and "):n[0]+" and "+(n.length-1)+" others"} ${n.length===1?"is":"are"} notified.`,need:"Add text or media to publish.",needProj:"Pick a project to share.",needMax:"That's over 2,200 characters.",
+ discard:"Discard this post?",discardB:"What you wrote will be lost.",discardOk:"Discard",posted:"Posted to the feed",updated:"Post updated",
+ lockedMedia:"Media can't be changed after publishing. You can edit the text and skills for 15 minutes.",youFollow:"you follow",
+ counter:(n)=>`${n} / 2,200`});
+Object.assign(FAMA.T.ar,{"h.label":"ناسك","h.title":"المستجدات","h.lead":"شوف ناسك بيشتغلوا على إيه، وشارك شغلك.",
+ start:"ابدأ منشور",photo:"صورة",video:"فيديو",shareProj:"شارك مشروع",
+ follow:"متابعة",following:"بتتابعه",dismiss:n=>`إخفاء ${n} من الاقتراحات`,hidden:n=>`مش هنقترح ${n} تاني`,
+ toFollow:"مواهب تتابعها",toDiscover:"مواهب تكتشفها",followSub:"ناس قريبة من شغلك",discoverSub:"وشوش جديدة في مهاراتك",projShort:"مشروع",whyFollows:"بيتابعك",whyAlso:s=>`برضه في ${s}`,
+ end:"شفت كل حاجة.",loading:"بنحمّل أكتر…",empty:"كن الأول — شارك شغلك.",emptyP:"منشورات الناس على فاما بتظهر هنا. شارك مجموعة صور أو ملاحظة أو مشروع.",
+ filters:"الفلاتر",filtersT:"فلترة المستجدات",filtersP:"اعرض كل حاجة، أو اللي بتتابعهم بس، أو مهارة واحدة. الرابط بيتغير عشان تقدر تبعته.",all:"الكل",fFollowing:"اللي بتابعهم",show:"اعرض المنشورات",cancel:"إلغاء",clear:"امسح الفلتر",
+ top:"ارجع لفوق",newPost:"منشور جديد",showing:f=>`المعروض: ${f}`,noMatch:"مفيش منشورات بالفلتر ده لسه.",
+ npTitle:"منشور جديد",npEdit:"تعديل المنشور",modePost:"منشور",modeProj:"شارك مشروع",textPh:"بتشتغل على إيه؟ اكتب @ عشان تذكر حد.",
+ addMedia:"إضافة صور أو فيديو",mediaH:"لحد ١٠. اسحب للترتيب.",alt:"وصف الصورة",altPh:"اوصف الصورة دي",remove:"إزالة",
+ skills:"المهارات",skillsH:"مهاراتك إنت بس",pickProj:"اختار مشروع من مشاريعك",projNote:"لازم بروفايلك يكون منشور عشان تشارك مشروع.",
+ publish:"نشر",need:"اكتب حاجة أو ضيف صورة عشان تنشر.",needProj:"اختار مشروع تشاركه.",needMax:"ده أكتر من ٢٢٠٠ حرف.",
+ discard:"تتجاهل المنشور؟",discardB:"اللي كتبته هيضيع.",discardOk:"تجاهل",posted:"اتنشر في المستجدات",updated:"اتعدّل المنشور",
+ lockedMedia:"الصور مش بتتغير بعد النشر. تقدر تعدّل الكلام والمهارات لمدة ١٥ دقيقة.",youFollow:"بتتابعه",
+ counter:(n)=>`${n} / ٢٢٠٠`});
+const H=document.getElementById("hero"),GV=new URLSearchParams(location.search).get("view")==="guest";
+H.dataset.label=FAMA.t(GV?"g.label":"h.label");H.dataset.title=FAMA.t("h.title");H.dataset.lead=FAMA.t(GV?"g.lead":"h.lead");
+/* a visitor gets the way in, inside the hero */
+if(GV)H.innerHTML=`<a class="btn" href="register.html"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg>${FAMA.t("g.join")}</a><a class="btn btn-2" href="login.html"><svg class="icon" aria-hidden="true"><use href="#a-log-in"/></svg>${FAMA.t("g.login")}</a>`;
+document.write(FAMA.ICONS);
+</script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-video" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+</svg>
+
+<main class="wrap main"><div class="layout">
+  <div>
+    <div class="filterbar" id="filterbar" hidden><span class="tag tag-ink" id="filterTag"></span><button class="link" id="clearFilter" data-t="clear"></button></div>
+    <div class="composer" id="composer">
+      <div class="top"><span class="av md" aria-hidden="true">DT</span><button type="button" class="start" id="start" aria-haspopup="dialog" data-t="start"></button></div>
+      <div class="quick">
+        <button type="button" data-start="photo" aria-haspopup="dialog"><svg class="icon"><use href="#i-image"/></svg><span data-t="photo"></span></button>
+        <button type="button" data-start="video" aria-haspopup="dialog"><svg class="icon"><use href="#i-video"/></svg><span data-t="video"></span></button>
+        <button type="button" data-start="project" aria-haspopup="dialog"><svg class="icon"><use href="#i-folder"/></svg><span class="lg" data-t="shareProj"></span><span class="sm" data-t="projShort"></span></button>
+      </div>
+    </div>
+    <div id="posts" aria-live="polite"></div>
+    <div id="sentinel"></div>
+  </div>
+  <aside class="side card tight" aria-labelledby="tf"><h2 class="h3" id="tf" data-t="toFollow"></h2><ul class="rows" id="toFollow" style="margin-top:var(--s2)"></ul></aside>
+</div></main>
+<div data-fama-foot></div>
+
+<div class="fab" id="fab">
+  <button id="fabTop" hidden data-t-aria="top"><svg class="icon"><use href="#i-up"/></svg></button>
+  <button id="fabFilter" aria-haspopup="dialog" data-t-aria="filters"><svg class="icon"><use href="#i-filter"/></svg><span class="dot" id="fabDot" hidden></span></button>
+  <button class="pri" id="fabNew" aria-haspopup="dialog" data-t-aria="newPost"><svg class="icon"><use href="#i-plus"/></svg></button>
+</div>
+
+<dialog class="dlg" id="filterDlg"><form method="dialog"><h2 data-t="filtersT"></h2><p class="d" data-t="filtersP"></p><input class="in" id="fsearch" type="search" autocomplete="off" data-t-ph="fSearch" data-t-aria="fSearch" style="margin-top:var(--s5)"><div class="chips" id="fpills" style="margin-top:var(--s4);max-height:50vh;overflow:auto"></div>
+  <div class="acts"><button class="btn btn-2" value="cancel" data-t="cancel"></button><button class="btn" value="ok" data-t="show"></button></div></form></dialog>
+<dialog class="dlg wide" id="np"><form class="np" id="npf" novalidate></form></dialog>
+
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search), GUEST=FAMA.guest;
+const MY_SKILLS=["Styling","Modelling","Photography"];
+const NINE=FAMA_SKILL_NAMES; /* all 41, from assets/js/skills.js */
+const MY_PROJECTS=[["desert-light","Desert Light — 2026","Maison Nour · 2026"],["nomad-autumn","Nomad Coffee — Autumn launch","Nomad Coffee Co. · 2025"],["nefertari-ss26","Nefertari Cosmetics — 2026","Nefertari · 2026"]];
+const slug=s=>s.toLowerCase().replace(/ & /g,"-").replace(/\s+/g,"-");
+FAMA.apply();
+if(GUEST){["composer","fabNew"].forEach(id=>document.getElementById(id).hidden=true)}
+
+/* a fresh mix on every visit that stays stable while scrolling */
+const base=Q.get("empty")==="1"?[]:FAMA.POSTS.slice().sort(()=>Math.random()-.5);
+const list=base;
+const followingSet=new Set(["lina-haddad","omar-saleh","rania-k"]);
+let filter=Q.get("following")==="1"?"following":(Q.get("skill")||"all");
+const fName=f=>f==="all"?t("all"):f==="following"?t("fFollowing"):(NINE.find(s=>slug(s)===f)||f);
+const matches=p=>filter==="all"||(filter==="following"?followingSet.has(p.a.user)||p.mine:(p.skills||[]).some(s=>slug(s)===filter));
+let more=false, suggestions=FAMA.PEOPLE.slice();
+const init=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+
+function personRow(p){return `<li data-u="${p.user}"><span class="av">${init(p.name)}</span><span class="grow"><a href="${href("preview.html?view=guest")}"><b>${esc(p.name)}</b></a><span class="why">${GUEST?esc(p.skill):p.why==="follows"?t("whyFollows"):t("whyAlso",esc(p.skill))}</span>
+  <button class="btn btn-2" data-follow aria-pressed="false" style="min-height:36px;padding-inline:var(--s4);margin-top:var(--s2)">${t("follow")}</button></span><button class="iconbtn plain" data-dismiss aria-label="${esc(t("dismiss",p.name))}"><svg class="icon sm"><use href="#i-x"/></svg></button></li>`}
+function renderSide(){document.getElementById("toFollow").innerHTML=suggestions.slice(0,4).map(personRow).join("")}
+/* people between posts: a tinted band of cards you swipe through, so it never reads as another post (11 Oct 2026) */
+function strip(kind){const ppl=kind==="discover"?FAMA.PEOPLE.slice(3):suggestions.slice(0,4);
+  return `<section class="strip ${kind==="follow"?"mobile-follow":""}" aria-label="${kind==="discover"?t("toDiscover"):t("toFollow")}"><div class="strip-h"><div><h2 class="h3">${kind==="discover"?t("toDiscover"):t("toFollow")}</h2><p class="why">${t(kind==="discover"?"discoverSub":"followSub")}</p></div></div>
+  <div class="people">${ppl.map(p=>`<div class="pp" data-u="${p.user}">${kind==="follow"?`<button class="iconbtn plain px" data-dismiss aria-label="${esc(t("dismiss",p.name))}"><svg class="icon sm"><use href="#i-x"/></svg></button>`:""}<span class="av md">${init(p.name)}</span><b>${esc(p.name)}</b><span class="role">${esc(p.skill)}</span>${GUEST?"":`<span class="why">${p.why==="follows"?t("whyFollows"):t("whyAlso",esc(p.skill))}</span>`}<button class="btn btn-2" data-follow aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg>${t("follow")}</button></div>`).join("")}</div></section>`}
+function render(){
+  const shown=list.filter(matches), el=document.getElementById("posts");
+  document.getElementById("filterbar").hidden=filter==="all";document.getElementById("filterTag").textContent=t("showing",fName(filter));
+  document.getElementById("fabDot").hidden=filter==="all";const fb=document.getElementById("fabFilter");const fl=filter==="all"?t("filters"):t("filters")+" · "+fName(filter);fb.setAttribute("aria-label",fl);fb.dataset.tip=fl;
+  if(!shown.length){el.innerHTML=`<div class="card empty"><h2 class="h2">${filter==="all"?t("empty"):t("noMatch")}</h2><p>${t("emptyP")}</p>${GUEST||filter!=="all"?"":`<button class="btn" data-opennp><svg class="icon"><use href="#i-plus"/></svg>${t("newPost")}</button>`}</div>`;return}
+  let html="";shown.forEach((p,i)=>{html+=FAMA.postHTML(p,false);if(i===1)html+=strip("follow");if((i+1)%6===0)html+=strip("discover")});
+  html+=more?`<p class="end">${t("end")}</p>`:`<p class="loading">${t("loading")}</p>`;
+  el.innerHTML=html;
+}
+FAMA.bindPosts(document.getElementById("posts"),list,render);
+FAMA.onRepost=np=>{list.unshift(np);if(filter!=="all")setFilter("all");else render();scrollTo({top:document.getElementById("posts").offsetTop-120,behavior:"smooth"})};
+/* more loads as the reader reaches the bottom — one more page of older posts, then the end */
+new IntersectionObserver(es=>{if(es[0].isIntersecting&&!more&&list.length){setTimeout(()=>{
+  base.slice(0,3).forEach((p,i)=>list.push(Object.assign({},p,{id:p.id*10+1,ago:(4+i)+"d",pinned:false,mine:p.mine,liked:false,saved:false})));more=true;render()},400)}},{rootMargin:"200px"}).observe(document.getElementById("sentinel"));
+
+document.addEventListener("click",e=>{
+  const f=e.target.closest("[data-follow]");if(f){if(GUEST){FAMA.signInPrompt(f.closest(".pp,.card")||f.parentElement,"follow");return}
+    const on=f.getAttribute("aria-pressed")!=="true";f.setAttribute("aria-pressed",on);const ic=f.querySelector("svg");f.textContent=on?t("following"):t("follow");if(ic&&!on)f.prepend(ic)}
+  const d=e.target.closest("[data-dismiss]");if(d){const u=d.closest("li,.pp").dataset.u,i=suggestions.findIndex(p=>p.user===u),p=suggestions[i];suggestions.splice(i,1);renderSide();render();FAMA.toast(t("hidden",p.name),()=>{suggestions.splice(i,0,p);renderSide();render()})}
+  if(e.target.closest("[data-opennp]"))openNP();
+});
+
+/* filters */
+const opts=[["all",t("all")],["following",t("fFollowing")],...NINE.map(s=>[slug(s),s])];
+let pick=filter;
+const fd=document.getElementById("filterDlg"),fp=document.getElementById("fpills");
+const fs=document.getElementById("fsearch");
+fs.addEventListener("input",()=>drawF());
+/* All and Following always show; skills narrow as you type */
+const drawF=()=>{const qv=fs.value.trim().toLowerCase();fp.innerHTML=opts.filter((o,i)=>i<2||o[0]===pick||!qv||o[1].toLowerCase().includes(qv)).map(o=>`<button type="button" class="chip" data-v="${o[0]}" aria-pressed="${o[0]===pick}">${esc(o[1])}</button>`).join("")};
+fp.onclick=e=>{const b=e.target.closest("[data-v]");if(b){pick=b.dataset.v;drawF()}};
+document.getElementById("fabFilter").onclick=()=>{pick=filter;fs.value="";drawF();fd.returnValue="";fd.showModal()};
+fd.addEventListener("close",()=>{if(fd.returnValue==="ok")setFilter(pick)});
+function setFilter(f){filter=f;const u=new URL(location.href);u.searchParams.delete("skill");u.searchParams.delete("following");
+  if(f==="following")u.searchParams.set("following","1");else if(f!=="all")u.searchParams.set("skill",f);history.replaceState(null,"",u);render()}
+document.getElementById("clearFilter").onclick=()=>setFilter("all");
+const topB=document.getElementById("fabTop");
+addEventListener("scroll",()=>topB.hidden=scrollY<600,{passive:true});
+topB.onclick=()=>{scrollTo({top:0,behavior:"smooth"});document.querySelector(".fx-logo").focus({preventScroll:true})};
+document.querySelectorAll("#fab button").forEach(b=>b.dataset.tip=b.getAttribute("aria-label"));
+
+/* ---- new post ---- */
+const NP=document.getElementById("np"),NF=document.getElementById("npf");
+let st=null;
+function openNP(mode,editing){
+  st=editing?{edit:editing,mode:"post",text:editing.text||"",media:0,alts:[],skills:[...(editing.skills||[])],proj:null,dirty:false}
+            :{mode:mode==="project"?"project":"post",text:"",media:0,alts:[],skills:[],proj:null,dirty:false};
+  drawNP();NP.showModal();
+  if(mode==="photo"||mode==="video")NF.querySelector("[data-addm]")?.focus();else (NF.querySelector("textarea")||NF.querySelector("input[name=proj]"))?.focus();
+}
+function need(){if(st.mode==="project")return !st.proj?t("needProj"):st.text.length>2200?t("needMax"):"";if(st.text.length>2200)return t("needMax");return st.text.trim()||st.media?"":t("need")}
+function drawNP(){
+  const n=need(),links=FAMA.links(st.text);
+  NF.innerHTML=`<div class="dh"><h2>${st.edit?t("npEdit"):t("npTitle")}</h2><button type="button" class="iconbtn plain" data-close aria-label="${t("cancel")}"><svg class="icon"><use href="#i-x"/></svg></button></div>
+  ${st.edit?"":`<div class="seg" role="group" style="margin-top:var(--s4)"><button type="button" data-mode="post" aria-pressed="${st.mode==="post"}">${t("modePost")}</button><button type="button" data-mode="project" aria-pressed="${st.mode==="project"}">${t("modeProj")}</button></div>`}
+  <div class="who"><span class="av">DT</span><span><b>Demo talent</b><span class="meta" dir="ltr">@demo-talent</span></span></div>
+  ${st.mode==="post"?`
+    <label class="vh" for="npText">${t("textPh")}</label><textarea class="ta" id="npText" maxlength="2400" placeholder="${t("textPh")}">${esc(st.text)}</textarea>
+    <ul class="sugg" id="sugg" hidden></ul>
+    <div class="row"><div class="chips" id="lchips">${links.map(u=>`<span class="chip"><svg class="icon sm"><use href="#i-link"/></svg>${esc(FAMA.platform(u))}</span>`).join("")}</div><span class="meta" id="cnt">${t("counter",num(st.text.length))}</span></div>
+    ${st.edit?`<p class="locked">${t("lockedMedia")}</p>`:`<button type="button" class="drop" data-addm style="margin-top:var(--s4)"><svg class="icon"><use href="#i-plus"/></svg>${t("addMedia")}<small>${t("mediaH")}</small></button>
+    <div class="mgrid">${Array.from({length:st.media},(_,i)=>`<div class="mtile" draggable="true" data-i="${i}"><div class="ph"><svg class="icon"><use href="#i-image"/></svg><button type="button" class="iconbtn" data-rmm="${i}" aria-label="${t("remove")}"><svg class="icon sm"><use href="#i-x"/></svg></button></div><input class="in" maxlength="160" data-alt="${i}" value="${esc(st.alts[i]||"")}" placeholder="${t("altPh")}" aria-label="${t("alt")} ${i+1}"></div>`).join("")}</div>`}
+`
+  :`<label class="vh" for="npText">${t("projTextPh")}</label><textarea class="ta short" id="npText" maxlength="2400" placeholder="${t("projTextPh")}">${esc(st.text)}</textarea>
+    <ul class="sugg" id="sugg" hidden></ul>
+    <div class="row"><div class="chips" id="lchips"></div><span class="meta" id="cnt">${t("counter",num(st.text.length))}</span></div>
+    <p class="lbl" style="margin-top:var(--s5)">${t("pickProj")}</p><ul class="projpick">${MY_PROJECTS.map(p=>`<li><label><input type="radio" name="proj" value="${p[0]}" ${st.proj===p[0]?"checked":""}><span><b style="font-weight:600;display:block">${esc(p[1])}</b><span class="meta">${esc(p[2])}</span></span></label></li>`).join("")}</ul>`}
+  <div class="foot"><span class="need" id="need" role="status">${n}</span><button type="button" class="btn btn-2" data-close>${t("cancel")}</button><button class="btn" id="pub" ${n?'aria-disabled="true"':""} aria-describedby="need" title="${esc(n)}"><svg class="icon" aria-hidden="true"><use href="#a-send"/></svg>${t("publish")}</button></div>`;
+}
+function refreshFoot(){const n=need();document.getElementById("need").textContent=n;const b=document.getElementById("pub");if(n)b.setAttribute("aria-disabled","true");else b.removeAttribute("aria-disabled");b.title=n;const c=document.getElementById("cnt");if(c)c.textContent=t("counter",num(st.text.length))}
+async function closeNP(){if(st.dirty&&!await FAMA.confirm(t("discard"),t("discardB"),t("discardOk"),true))return;NP.close()}
+NP.addEventListener("cancel",e=>{e.preventDefault();closeNP()});
+NF.addEventListener("input",e=>{st.dirty=true;
+  if(e.target.id==="npText"){st.text=e.target.value;mention(e.target);
+    const lc=document.getElementById("lchips"),links=FAMA.links(st.text);if(lc)lc.innerHTML=links.map(u=>`<span class="chip"><svg class="icon sm"><use href="#i-link"/></svg>${esc(FAMA.platform(u))}</span>`).join("");refreshFoot()}
+  if(e.target.dataset.alt!=null)st.alts[e.target.dataset.alt]=e.target.value});
+NF.addEventListener("change",e=>{if(e.target.name==="proj"){st.proj=e.target.value;st.dirty=true;refreshFoot()}});
+NF.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.close!==undefined)return closeNP();
+  if(b.dataset.mode){st.mode=b.dataset.mode;drawNP();return}
+  if(b.dataset.addm!==undefined){st.dirty=true;st.media=Math.min(10,st.media+2);drawNP();return}
+  if(b.dataset.rmm){st.media--;st.alts.splice(+b.dataset.rmm,1);drawNP();return}
+  if(b.dataset.sk){st.dirty=true;const i=st.skills.indexOf(b.dataset.sk);i>=0?st.skills.splice(i,1):st.skills.push(b.dataset.sk);b.setAttribute("aria-pressed",i<0);return}
+  if(b.dataset.pick){insertMention(b.dataset.pick);return}
+  if(b.dataset.tag){insertTag(b.dataset.tag);return}
+});
+/* @ to credit someone — people you follow come first */
+/* # to tag a skill: any of the 41, yours or not, so a post can ask for a photographer (3 Oct 2026) */
+function hashtags(ta){const m=ta.value.slice(0,ta.selectionStart).match(/#([a-z0-9]*)$/i),ul=document.getElementById("sugg");
+  if(!m)return false; const q=m[1].toLowerCase();
+  const list=FAMA_SKILLS.map(k=>{const tag=FAMA.hashTag(k.name);
+    if(!q||tag.toLowerCase().startsWith(q)||(" "+k.name.toLowerCase()).includes(" "+q))return {k,tag,via:""};
+    const sp=k.specs.find(x=>(" "+x.name.toLowerCase()).includes(" "+q));return sp?{k,tag,via:sp.name}:null}).filter(Boolean)
+    .sort((a,b)=>MY_SKILLS.includes(b.k.name)-MY_SKILLS.includes(a.k.name)).slice(0,5);
+  if(!list.length){ul.hidden=true;return true}
+  ul.classList.add("tagmenu");
+  ul.innerHTML=list.map((x,i)=>`<li><button type="button" data-tag="${x.tag}"${i===0?' class="on"':""}><span class="hash" aria-hidden="true">#</span><span class="nm">${esc(x.k.name)}</span>${x.via?`<span class="sub">${esc(x.via)}</span>`:MY_SKILLS.includes(x.k.name)?`<span class="sub">${t("yourSkill")}</span>`:""}</button></li>`).join("");ul.hidden=false;return true}
+function insertTag(tag){const ta=NF.querySelector("textarea"),pos=ta.selectionStart,before=ta.value.slice(0,pos).replace(/#([a-z0-9]*)$/i,"#"+tag+" ");
+  ta.value=before+ta.value.slice(pos);st.text=ta.value;document.getElementById("sugg").hidden=true;ta.focus();ta.setSelectionRange(before.length,before.length);refreshFoot()}
+/* place the suggestion dropdown just under the caret, inside the composer */
+function placeSugg(ta){
+  const ul=document.getElementById("sugg"); if(ul.hidden) return;
+  const cs=getComputedStyle(ta), m=document.createElement("div");
+  ["fontFamily","fontSize","fontWeight","lineHeight","letterSpacing","paddingTop","paddingRight","paddingBottom","paddingLeft","borderTopWidth","borderLeftWidth","boxSizing"].forEach(k=>m.style[k]=cs[k]);
+  Object.assign(m.style,{position:"absolute",visibility:"hidden",whiteSpace:"pre-wrap",wordWrap:"break-word",width:ta.offsetWidth+"px",top:"0",left:"0"});
+  m.textContent=ta.value.slice(0,ta.selectionStart); const mark=document.createElement("span"); mark.textContent="\u200b"; m.appendChild(mark);
+  NF.appendChild(m); const x=mark.offsetLeft, y=mark.offsetTop+(parseFloat(cs.lineHeight)||20); m.remove();
+  const left=Math.max(0,Math.min(ta.offsetLeft+x-8, NF.clientWidth-ul.offsetWidth-8));
+  ul.style.left=left+"px"; ul.style.top=(ta.offsetTop+y-ta.scrollTop+4)+"px";
+}
+function mention(ta){document.getElementById("sugg").classList.remove("tagmenu");if(hashtags(ta)){placeSugg(ta);return}const m=ta.value.slice(0,ta.selectionStart).match(/@([a-z0-9-]*)$/i),ul=document.getElementById("sugg");
+  if(!m){ul.hidden=true;return}const q=m[1].toLowerCase();
+  const ppl=FAMA.PEOPLE.filter(p=>p.user.includes(q)||p.name.toLowerCase().includes(q)).sort((a,b)=>followingSet.has(b.user)-followingSet.has(a.user)).slice(0,5);
+  if(!ppl.length){ul.hidden=true;return}
+  ul.innerHTML=ppl.map(p=>`<li><button type="button" data-pick="${p.user}"><span class="av" style="width:32px;height:32px;font-size:12px">${init(p.name)}</span><span><b>${esc(p.name)}</b> <span class="meta" dir="ltr">@${p.user}</span>${followingSet.has(p.user)?` <span class="meta">· ${t("youFollow")}</span>`:""}</span></button></li>`).join("");ul.hidden=false;placeSugg(ta)}
+function insertMention(u){const ta=NF.querySelector("textarea"),pos=ta.selectionStart,before=ta.value.slice(0,pos).replace(/@([a-z0-9-]*)$/i,"@"+u+" ");
+  ta.value=before+ta.value.slice(pos);st.text=ta.value;document.getElementById("sugg").hidden=true;ta.focus();ta.setSelectionRange(before.length,before.length);refreshFoot()}
+NF.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElementById("sugg").hidden){e.preventDefault();e.stopPropagation();document.getElementById("sugg").hidden=true;return}if(e.target.id==="npText"&&e.key==="Enter"&&!document.getElementById("sugg").hidden){const f=document.querySelector("#sugg [data-pick],#sugg [data-tag]");if(f){e.preventDefault();f.dataset.tag?insertTag(f.dataset.tag):insertMention(f.dataset.pick)}}});
+let dm=null;
+NF.addEventListener("dragstart",e=>{const x=e.target.closest(".mtile");if(!x)return;dm=+x.dataset.i;e.dataTransfer.setData("text/plain","")});
+NF.addEventListener("dragover",e=>{if(dm!=null&&e.target.closest(".mtile"))e.preventDefault()});
+NF.addEventListener("drop",e=>{const x=e.target.closest(".mtile");if(dm==null||!x)return;e.preventDefault();const to=+x.dataset.i,[a]=st.alts.splice(dm,1);st.alts.splice(to,0,a);dm=null;drawNP()});
+NF.addEventListener("submit",e=>{e.preventDefault();if(need())return;
+  st.skills=FAMA.tagsIn(st.text);
+  if(st.edit){Object.assign(st.edit,{text:st.text,skills:st.skills,edited:true});st.dirty=false;NP.close();render();FAMA.toast(t("updated"));return}
+  const pr=MY_PROJECTS.find(x=>x[0]===st.proj)||[], [cl,yr]=(pr[2]||"").split(" · ");
+  const p=st.mode==="project"?{id:Date.now(),kind:"project",a:FAMA.ME,mine:true,ago:"now",text:st.text.trim(),project:{slug:pr[0],title:pr[1],client:cl,year:yr,credits:"Demo talent · Styling"},skills:["Styling"],likes:0,comments:0}
+    :{id:Date.now(),a:FAMA.ME,mine:true,ago:"now",text:st.text,media:st.media,skills:st.skills,likes:0,comments:0};
+  list.unshift(p);st.dirty=false;NP.close();if(filter!=="all")setFilter("all");else render();
+  /* the flow: after posting, everyone @mentioned gets a notification — say who */
+  const tagged=[...new Set((st.text.match(/@([a-z0-9-]+)/gi)||[]).map(m=>m.slice(1).toLowerCase()))].map(u=>FAMA.PEOPLE.find(x=>x.user===u)).filter(Boolean);
+  FAMA.toast(tagged.length?t("postedN",tagged.map(x=>x.name)):t("posted"))});
+FAMA.editPost=p=>openNP(null,p);
+["start","fabNew"].forEach(id=>document.getElementById(id).onclick=()=>openNP());
+document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>openNP(b.dataset.start));
+
+renderSide(); render();
+</script>
+</body></html>

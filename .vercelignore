@@ -1,0 +1,10 @@
+# Only the prototype goes to Vercel: no backups, mockups or design files
+_backup-*
+_mockup-*.html
+_mockups
+figma
+index.v1-backup.html
+index.v2-extras-backup.html
+.impeccable
+*.md
+!assets/img/stock/SOURCES.md

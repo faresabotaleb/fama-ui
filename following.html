@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Activity · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="stylesheet" href="assets/css/posts.css?v=32">
+<style>
+/* Screen: /talent/feed/activity?view=saved|liked|following — "Activity" in the Fama V1 Blueprint.
+   The talent's private feed collections. Following / Followers are portrait cards with a
+   Mutual badge and "quiet since…" after 90 days without posting. Unfollow has a 5-second
+   Undo. Followers get Follow back where it isn't mutual. The grid is capped so a few cards
+   don't leave a hole (UX audit #15). */
+.tools{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;margin-top:var(--s5)}
+.tools .in{max-width:280px}
+.tools .sel{width:auto;min-width:180px}
+.tools .skf{width:220px}
+.tools .skf .in{max-width:none}
+/* people as rows (11 Oct 2026, Muhammad's review): who they are, why they matter, their three latest
+   pieces of work, and one action. No empty cover, so nothing looks unfinished. */
+.people{list-style:none;margin:var(--s5) 0 0;padding:0 var(--s5);background:var(--white);border:var(--border);border-radius:var(--radius);max-width:760px}
+.pc{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:var(--s1) var(--s3);align-items:center;padding-block:var(--s4);border-top:var(--border)}
+.pc:first-child{border-top:0}
+.pc>.av{width:48px;height:48px;font-size:16px}
+.pc .who{min-width:0}
+.pc b{font-weight:600;font-size:16px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc a{text-decoration:none;color:inherit}
+.pc a:hover b{color:var(--purple-dk)}
+.pc .meta{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc .status{font-size:13px;font-weight:500;color:var(--purple-dk);margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc .status.q{color:var(--grey);font-weight:400}
+.pc .foot .btn{min-height:36px;padding-inline:var(--s4);font-size:14px}
+.pc .work{grid-column:2/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:var(--s2)}
+.pc .work span{aspect-ratio:1;border-radius:8px;background:var(--line) center/cover no-repeat}
+@media (min-width:761px){.pc .work span{aspect-ratio:7/4}}
+.quiet{background:var(--line);color:var(--grey)}
+.posts-list{max-width:720px;margin-top:var(--s5)}
+@media (max-width:760px){.people{padding:0 var(--s4)}.tools .in,.tools .sel,.tools .skf{max-width:none;width:100%}}
+</style></head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/skillfield.js?v=30"></script>
+<div data-fama-nav></div>
+<div data-fama-hero data-tone="soft" data-photo="assets/img/banners/activity-star.png" id="hero"></div>
+<script src="assets/js/posts.js?v=34y"></script>
+<script>
+Object.assign(FAMA.T.en,{"h.label":"Only you see this","h.title":"Activity","h.lead":"What you saved and liked, who you follow, and who follows you.",
+ saved:"Saved",liked:"Liked",following:"Following",followers:"Followers",search:"Search name or username",allSkills:"All skills",
+ sort:"Sort",sRecent:"Recently followed",sAlpha:"Alphabetical",sLeast:"Least active",mutual:"Follows you",quiet:m=>`Quiet since ${m}`,posted:d=>d===0?"Posted today":d===1?"Posted yesterday":`Posted ${d} days ago`,
+ unfollow:"Unfollow",unfollowA:n=>`Unfollow ${n}`,followBack:"Follow back",followBackA:n=>`Follow ${n} back`,followingNow:"Following",
+ unfollowed:n=>`Unfollowed ${n}`,followed:n=>`You follow ${n} now`,
+ emptySaved:"Nothing saved yet",emptySavedP:"Save posts from the feed to keep them here. Only you can see this list.",
+ emptyLiked:"No likes yet",emptyLikedP:"Posts you like show here.",emptyPeople:"No one matches",emptyPeopleP:"Try another name or skill.",openFeed:"Go to the feed"});
+Object.assign(FAMA.T.ar,{"h.label":"ده ليك إنت بس","h.title":"النشاط","h.lead":"اللي حفظته وعجبك، ومين بتتابعه، ومين بيتابعك.",
+ saved:"المحفوظ",liked:"اللي عجبك",following:"بتتابعهم",followers:"بيتابعوك",search:"ابحث بالاسم أو اسم المستخدم",allSkills:"كل المهارات",
+ sort:"الترتيب",sRecent:"أحدث متابعة",sAlpha:"أبجدي",sLeast:"الأقل نشاطاً",mutual:"متبادل",quiet:m=>`هادي من ${m}`,
+ unfollow:"إلغاء المتابعة",unfollowA:n=>`إلغاء متابعة ${n}`,followBack:"تابعه",followBackA:n=>`تابع ${n}`,followingNow:"بتتابعه",
+ unfollowed:n=>`لغيت متابعة ${n}`,followed:n=>`بقيت بتتابع ${n}`,
+ emptySaved:"مفيش محفوظ لسه",emptySavedP:"احفظ منشورات من المستجدات عشان تلاقيها هنا. محدش غيرك يشوف القايمة دي.",
+ emptyLiked:"لسه معجبتش بحاجة",emptyLikedP:"المنشورات اللي بتعجبك بتظهر هنا.",emptyPeople:"مفيش حد مطابق",emptyPeopleP:"جرّب اسم أو مهارة تانية.",openFeed:"روح للمستجدات"});
+const H=document.getElementById("hero");H.dataset.label=FAMA.t("h.label");H.dataset.title=FAMA.t("h.title");H.dataset.lead=FAMA.t("h.lead");
+document.write(FAMA.ICONS);
+</script>
+<main class="wrap main">
+  <div class="ptabs" role="tablist" id="views"></div>
+  <div id="panel" role="tabpanel"></div>
+</main>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search);
+const NINE=FAMA_SKILL_NAMES; /* all 41, from assets/js/skills.js */
+let view=["saved","liked","following"].includes(Q.get("view"))?Q.get("view"):"following", who="following", q="", skill="", sort="recent";
+/* placeholder people: since = days since you followed; last = days since their last post */
+let FOLLOWING=[
+ {name:"Omar Saleh",user:"omar-saleh",skill:"Photography",mutual:1,since:3,last:1},
+ {name:"Rania K.",user:"rania-k",skill:"Makeup",mutual:0,since:10,last:130,lastM:"May"},
+ {name:"Karim F.",user:"karim-f",skill:"Photography",mutual:0,since:21,last:2},
+ {name:"Lina Haddad",user:"lina-haddad",skill:"Photography",mutual:1,since:40,last:0},
+ {name:"Tarek Sobhy",user:"tarek-sobhy",skill:"Cinematography",mutual:0,since:60,last:95,lastM:"June"}
+];
+let FOLLOWERS=[
+ {name:"Omar Saleh",user:"omar-saleh",skill:"Photography",mutual:1,since:3,last:1},
+ {name:"Lina Haddad",user:"lina-haddad",skill:"Photography",mutual:1,since:40,last:0},
+ {name:"Nour Adel",user:"nour-adel",skill:"Styling",mutual:0,since:2,last:4},
+ {name:"Omar Farouk",user:"omar-farouk",skill:"Direction",mutual:0,since:15,last:8}
+];
+const saved=FAMA.POSTS.filter(p=>!p.mine).slice(0,2).map(p=>Object.assign(p,{saved:true}));
+const liked=FAMA.POSTS.filter(p=>!p.mine).slice(1,4).map(p=>Object.assign(p,{liked:true}));
+const init=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+
+function tabs(){
+  document.getElementById("views").innerHTML=[["saved",t("saved"),saved.length],["liked",t("liked"),liked.length],["following",t("following"),FOLLOWING.length]]
+    .map(v=>`<button role="tab" aria-selected="${v[0]===view}" data-v="${v[0]}">${v[1]}<span class="n">${num(v[2])}</span></button>`).join("");
+}
+const WORK=["dashboard","feed","projects","activity","credits","notifications","profile-structure","signin","profile"].map(n=>`assets/img/banners/${n}.jpg`);
+const hashU=u=>[...u].reduce((a,c)=>a+c.charCodeAt(0),0);
+function card(p){
+  const fol=who==="followers", isF=FOLLOWING.some(x=>x.user===p.user), quiet=p.last>=90, h=hashU(p.user);
+  return `<li class="pc" data-u="${p.user}"><a class="av" href="${href("preview.html?view=guest")}" aria-hidden="true" tabindex="-1">${init(p.name)}</a>
+    <div class="who"><a href="${href("preview.html?view=guest")}"><b dir="auto">${esc(p.name)}</b></a><span class="meta"><span dir="ltr">@${p.user}</span> · ${esc(p.skill)}</span>
+    <p class="status${quiet?" q":""}">${esc([p.mutual?t("mutual"):"",quiet?t("quiet",p.lastM):t("posted",p.last)].filter(Boolean).join(" · "))}</p></div>
+    <div class="foot">${fol&&!isF?`<button class="btn" data-back aria-label="${esc(t("followBackA",p.name))}">${t("followBack")}</button>`
+      :fol?`<button class="btn btn-2" disabled>${t("followingNow")}</button>`
+      :`<button class="btn btn-2" data-unfollow aria-label="${esc(t("unfollowA",p.name))}">${t("followingNow")}</button>`}</div>
+    <div class="work" aria-hidden="true">${[0,1,2].map(i=>`<span style="background-image:url(${WORK[(h+i*3)%WORK.length]})"></span>`).join("")}</div></li>`;
+}
+function people(){
+  const src=who==="following"?FOLLOWING:FOLLOWERS;
+  let l=src.filter(p=>(!q||p.name.toLowerCase().includes(q)||p.user.includes(q))&&(!skill||p.skill===skill));
+  l=l.slice().sort(sort==="alpha"?(a,b)=>a.name.localeCompare(b.name):sort==="least"?(a,b)=>b.last-a.last:(a,b)=>a.since-b.since);
+  return `<div class="utabs" role="tablist" style="margin-top:var(--s5)"><button role="tab" data-who="following" aria-selected="${who==="following"}">${t("following")}<span class="n">${num(FOLLOWING.length)}</span></button><button role="tab" data-who="followers" aria-selected="${who==="followers"}">${t("followers")}<span class="n">${num(FOLLOWERS.length)}</span></button></div>
+  <div class="tools"><label class="vh" for="q">${t("search")}</label><input class="in" id="q" type="search" value="${esc(q)}" placeholder="${t("search")}">
+    ${FAMA.skillField({value:skill,empty:t("allSkills"),label:t("allSkills"),attrs:'id="sk"'})}
+    <label class="vh" for="so">${t("sort")}</label><select class="sel" id="so"><option value="recent" ${sort==="recent"?"selected":""}>${t("sRecent")}</option><option value="alpha" ${sort==="alpha"?"selected":""}>${t("sAlpha")}</option><option value="least" ${sort==="least"?"selected":""}>${t("sLeast")}</option></select></div>
+  <div id="grid">${l.length?`<ul class="people">${l.map(card).join("")}</ul>`:`<div class="card empty" style="margin-top:var(--s5)"><h2 class="h2">${t("emptyPeople")}</h2><p>${t("emptyPeopleP")}</p></div>`}</div>`;
+}
+function posts(list,emptyT,emptyP){return list.length?`<div class="posts-list" id="pl">${list.map(p=>FAMA.postHTML(p,false)).join("")}</div>`
+  :`<div class="card empty" style="margin-top:var(--s5)"><h2 class="h2">${t(emptyT)}</h2><p>${t(emptyP)}</p><a class="btn" href="${href("feed.html")}">${t("openFeed")}</a></div>`}
+function render(){
+  tabs();
+  const P=document.getElementById("panel");
+  P.innerHTML=view==="following"?people():view==="saved"?posts(saved.filter(p=>p.saved),"emptySaved","emptySavedP"):posts(liked.filter(p=>p.liked),"emptyLiked","emptyLikedP");
+}
+function renderGrid(){const tmp=document.createElement("div");tmp.innerHTML=people();document.getElementById("grid").replaceWith(tmp.querySelector("#grid"))}
+document.getElementById("views").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;view=b.dataset.v;const u=new URL(location.href);u.searchParams.set("view",view);history.replaceState(null,"",u);render();document.querySelector(`[data-v="${view}"]`).focus()});
+const panel=document.getElementById("panel");
+panel.addEventListener("click",e=>{
+  const w=e.target.closest("[data-who]");if(w){who=w.dataset.who;render();document.querySelector(`[data-who="${who}"]`).focus();return}
+  const c=e.target.closest(".pc");if(!c)return;const u=c.dataset.u;
+  if(e.target.closest("[data-unfollow]")){const i=FOLLOWING.findIndex(p=>p.user===u),p=FOLLOWING[i];FOLLOWING.splice(i,1);render();
+    FAMA.toast(t("unfollowed",p.name),()=>{FOLLOWING.splice(i,0,p);render()})}
+  if(e.target.closest("[data-back]")){const p=FOLLOWERS.find(x=>x.user===u);p.mutual=1;FOLLOWING.unshift(Object.assign({},p,{since:0}));render();FAMA.toast(t("followed",p.name))}
+});
+panel.addEventListener("input",e=>{if(e.target.id==="q"){q=e.target.value.trim().toLowerCase();renderGrid()}});
+panel.addEventListener("change",e=>{if(e.target.id==="sk"){skill=FAMA.skillValue(e.target);renderGrid()}if(e.target.id==="so"){sort=e.target.value;renderGrid()}});
+/* saved and liked lists use the same post actions as the feed; unsaving drops a post from Saved */
+FAMA.bindPosts(panel,[...new Set([...saved,...liked])],()=>render());
+FAMA.apply(); render();
+</script>
+</body></html>

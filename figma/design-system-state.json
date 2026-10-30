@@ -1,0 +1,74 @@
+{
+ "runId": "fama-ds-2026-09-28",
+ "fileKey": "ioYiPalw91NjZu6YvzM0R5",
+ "phase": "phase3",
+ "notes": "Source of truth: fama-ui/assets/css/ds.css tokens + shell.css. Arabic paused (English only). No dark mode, no shadows. Brand assets on page 'draft' (0:1): En.logo1 1 (16:53), Pattern 4 1 (16:160). Target page 'design' (90:2) left for screens. Libraries in file are generic kits: rebuild.",
+ "entities": {
+  "collections": {
+   "Primitives": "VariableCollectionId:92:2",
+   "Color": "VariableCollectionId:92:18",
+   "Spacing": "VariableCollectionId:92:45",
+   "Radius": "VariableCollectionId:92:46"
+  },
+  "variables": {},
+  "textStyles": "Display/Hero, Heading/H1, H2, H2 small, H3, Body/Lead on hero, Body/Regular, Body/Strong, UI/Button, UI/Label, UI/Meta, UI/Tag",
+  "pages": {
+   "Design system": "90:2",
+   "Screens": "92:75",
+   "draft": "0:1"
+  },
+  "components": {
+   "icons": "40 icon components 'Icon/<name>' in section 93:2 (check=93:19, plus=93:39, x=93:43, arrow-right=93:47, eye=93:6, send=93:16, user-plus=93:25, log-in=93:35, search=93:54, trash=93:59, pin=93:63, lock=93:67, bell=93:71, heart=93:74, message-circle=93:77, share=93:82, bookmark=93:85, more-horizontal=94:6, link=94:10, image=94:20, chevron-down=93:50, eye-off=93:12, award=94:36)",
+   "Button": "95:51",
+   "Tag": "95:62",
+   "Status pill": "95:72",
+   "Chip": "95:77",
+   "Text field": "95:99",
+   "Switch": "95:106",
+   "Checkbox": "95:111"
+  },
+  "variablesNote": "Color semantic ids 92:19..92:44 (bg/page 19, bg/surface 20, bg/muted 21, bg/inverse 22, bg/hero 23, bg/accent 24, text/primary 25, text/secondary 26, text/inverse 27, text/on-hero 28, text/accent 29, border/default 30, border/strong 31, border/focus 32, icon/default 33, icon/muted 34, icon/accent 35, icon/inverse 36, status live bg37 fg38, bad bg39 fg40, off bg41 fg42, brand/purple 43, brand/yellow 44). space s1..s9 = 92:47..92:55, content 56, gutter 57, radius sm58 md59 lg60 pill61",
+  "sections": {
+   "Foundations": "92:76",
+   "Icons": "93:2",
+   "Buttons": "95:2",
+   "Tags & status": "95:(section containing 95:62)",
+   "Form controls": "95:78"
+  }
+ },
+ "completedSteps": [
+  "phase0",
+  "phase1",
+  "phase2",
+  "icons",
+  "button",
+  "tag",
+  "status-pill",
+  "chip",
+  "text-field",
+  "switch",
+  "checkbox"
+ ],
+ "blocked": "Figma MCP Starter-plan tool-call limit reached on 2026-09-28. Last call (Icon button, Avatar, Segmented, Skill field, Toast into section 95:78) was rejected before running: nothing created.",
+ "next": [
+  "icon-button",
+  "avatar",
+  "segmented",
+  "skill-field",
+  "toast",
+  "card",
+  "dialog",
+  "menu",
+  "nav (full/visitor/sign-in)",
+  "notice banner",
+  "hero",
+  "footer",
+  "post",
+  "comment",
+  "notification item",
+  "credit row",
+  "project card",
+  "skill tabs",
+  "then Screens page 92:75"
+ ]
+}

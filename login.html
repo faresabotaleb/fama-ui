@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Log in · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="stylesheet" href="assets/css/auth.css?v=31b">
+</head><body>
+<div data-fama-nav data-mode="auth"></div>
+<script src="assets/js/ds.js?v=30"></script>
+<script src="assets/js/auth.js?v=31"></script>
+<main class="wrap"><div class="auth">
+  <section class="au-show" id="show" aria-hidden="true"></section>
+  <section class="pane">
+    <span class="label" data-t="eyebrow"></span>
+    <h2 class="h2" data-t="title"></h2>
+    <p class="note" id="next" hidden></p>
+    <form id="form" novalidate>
+      <label class="f"><span data-t="email"></span><input class="in" id="email" type="email" autocomplete="email" dir="ltr" value="talent-demo@fama.test" required><p class="help"></p></label>
+      <div class="f"><label class="lbl" for="pw" data-t="pw"></label><div class="pw"><input class="in" id="pw" type="password" autocomplete="current-password" dir="ltr" value="demopass" required><button type="button" data-pw="pw" aria-pressed="false" data-t="show"></button></div><p class="help"></p></div>
+      <div class="row2"><label class="check"><input type="checkbox" id="remember"><span data-t="remember"></span></label><a class="link" href="forgot-password.html" data-t="forgot"></a></div>
+      <button class="btn btn-block"><svg class="icon" aria-hidden="true"><use href="#a-log-in"/></svg><span data-t="cta"></span></button>
+    </form>
+    <p class="alt"><span data-t="new"></span> <a class="link" href="register.html" data-t="create"></a></p>
+  </section>
+</div></main>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+FAMA.T.en={eyebrow:"Log in",title:"Welcome back.",email:"Email",pw:"Password",show:"Show",remember:"Remember me",forgot:"Forgot password?",cta:"Log in",new:"New here?",create:"Create an account",
+ next:"Log in to finish following Demo talent. We'll bring you straight back.",eEmail:"Enter the email you signed up with.",ePw:"Enter your password.",eWrong:"That email and password don't match. Try again, or reset your password."};
+FAMA.T.ar={eyebrow:"تسجيل الدخول",title:"أهلاً بعودتك.",email:"الإيميل",pw:"كلمة السر",show:"إظهار",remember:"افتكرني",forgot:"نسيت كلمة السر؟",cta:"تسجيل الدخول",new:"جديد هنا؟",create:"أنشئ حساب",
+ next:"سجّل دخول عشان تكمّل متابعة موهبة تجريبية. هنرجّعك على طول.",eEmail:"اكتب الإيميل اللي سجلت بيه.",ePw:"اكتب كلمة السر.",eWrong:"الإيميل وكلمة السر مش متطابقين. جرّب تاني، أو غيّر كلمة السر."};
+const {t}=FAMA;FAMA.apply();FAMA.showcase(document.getElementById("show"));
+const $=id=>document.getElementById(id), Q=new URLSearchParams(location.search);
+if(Q.get("next")){$("next").hidden=false;$("next").textContent=t("next")}
+$("form").addEventListener("submit",e=>{e.preventDefault();
+  const a=FAMA.fieldError($("email"),/^[^@\s]+@[^@\s]+$/.test($("email").value)?"":t("eEmail"));
+  const b=FAMA.fieldError($("pw"),$("pw").value?(($("pw").value==="wrong")?t("eWrong"):""):t("ePw"));
+  if(!a){$("email").focus();return} if(!b){$("pw").focus();return}
+  /* a guest sent here from a Follow or Like: finish the action once, then return them */
+  location.href=FAMA.href(Q.get("next")==="preview"?"preview.html?followed=1":"profile-structure.html");
+});
+</script>
+</body></html>

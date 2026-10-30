@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recognise a peer · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<style>
+.col{max-width:680px;margin-inline:auto}
+.back{display:inline-flex;align-items:center;gap:var(--s2);text-decoration:none;font-weight:600;color:var(--purple-dk);min-height:44px}
+.bk{transform:scaleX(-1)}[dir=rtl] .bk{transform:none}
+.target{display:flex;align-items:center;gap:var(--s4);margin-top:var(--s4)}
+.target .h1{font-size:clamp(34px,5vw,44px)}
+.card form{margin-top:0}
+.rate{display:flex;gap:var(--s1)}
+.rate input{position:absolute;opacity:0;width:1px;height:1px}
+.rate label{font-size:36px;line-height:1;color:var(--line);cursor:pointer;padding:var(--s1);min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--s2)}
+.rate label.on{color:var(--purple)}
+.rate input:focus-visible+label{outline:2px solid var(--purple-dk);outline-offset:2px}
+.done{text-align:center;padding:var(--s7) var(--s5)}
+.done .ic{width:64px;height:64px;border-radius:var(--radius-pill);background:var(--mint-bg);color:var(--mint-fg);display:flex;align-items:center;justify-content:center;margin:0 auto var(--s4)}
+.done p{color:var(--grey);margin-top:var(--s2)}
+.acts{display:flex;gap:var(--s2);justify-content:flex-end;flex-wrap:wrap;margin-top:var(--s6)}
+.prev{margin-top:var(--s6);padding:var(--s5);border:var(--border);border-radius:var(--radius);background:var(--cream)}
+.prev q{display:block;margin-top:var(--s3);font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.25}
+[dir=rtl] .prev q{font-family:var(--ar);font-weight:700;font-size:22px;line-height:1.6}
+.prev .who{margin-top:var(--s3);color:var(--grey)}
+.note{background:var(--cream);border:var(--border);border-radius:var(--s3);padding:var(--s3) var(--s4);margin-top:var(--s5)}
+</style></head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol></svg>
+<main class="wrap main"><div class="col" id="page">
+  <a class="back" href="preview.html?view=guest"><svg class="icon bk"><use href="#i-arrow"/></svg><span data-t="back"></span></a>
+  <div class="target"><span class="av" aria-hidden="true" style="width:72px;height:72px;font-size:24px">DT</span><div><h1 class="h1" data-t="title"></h1><p class="meta" data-t="sub"></p></div></div>
+  <div id="body"></div>
+</div></main>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+FAMA.T.en={back:"Back to Demo talent's profile",title:"Recognise Demo talent",sub:"Vouch for a peer. No stars, just your words.",
+ how:"How do you know them?",howPh:"e.g. Shot three campaigns together",say:"What would you tell someone about working with them?",sayPh:"Something only someone who worked with them would know…",
+ soFar:n=>`40–1,500 characters · ${n} so far`,howCount:n=>`8–160 characters · ${n} so far`,preview:"How it looks on the profile",send:"Send recognition",update:"Send updated recognition",cancel:"Cancel",
+ eHow:"Tell us how you know them, in 8 to 160 characters.",eSay:"Write at least 40 characters.",
+ existing:"You've already recognised Demo talent. Sending this replaces it, and it goes back for approval.",
+ doneT:"Recognition sent",doneP:"It shows on Demo talent's profile once our team approves it.",
+ guestT:"Log in to recognise Demo talent",guestP:"Recognitions come from talents on Fama. We'll bring you back to this form after you log in.",login:"Log in",join:"Join as talent",
+ selfT:"You can't recognise yourself",selfP:"Recognitions come from your peers. Share your profile so people you've worked with can vouch for you.",share:"Preview your profile"};
+FAMA.T.ar={back:"ارجع لبروفايل موهبة تجريبية",title:"زكّي موهبة تجريبية",sub:"زكّي زميل. من غير نجوم، بكلامك إنت.",
+ how:"تعرفه منين؟",howPh:"مثلاً: صورنا ٣ حملات مع بعض",say:"تقول إيه لحد عن الشغل معاه؟",sayPh:"حاجة محدش يعرفها غير اللي اشتغل معاه…",
+ soFar:n=>`٤٠–١٥٠٠ حرف · كتبت ${n}`,howCount:n=>`٨–١٦٠ حرف · كتبت ${n}`,preview:"شكلها على البروفايل",send:"إرسال التزكية",update:"إرسال التزكية المعدّلة",cancel:"إلغاء",
+ eHow:"قولنا تعرفه منين، من ٨ لـ ١٦٠ حرف.",eSay:"اكتب ٤٠ حرف على الأقل.",
+ existing:"إنت زكّيت موهبة تجريبية قبل كده. الإرسال ده هيستبدلها، وهترجع للمراجعة.",
+ doneT:"التزكية اتبعتت",doneP:"هتظهر على بروفايل موهبة تجريبية بعد موافقة فريقنا.",
+ guestT:"سجّل دخول عشان تزكّي موهبة تجريبية",guestP:"التزكيات بتيجي من المواهب على فاما. هنرجّعك للفورم ده بعد ما تسجل دخول.",login:"تسجيل الدخول",join:"انضم كموهبة",
+ selfT:"مينفعش تزكّي نفسك",selfP:"التزكيات بتيجي من زملائك. شارك بروفايلك عشان اللي اشتغلوا معاك يزكّوك.",share:"عاين بروفايلك"};
+const {t,num,esc,href}=FAMA;FAMA.apply();const Q=new URLSearchParams(location.search),$=id=>document.getElementById(id);
+const body=$("body");
+if(Q.get("view")==="guest"){body.innerHTML=`<section class="card done" style="margin-top:var(--s6)"><h2 class="h2">${t("guestT")}</h2><p>${t("guestP")}</p><div class="acts" style="justify-content:center"><a class="btn" href="${href("login.html?next=recognise")}">${t("login")}</a><a class="btn btn-2" href="${href("register.html")}">${t("join")}</a></div></section>`}
+else if(Q.get("self")==="1"){body.innerHTML=`<section class="card done" style="margin-top:var(--s6)"><h2 class="h2">${t("selfT")}</h2><p>${t("selfP")}</p><a class="btn" href="${href("preview.html")}" style="margin-top:var(--s5)">${t("share")}</a></section>`}
+else{
+  const ex=Q.get("existing")==="1";
+  body.innerHTML=`<section class="card" style="margin-top:var(--s6)" id="formCard">${ex?`<p class="note" style="margin-top:0">${t("existing")}</p>`:""}
+    <form id="form" novalidate style="margin-top:${ex?"var(--s5)":"0"}">
+      <label class="f"><span>${t("how")}</span><input class="in" id="how" maxlength="160" placeholder="${t("howPh")}" value="${ex?"Shot three campaigns together":""}"><p class="help" id="howHelp"></p></label>
+      <label class="f"><span>${t("say")}</span><textarea class="ta" id="say" maxlength="1500" placeholder="${t("sayPh")}" style="min-height:160px">${ex?"He finds the story in a rail of clothes before anyone else does, and he credits everyone on set.":""}</textarea><p class="help" id="sayHelp"></p></label>
+      <div class="prev" aria-live="polite"><span class="label">${t("preview")}</span><q id="pq" dir="auto"></q><p class="who" id="pw"></p></div>
+      <div class="acts"><a class="btn btn-2" href="${href("preview.html?view=guest")}">${t("cancel")}</a><button class="btn"><svg class="icon" aria-hidden="true"><use href="#a-send"/></svg>${ex?t("update"):t("send")}</button></div>
+    </form></section>
+    <section class="card done" id="done" hidden role="status" style="margin-top:var(--s6)"><span class="ic"><svg class="icon" style="width:32px;height:32px"><use href="#i-check"/></svg></span><h2 class="h2">${t("doneT")}</h2><p>${t("doneP")}</p><a class="btn" href="${href("preview.html?view=guest")}" style="margin-top:var(--s5)">${t("back")}</a></section>`;
+  const upd=()=>{const h=$("how").value.trim(),s=$("say").value.trim();
+    $("howHelp").textContent=t("howCount",num($("how").value.length));$("howHelp").className="help";
+    $("sayHelp").textContent=t("soFar",num($("say").value.length));$("sayHelp").className="help";
+    $("pq").textContent=s?`“${s}”`:"“…”";$("pw").textContent=`— Omar Saleh${h?" · "+h:""}`};
+  upd();$("how").addEventListener("input",upd);$("say").addEventListener("input",upd);
+  $("form").addEventListener("submit",e=>{e.preventDefault();const h=$("how").value.trim(),s=$("say").value.trim();
+    if(h.length<8){$("howHelp").textContent=t("eHow");$("howHelp").className="help err";$("how").closest(".f").classList.add("bad");$("how").focus();return}
+    if(s.length<40){$("sayHelp").textContent=t("eSay");$("sayHelp").className="help err";$("say").closest(".f").classList.add("bad");$("say").focus();return}
+    $("formCard").hidden=true;$("done").hidden=false});
+}
+</script>
+</body></html>

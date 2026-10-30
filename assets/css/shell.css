@@ -1,0 +1,241 @@
+/* 24 Oct 2026: the shared motion-token scale (transitions.dev, via the transitions-polish skill). Lives in shell.css because every app page loads it (profile-structure does not load ds.css) */
+:root {
+  /* Durations */
+  --duration-stagger: 40ms;  /* per-item stagger offset */
+  --duration-micro: 80ms;  /* tooltip/path delay, shake segment, large stagger */
+  --duration-quick: 150ms;  /* modal/dropdown close, text swap, tooltip appear */
+  --duration-fast: 250ms;  /* icon swap, dropdown/modal open, tabs sliding, page slide */
+  --duration-medium: 350ms;  /* panel close, toast close */
+  --duration-slow: 400ms;  /* panel open, skeleton content reveal, input clear */
+  --duration-very-slow: 500ms;  /* emphasis moments, badge appear, text reveal, success check */
+  /* Easings */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);  /* modal/dropdown/panel open + close, page slide, resize, position change */
+  --ease-in-out: ease-in-out;  /* icon swap, text swap, text reveal, skeleton reveal */
+  --ease-out: ease-out;  /* tooltip open / close */
+  --ease-linear: linear;  /* shimmer, skeleton pulse, spinner */
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);  /* badge pop open */
+  --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1);  /* bouncy hover-out (avatar return) */
+  /* Distances */
+  --distance-micro: 4px;  /* text swap */
+  --distance-small: 6px;  /* error shake (small segment) */
+  --distance-base: 8px;  /* badge diagonal reveal, page slide, error shake (large segment) */
+  --distance-medium: 12px;  /* text reveal */
+  --distance-large: 30px;  /* check badge appear */
+  /* Scales */
+  --scale-large: 0.96;  /* modal open / close */
+  --scale-medium: 0.97;  /* dropdown open */
+  --scale-small: 0.98;  /* tooltip open */
+  --scale-tiny: 0.99;  /* dropdown close */
+  /* Blur */
+  --blur-small: 2px;  /* panel reveal, icon swap, text swap, skeleton reveal, number pop-in */
+  --blur-medium: 3px;  /* page slide, text reveal */
+  --blur-large: 8px;  /* success check open */
+}
+html{overflow-x:clip} /* decorative bleeds never widen the page on a phone */
+/* FAMA — shared header and footer. Loaded on every page, next to that page's own CSS.
+   Everything is scoped under .fx-* and carries its own copy of the tokens (tokens.css),
+   so it looks the same whatever stylesheet the page underneath still uses. */
+@import url("https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap");
+
+.fx-nav,.fx-foot{
+  --cream:#FBFAF2; --white:#FFFFFF; --ink:#14110F; --grey:#6B6560; --line:#E6E2D8;
+  --purple:#AD50D3; --purple-dk:#8A2FA8; --yellow:#FFEB73;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --radius:20px; --radius-pill:999px; --border:1px solid var(--line);
+  --ease:cubic-bezier(.2,.9,.3,1); --fast:120ms; --content:1060px;
+  font-family:"Sofia Sans",sans-serif; font-size:16px; line-height:1.5; color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+[dir=rtl] .fx-nav,[dir=rtl] .fx-foot{font-family:"KO Sans","Zanjabeel","IBM Plex Sans Arabic",Tahoma,sans-serif}
+.fx-nav *,.fx-foot *{box-sizing:border-box}
+.fx-nav a,.fx-foot a{color:inherit;text-decoration:none}
+.fx-nav :focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:var(--s1)}
+.fx-nav .fx-av:focus-visible,.fx-nav .fx-bell:focus-visible,.fx-nav .fx-burger:focus-visible,.fx-nav .fx-preview:focus-visible{outline-color:var(--ink);border-radius:var(--radius-pill)}
+.fx-av[aria-expanded=true]{background:var(--ink);color:var(--cream)}
+.fx-wrap{max-width:calc(var(--content) + 2 * var(--s5));margin-inline:auto;padding-inline:var(--s5)}
+.fx-icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
+[dir=rtl] .fx-flip{transform:scaleX(-1)}
+
+/* header */
+.fx-nav{position:sticky;top:0;z-index:40;background:var(--cream);border-bottom:var(--border)}
+.fx-nav .fx-in{display:flex;align-items:center;gap:var(--s5);min-height:72px}
+.fx-logo img{display:block;height:36px;width:auto;max-width:none}
+.fx-links{display:flex;gap:var(--s5);font-weight:500;font-size:15px;margin:0;padding:0;list-style:none}
+.fx-links a{display:block;color:var(--grey);white-space:nowrap;padding-block:24px 22px;border-bottom:2px solid transparent}
+.fx-links a:hover{color:var(--ink)}
+.fx-links a[aria-current]{color:var(--ink);border-bottom-color:var(--purple)}
+.fx-end{margin-inline-start:auto;display:flex;align-items:center;gap:var(--s3)}
+.fx-preview{display:inline-flex;align-items:center;gap:var(--s2);font-weight:600;font-size:15px;white-space:nowrap;padding:var(--s2) var(--s4);border:var(--border);border-radius:var(--radius);background:var(--white)}
+.fx-preview:hover{border-color:var(--ink)}
+.fx-preview[aria-current]{border-color:var(--purple)}
+.fx-preview .fx-st{color:var(--purple)}
+.fx-me{position:relative}
+.fx-av{width:40px;height:40px;border-radius:var(--radius-pill);background:var(--line);border:0;display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer;padding:0}
+.fx-pop{position:absolute;top:calc(100% + var(--s2));inset-inline-end:0;min-width:220px;background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s2);margin:0;list-style:none}
+.fx-pop[hidden]{display:none}
+.fx-acct{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3) var(--s3)}
+.fx-av-s{width:40px;height:40px;flex:none;cursor:default;background:var(--line)}
+.fx-acct .fx-who{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.fx-acct .fx-who b{font-weight:600;font-size:15px}
+.fx-acct .fx-who span{font-size:13px;color:var(--grey)}
+.fx-out{color:var(--grey)!important;border-top:var(--border);margin-top:var(--s1)}
+.fx-pop .fx-out{border-radius:0 0 var(--s3) var(--s3)}
+.fx-pop .fx-out:hover,.fx-pop .fx-out:focus-visible{color:var(--ink)!important}
+.fx-pop a{display:block;padding:10px var(--s3);border-radius:var(--s3);font-size:15px}
+.fx-pop a:hover,.fx-pop a:focus-visible{background:var(--cream)}
+/* sign-in pages: the way to the feed */
+.fx-browse{display:inline-flex;align-items:center;gap:var(--s2);font-size:15px;color:var(--grey)}
+.fx-browse b{font-weight:600;color:var(--purple-dk)}
+.fx-browse:hover b{color:var(--ink)}
+.fx-browse .fx-icon{color:var(--purple-dk)}
+@media (max-width:760px){.fx-browse .fx-lbl2{display:none}}
+
+/* notifications */
+.fx-bellw{position:relative}
+.fx-bell{position:relative;width:40px;height:40px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:var(--ink)}
+.fx-bell:hover{border-color:var(--ink)}
+.fx-count{position:absolute;top:-3px;inset-inline-end:-3px;min-width:16px;height:16px;padding:0 4px;border-radius:var(--radius-pill);background:var(--ink);color:var(--cream);font-size:11px;font-weight:600;line-height:16px;font-variant-numeric:tabular-nums;text-align:center;border:2px solid var(--cream);box-sizing:content-box}
+.fx-count[hidden]{display:none}
+.fx-npop{position:absolute;top:calc(100% + var(--s2));inset-inline-end:-56px;width:380px;max-width:calc(100vw - 32px);background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s2);z-index:50}
+.fx-npop[hidden]{display:none}
+.fx-nh{display:flex;justify-content:space-between;align-items:center;padding:var(--s2) var(--s3) var(--s3)}
+.fx-nh b{font-weight:600;font-size:17px}
+.fx-nh button{border:0;background:none;color:var(--purple-dk);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:var(--s1)}
+.fx-nh button:hover{color:var(--ink)}
+.fx-nlist{list-style:none;margin:0;padding:0;max-height:min(420px,60vh);overflow:auto}
+.fx-n{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3);border-radius:var(--s3);font-size:14px;line-height:1.4;color:var(--ink)}
+.fx-n:hover,.fx-n:focus-visible{background:var(--cream)}
+.fx-n b{font-weight:600}
+.fx-nic{flex:none;width:36px;height:36px;border-radius:var(--radius-pill);background:var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.fx-n.unread .fx-nic{background:var(--ink);color:var(--cream)}
+.fx-nic .fx-icon{width:16px;height:16px}
+.fx-nb{flex:1;min-width:0;display:grid;gap:2px}
+.fx-nex{color:var(--grey);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fx-nago{color:var(--grey);font-size:13px}
+.fx-ndot{flex:none;width:8px;height:8px;border-radius:var(--radius-pill);background:var(--purple);margin-top:6px}
+.fx-nmore{display:block;text-align:center;padding:var(--s3);margin-top:var(--s1);border-top:var(--border);font-weight:600;font-size:15px;color:var(--purple-dk)}
+.fx-nmore:hover{color:var(--ink)}
+.fx-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:760px){.fx-bellw{position:static}.fx-npop{position:absolute;inset-inline:var(--s4);width:auto;max-width:none;top:calc(100% + 1px)}}
+.fx-burger{display:none;width:40px;height:40px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);align-items:center;justify-content:center;cursor:pointer;padding:0;color:var(--ink)}
+
+/* phone and tablet: the links move into a panel under the bar */
+.fx-dwrap{position:absolute;left:0;right:0;top:100%;z-index:45}
+.fx-drawer{background:var(--cream);border-top:var(--border);padding-block:var(--s2) var(--s5);box-shadow:0 18px 32px -12px rgba(20,17,15,.22);max-height:calc(100vh - 64px);overflow:auto;overscroll-behavior:contain;
+  animation:fxDrop var(--duration-fast) var(--ease-smooth-out)}
+/* menu panel: opens 250ms from 8px up, closes faster (150ms) and shorter */
+@keyframes fxDrop{from{opacity:0;transform:translateY(calc(-1 * var(--distance-base)))}}
+@keyframes fxLift{to{opacity:0;transform:translateY(calc(-1 * var(--distance-micro)))}}
+.fx-drawer.is-closing{animation:fxLift var(--duration-quick) var(--ease-smooth-out) forwards}
+/* dropdowns (account, notifications): open from 0.97, close to 0.99, origin at their button */
+.fx-pop,.fx-npop{transform-origin:top right;animation:fxPop var(--duration-fast) var(--ease-smooth-out)}
+[dir=rtl] .fx-pop,[dir=rtl] .fx-npop{transform-origin:top left}
+@keyframes fxPop{from{opacity:0;transform:scale(var(--scale-medium))}}
+@keyframes fxPopOut{to{opacity:0;transform:scale(var(--scale-tiny))}}
+.fx-pop.is-closing,.fx-npop.is-closing{animation:fxPopOut var(--duration-quick) var(--ease-smooth-out) forwards}
+/* burger ↔ close: an icon swap, 250ms ease-in-out, from scale .25 and 2px blur */
+.fx-burger svg.is-swap{animation:fxSwap var(--duration-fast) var(--ease-in-out)}
+@keyframes fxSwap{from{opacity:0;transform:scale(.25);filter:blur(var(--blur-small))}}
+.fx-av{transition-property:background-color,color;transition-duration:var(--duration-quick);transition-timing-function:var(--ease-out)}
+.fx-dacc{margin-top:var(--s3);padding-top:var(--s2);display:grid;gap:0}
+.fx-dacc{border-top:var(--border)}
+.fx-dacc .fx-acct{padding-inline:0}
+.fx-drawer .fx-out{padding-top:var(--s3)}
+.fx-drawer .fx-dlink{justify-content:flex-start;gap:var(--s2);border-bottom:0;font-size:16px;min-height:44px;padding-block:var(--s2)}
+.fx-drawer .fx-dlink .fx-icon{width:18px;height:18px}
+@media (prefers-reduced-motion:reduce){.fx-drawer,.fx-drawer.is-closing,.fx-pop,.fx-npop,.fx-pop.is-closing,.fx-npop.is-closing,.fx-burger svg.is-swap{animation:none}.fx-av{transition:none}}
+.fx-drawer[hidden]{display:none}
+.fx-drawer ul{list-style:none;margin:0;padding:0}
+.fx-drawer a{display:flex;justify-content:space-between;align-items:center;padding:var(--s3) 0;font-size:17px;font-weight:500;border-bottom:var(--border)}
+.fx-drawer a[aria-current]{font-weight:600}
+.fx-drawer a[aria-current]::after{content:"";width:8px;height:8px;border-radius:var(--radius-pill);background:var(--purple)}
+@media (min-width:1101px){.fx-drawer{display:none!important}}
+@media (max-width:1100px){
+  .fx-links:not(.fx-keep){display:none}
+  .fx-burger{display:inline-flex}
+  .fx-me{display:none} /* the account lives in the menu here, so there is one menu, not two */
+}
+@media (max-width:760px){
+  .fx-wrap{padding-inline:var(--s4)}
+  .fx-nav .fx-in{min-height:64px;gap:var(--s3)}
+  .fx-logo img{height:30px}
+  .fx-preview .fx-lbl,.fx-preview .fx-flip{display:none}
+  .fx-preview{padding:0;width:44px;height:44px;justify-content:center;border-radius:var(--radius-pill)}
+  .fx-bell,.fx-burger{width:44px;height:44px}
+}
+
+/* footer */
+.fx-foot{margin-top:104px;background:transparent}
+.fx-foot .fx-in{border-top:var(--border);padding-block:var(--s5) var(--s7);display:flex;justify-content:space-between;align-items:center;gap:var(--s4);flex-wrap:wrap}
+.fx-foot img{height:28px;width:auto;display:block;max-width:none}
+.fx-foot span{font-size:14px;color:var(--grey)}
+@media (max-width:760px){.fx-foot{margin-top:64px}}
+
+/* page hero — the purple block with the pattern band that opens every talent page.
+   Used through <div data-fama-hero data-label data-title data-lead>…actions…</div> */
+.fx-hero{
+  --white:#FFFFFF; --ink:#14110F; --cream:#FBFAF2; --line:#E6E2D8; --purple:#AD50D3; --yellow:#FFEB73;
+  max-width:1060px; margin:32px auto 0; background:var(--purple); color:var(--white); border-radius:20px; overflow:hidden;
+  font-family:"Sofia Sans",sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.fx-hero-wrap{padding-inline:24px}
+/* soft tone: cream, ink type — for inner pages. Photo: the image sits on the right, already shaped as the star */
+/* soft banner colour: lavender mist, a whisper of the brand purple (chosen 6 Oct 2026) */
+.fx-hero.fx-soft{background-color:var(--lavender,#F3EAF8);color:var(--ink);border:1px solid var(--lavender-line,#E9DAF2)}
+.fx-hero.fx-soft h1{color:var(--ink)}
+.fx-hero.fx-soft .fx-hl{color:#8A2FA8;font-size:15px}
+.fx-hero.fx-soft .fx-lead{color:#6B6560;font-weight:400;font-size:17px}
+.fx-hero.fx-soft .fx-hbtn.light{border-color:var(--line)}
+.fx-hero.fx-photo{position:relative;min-height:216px;overflow:hidden}
+.fx-star{position:absolute;top:0;bottom:0;right:26px;margin-block:auto;display:block;pointer-events:none}
+.fx-hero.fx-photo .fx-hb{min-height:216px;align-items:center;padding-right:52%}
+[dir=rtl] .fx-hero{font-family:"KO Sans","Zanjabeel","IBM Plex Sans Arabic",Tahoma,sans-serif}
+.fx-hero .fx-hb{padding:32px 48px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.fx-hero .fx-hl{font-weight:600;font-size:20px;letter-spacing:0;text-transform:none}
+.fx-hero h1{font-family:"Oswald",sans-serif;font-weight:600;font-size:44px;line-height:1.05;margin:4px 0 0;color:var(--white);letter-spacing:0;text-transform:none}
+[dir=rtl] .fx-hero h1{font-family:"KO Sans","Zanjabeel","IBM Plex Sans Arabic",sans-serif;font-weight:700;line-height:1.3}
+.fx-hero .fx-lead{font-weight:600;font-size:20px;max-width:46ch;margin:12px 0 0}
+.fx-hero .fx-ha{display:flex;gap:8px;flex-wrap:wrap}
+.fx-hero .fx-ha:empty{display:none}
+.fx-hero .fx-band{height:40px;background:url("../img/pattern-stars.png") repeat-x;background-size:auto 100%}
+.fx-hbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:20px;font:inherit;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;text-decoration:none;letter-spacing:0;text-transform:none;border:1px solid var(--ink);background:var(--ink);color:var(--cream)}
+.fx-hbtn .st{color:var(--yellow)}
+.fx-hbtn.light{background:var(--white);border-color:var(--white);color:var(--ink)}
+.fx-hbtn[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+@media (max-width:760px){
+  .fx-hero-wrap{padding-inline:16px}
+  .fx-hero{margin-top:24px}
+  .fx-hero .fx-hb{padding:24px}
+  .fx-hero h1{font-size:34px}
+  .fx-hero .fx-band{height:32px}
+  .fx-hero.fx-photo{padding-top:196px}
+  .fx-star{top:-128px;right:-84px;bottom:auto;margin:0;clip-path:inset(128px 84px 0 0 round 0 20px 0 0)}
+  .fx-hero.fx-photo .fx-hb{padding-right:24px;min-height:0}
+}
+
+/* approval notice — pinned with the nav while the profile hasn't been sent for review */
+.fx-notice{background:var(--ink);color:var(--cream)}
+.fx-notice .fx-in{min-height:0;padding-block:var(--s3);gap:var(--s3)}
+.fx-notice p{margin:0;flex:1;min-width:0;font-size:15px;line-height:1.4}
+.fx-notice .fx-ncta{display:inline-flex;align-items:center;gap:var(--s1);font-weight:600;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
+.fx-notice .fx-ncta:hover{text-decoration:none}
+.fx-notice :focus-visible{outline-color:var(--cream)}
+.fx-notice .fx-short{display:none}
+@media (max-width:760px){.fx-notice .fx-in{flex-wrap:wrap;row-gap:var(--s1)}.fx-notice > .fx-in > .fx-icon{display:none}.fx-notice .fx-long{display:none}.fx-notice .fx-short{display:inline}}
+
+/* client review strip — only with ?review=1. Deliberately looks like tooling, not like Fama:
+   system font, no brand colour, dashed edge, sits above the page and scrolls away with it. */
+.fx-review{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 16px;background:var(--white);border-bottom:1px dashed var(--grey);color:var(--grey);font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}
+.fx-review a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.fx-review .fx-rnow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.fx-review b{color:var(--ink);font-weight:600}
+.fx-review .fx-roff{opacity:.4}
+.fx-review :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media (max-width:760px){.fx-review .fx-rtag{display:none}}
+
+/* 24 Oct 2026 (make-interfaces-feel-better pass on the header) */
+.fx-links a{transition-property:color,border-color;transition-duration:var(--duration-quick);transition-timing-function:var(--ease-out)}
+.fx-preview .fx-icon{stroke-width:2} /* beside 600-weight text */
+.fx-preview,.fx-bell,.fx-burger,.fx-av{transition-property:transform,background-color,color,border-color;transition-duration:var(--duration-quick);transition-timing-function:var(--ease-out)}
+.fx-preview:active,.fx-bell:active,.fx-burger:active,.fx-av:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.fx-links a,.fx-preview,.fx-bell,.fx-burger,.fx-av{transition:none}.fx-preview:active,.fx-bell:active,.fx-burger:active,.fx-av:active{transform:none}}

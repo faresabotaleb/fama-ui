@@ -1,0 +1,429 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<!-- hidden 3 Oct 2026: brands moved to Profile structure, recognitions to Credits. Kept for reference. -->
+<script>location.replace("profile-structure.html"+location.search.replace(/[?&]section=[^&]*/,"").replace(/^&/,"?")+"#brands")</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile content · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Sofia+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---- tokens.css, copied verbatim so the file stays self-contained ---- */
+:root{
+  color-scheme: light;
+  --cream:#FBFAF2; --white:#FFFFFF; --ink:#14110F; --grey:#6B6560; --line:#E6E2D8;
+  --purple:#AD50D3; --purple-dk:#8A2FA8; --yellow:#FFEB73;
+  --mint:#6CEAC2; --rose:#E8927C; --sky:#8FE1FF;
+  --mint-bg:#E2F9F0; --mint-fg:#1B6B52;
+  --rose-bg:#FCE8E2; --rose-fg:#9B4526;
+  --font-display:"Oswald",sans-serif;
+  --font-body:"Sofia Sans",sans-serif;
+  --font-ar:"KO Sans","Zanjabeel",sans-serif;
+  --t-display:96px; --t-display-lh:1;
+  --t-h1:44px; --t-h2:30px; --t-h3:18px;
+  --t-body:16px; --t-body-lh:1.5;
+  --t-label:14px; --t-meta:14px;
+  --t-display-ar:72px; --t-display-ar-lh:1.25;
+  --t-h2-ar:28px; --t-body-ar-lh:1.8;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:64px; --s9:104px;
+  --section-gap:104px; --section-gap-mobile:64px;
+  --radius:20px; --radius-pill:999px;
+  --border:1px solid var(--line); --shadow:none;
+  --ease:cubic-bezier(.2,.9,.3,1); --fast:120ms; --slow:260ms;
+  --content:1060px; --columns:12; --gutter:24px;
+}
+/* ---- end tokens ---- */
+
+/* Screen: /talent/content/{section} — "Profile content" in the Fama V1 Blueprint.
+   One row of section buttons (Profile-wide, then each skill); all of a section's
+   blocks are stacked on one page. Add, edit, drag to reorder, delete with confirmation.
+   Hidden blocks are listed, dimmed, with a Hidden tag. */
+:root{--ar:var(--font-ar),"IBM Plex Sans Arabic",Tahoma,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-body);font-size:var(--t-body);line-height:var(--t-body-lh);-webkit-font-smoothing:antialiased}
+[dir=rtl] body{font-family:var(--ar);line-height:var(--t-body-ar-lh)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+p{margin:0}
+:focus-visible{outline:2px solid var(--purple-dk);outline-offset:2px}
+.wrap{max-width:calc(var(--content) + 2 * var(--s5));margin-inline:auto;padding-inline:var(--s5)}
+.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+[dir=rtl] .flip{transform:scaleX(-1)}
+
+.label{font-weight:500;font-size:var(--t-label);color:var(--purple-dk)}
+.meta{font-size:var(--t-meta);color:var(--grey)}
+.h2{font-family:var(--font-display);font-weight:600;font-size:var(--t-h2);line-height:1.1;margin:0}
+[dir=rtl] .h2{font-family:var(--ar);font-weight:700;font-size:var(--t-h2-ar);line-height:1.4}
+
+.btn{font-weight:600;font-size:15px;min-height:44px;padding:var(--s2) var(--s5);border-radius:var(--radius);border:1px solid var(--ink);background:var(--ink);color:var(--cream);display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn .st{color:var(--yellow)}
+.btn-2{background:var(--white);color:var(--ink);border:var(--border)}
+.btn-2:hover{border-color:var(--ink)}
+.btn-text{background:none;border:0;color:var(--purple-dk);padding-inline:var(--s2);min-height:44px}
+.btn-text:hover{color:var(--ink)}
+.btn-danger{background:var(--rose-fg);border-color:var(--rose-fg);color:var(--white)}
+.link{color:var(--purple-dk);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--s1)}
+.link:hover{color:var(--ink)}
+.iconbtn{width:44px;height:44px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--grey);flex:none}
+.iconbtn:hover{color:var(--ink);border-color:var(--ink)}
+.iconbtn.del:hover{color:var(--rose-fg);border-color:var(--rose-fg)}
+
+.tag{font-weight:600;font-size:13px;border-radius:var(--radius-pill);padding:2px var(--s3);white-space:nowrap}
+.tag-primary{background:var(--ink);color:var(--cream);display:inline-flex;align-items:center;gap:5px}
+/* primary skill: a pin (Lucide), it's the skill the profile opens on */
+.tag-primary::before,.pin{content:"";display:inline-block;vertical-align:-2px;width:13px;height:13px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center/contain no-repeat}
+.tag-hidden{background:var(--line);color:var(--grey)}
+.pill{font-weight:600;font-size:13px;border-radius:var(--radius-pill);padding:2px var(--s3);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:var(--radius-pill);background:currentColor}
+.p-live{background:var(--mint-bg);color:var(--mint-fg)}
+.p-off{background:var(--line);color:var(--grey)}
+.p-bad{background:var(--rose-bg);color:var(--rose-fg)}
+
+/* section row — Profile-wide, then each skill */
+.tabs{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s7)}
+.tabs button{min-height:44px;white-space:nowrap;flex:none;display:inline-flex;align-items:center;gap:var(--s2);padding:0 var(--s4);border-radius:var(--radius-pill);border:var(--border);background:var(--white);font-weight:600;cursor:pointer}
+.tabs button:hover{border-color:var(--ink)}
+.tabs button[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.tabs .n{font-weight:500;font-size:13px;color:var(--grey)}
+.tabs button[aria-selected=true] .n{color:var(--line)}
+.tabs .st{color:var(--yellow)}
+.tabhint{margin-top:var(--s3)}
+
+/* blocks, stacked */
+.block{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s6);margin-top:var(--s5)}
+.block.off{background:var(--cream)}
+.bhead{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.bhead .h2{font-size:26px}
+.bhead .acts{margin-inline-start:auto;display:flex;gap:var(--s2);flex-wrap:wrap}
+.bdesc{color:var(--grey);margin-top:var(--s2);max-width:62ch}
+
+/* list items */
+.items{list-style:none;margin:var(--s5) 0 0;padding:0}
+.item{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding-block:var(--s3);border-top:var(--border);min-height:64px}
+.item:first-child{border-top:0}
+.item.dragging{opacity:.4}
+.item b{font-weight:600;display:block}
+.item .meta{display:block}
+.item .acts{display:flex;gap:var(--s2)}
+.grip{width:32px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--grey);cursor:grab}
+.none{color:var(--grey);padding-block:var(--s4)}
+
+/* media grid */
+.media{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--s3);margin-top:var(--s5)}
+.tile{position:relative;aspect-ratio:4/5;border-radius:var(--s3);background:var(--line);border:2px solid transparent;cursor:pointer;padding:0;display:flex;flex-direction:column;justify-content:flex-end;text-align:start;overflow:hidden}
+.tile:hover{border-color:var(--grey)}
+.tile[aria-pressed=true]{border-color:var(--ink)}
+.tile .kind{position:absolute;top:var(--s2);inset-inline-start:var(--s2);background:var(--white);border-radius:var(--radius-pill);font-size:12px;font-weight:600;padding:0 var(--s2)}
+.tile .cap{background:var(--white);font-size:13px;padding:var(--s2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.tile .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--grey)}
+.tile.dragging{opacity:.4}
+.drop{border:2px dashed var(--line);border-radius:var(--s3);aspect-ratio:4/5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s2);background:var(--white);cursor:pointer;color:var(--ink);font-weight:600;text-align:center;padding:var(--s3)}
+.drop:hover{border-color:var(--ink)}
+.drop small{font-weight:400;color:var(--grey);font-size:13px}
+
+/* inline form */
+.form{margin-top:var(--s5);padding:var(--s5);border:var(--border);border-radius:var(--radius);background:var(--cream)}
+.form h3{margin:0 0 var(--s4);font-size:var(--t-h3);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
+.f{display:block}
+.f.full{grid-column:1/-1}
+.f>span{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 var(--s3);font-weight:600;font-size:15px;margin-bottom:var(--s2)}
+.f>span small{font-weight:400;color:var(--grey);font-size:var(--t-meta)}
+.in,.sel,.ta{width:100%;min-width:0;min-height:48px;background:var(--white);border:1px solid var(--line);border-radius:var(--s3);padding:var(--s3) var(--s4);font-size:16px}
+.in:focus,.sel:focus,.ta:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.ta{min-height:96px;resize:vertical}
+.f.bad .in{border-color:var(--rose-fg)}
+.err{color:var(--rose-fg);font-size:var(--t-meta);margin-top:var(--s2)}
+.form .acts{display:flex;gap:var(--s2);justify-content:flex-end;margin-top:var(--s5);flex-wrap:wrap}
+
+/* reviews — read only */
+.filters{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
+.filters button{min-height:40px;padding:0 var(--s4);border-radius:var(--radius-pill);border:var(--border);background:var(--white);font-weight:500;cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.filters .c{color:var(--grey);margin-inline-start:var(--s1)}
+.filters button[aria-pressed=true] .c{color:var(--line)}
+.revs{list-style:none;margin:var(--s5) 0 0;padding:0;display:grid;gap:var(--s3)}
+.rev{border:var(--border);border-radius:var(--radius);padding:var(--s5)}
+.rev .top{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.stars{color:var(--purple);letter-spacing:0;font-size:18px}
+.stars span{color:var(--line)}
+.rev q{display:block;margin-top:var(--s3);font-size:17px}
+.rev .who{margin-top:var(--s3);font-size:var(--t-meta);color:var(--grey)}
+.rec q{font-size:17px;display:block}
+.rec .who{margin-top:var(--s2);font-size:var(--t-meta);color:var(--grey)}
+
+dialog{border:0;border-radius:var(--radius);padding:0;max-width:440px;width:calc(100% - 32px);background:var(--white);color:var(--ink)}
+dialog::backdrop{background:rgba(20,17,15,.5)}
+.dlg{padding:var(--s6)}
+.dlg h2{font-family:var(--font-display);font-weight:600;font-size:26px;margin:0}
+[dir=rtl] .dlg h2{font-family:var(--ar);font-weight:700}
+.dlg p{color:var(--grey);margin-top:var(--s2)}
+.dlg .acts{display:flex;justify-content:flex-end;gap:var(--s2);margin-top:var(--s5);flex-wrap:wrap}
+.toast{position:fixed;bottom:var(--s5);inset-inline-start:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:var(--s3) var(--s5);border-radius:var(--radius-pill);font-weight:500;display:flex;gap:var(--s4);align-items:center;z-index:50}
+[dir=rtl] .toast{transform:translateX(50%)}
+.toast[hidden]{display:none}
+.toast button{background:none;border:0;color:var(--yellow);font-weight:600;cursor:pointer;min-height:32px}
+
+@media (max-width:760px){
+  .wrap{padding-inline:var(--s4)}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--s4));padding-inline:var(--s4);margin-top:var(--s7)}
+  .block{padding:var(--s5)}
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .item{grid-template-columns:32px minmax(0,1fr)}
+  .item .acts{grid-column:2}
+  .media{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<!-- Lucide icons, ISC licence -->
+<symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+</svg>
+
+<div data-fama-nav></div>
+<div data-fama-hero id="heroSlot"><a class="fx-hbtn light" id="heroArrange" href="profile-structure.html#sections"></a></div>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <p class="meta tabhint" id="tabhint"></p>
+  <div id="blocks" role="tabpanel"></div>
+</main>
+
+<div data-fama-foot></div>
+
+<dialog id="dlgDel"><form method="dialog" class="dlg">
+  <h2 id="delTitle"></h2>
+  <p id="delHelp"></p>
+  <div class="acts"><button class="btn btn-2" value="cancel" id="delCancel"></button><button class="btn btn-danger" value="ok" id="delOk"></button></div>
+</form></dialog>
+<div class="toast" id="toast" hidden role="status"><span id="toastTx"></span><button id="toastUndo"></button></div>
+
+<script>
+/* runs before shell.js so the shared hero is written in the page's language */
+(function(){
+  var ar=false /* Arabic paused */, h=document.getElementById('heroSlot');
+  h.dataset.label=ar?'املأ بروفايلك':'Fill in your profile';
+  h.dataset.title=ar?'محتوى البروفايل':'Profile content';
+  h.dataset.lead=ar?'اختار قسم من فوق، وعدّل كل الأقسام اللي فيه في صفحة واحدة.':'The parts of your profile around your projects: recognitions, brands and what you\u2019d like to explore.';
+  var a=document.getElementById('heroArrange'); a.textContent=ar?'ترتيب الأقسام':'Show or hide sections'; if(ar)a.href='profile-structure.html?lang=ar#sections';
+})();
+</script>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+/* Placeholder data mirrors Profile structure: Styling (primary), Modelling, Photography. */
+const q=new URLSearchParams(location.search);
+const lang="en"; // Arabic paused (27 Sep 2026). Restore: q.get("lang")==="ar"?"ar":"en"
+const T={
+en:{hint:"Every change saves in place.",pw:"Profile-wide",primary:"Primary",hidden:"Hidden",hiddenHelp:"Hidden from your profile. It keeps its content, and you can show it again in Profile structure.",
+ add:"Add",edit:"Edit",del:"Delete",save:"Save",cancel:"Cancel",undo:"Undo",required:"Required",optional:"Optional",
+ editA:n=>`Edit ${n}`,delA:n=>`Delete ${n}`,dragA:n=>`Drag to reorder ${n}`,
+ delTitle:n=>`Delete ${n}?`,delHelp:"It comes off your profile. You can undo for a few seconds after.",delOk:"Delete",
+ deleted:n=>`${n} deleted`,savedT:n=>`${n} saved`,none:"Nothing here yet.",
+ reqErr:f=>`${f} is required.`,
+ gallery:"Gallery",galleryD:"Photos, videos and embeds. Drag to reorder; select one to edit its caption.",galleryAdd:"Add photos or video",galleryAddS:"JPG, PNG, WebP, MP4 · or paste an embed link",caption:"Caption",type:"Type",image:"Image",video:"Video",embed:"Embed",embedLink:"Embed link",
+ looks:"Looks",looksD:"Each look is a named set of images.",lookName:"Look name",photos:n=>`${n} photos`,
+ digitals:"Digitals",digitalsD:"Plain, unretouched shots so people see you as you are now.",shot:"Shot type",taken:"Date taken",
+ showreel:"Showreel",showreelD:"Your reel, from YouTube, Vimeo or an upload.",vlink:"Video link",title:"Title",platform:"Platform",length:"Length",thumb:"Thumbnail",
+ equipment:"Equipment",equipmentD:"The kit you work with.",name:"Name",category:"Category",brand:"Brand",model:"Model",notes:"Notes",
+ software:"Software",softwareD:"The tools you work in.",level:"Level",
+ brands:"Brands I've worked with",brandsD:"Brands you've worked with, with the project and year.",bname:"Brand name",project:"Project title",year:"Year",link:"Link",logo:"Logo",
+ projects:"Projects",projectsD:n=>`${n} projects tagged with this skill. Your photos and videos live inside each project.`,openProjects:"Open Projects",
+ reviews:"Reviews",reviewsD:"Written by clients. Our team approves each one before it shows on your profile.",all:"All",pending:"Pending",approved:"Approved",rejected:"Rejected",noRev:"No reviews at this rating yet.",
+ recognitions:"Recognitions",recognitionsD:"Peers vouching for you. Each is approved before it shows.",
+ explore:"Willing to explore",exploreD:"Skills you'd like to be asked about. You set these in Profile structure.",openStructure:"Edit in Profile structure",
+ upload:"Upload"},
+ar:{hint:"كل تغيير بيتحفظ مكانه.",pw:"على مستوى البروفايل",primary:"أساسية",hidden:"مخفي",hiddenHelp:"مخفي من بروفايلك. محتواه محفوظ، وتقدر تظهره تاني من هيكل البروفايل.",
+ add:"إضافة",edit:"تعديل",del:"حذف",save:"حفظ",cancel:"إلغاء",undo:"تراجع",required:"مطلوب",optional:"اختياري",
+ editA:n=>`تعديل ${n}`,delA:n=>`حذف ${n}`,dragA:n=>`اسحب لترتيب ${n}`,
+ delTitle:n=>`حذف ${n}؟`,delHelp:"هيتشال من بروفايلك. تقدر تتراجع لثواني بعدها.",delOk:"حذف",
+ deleted:n=>`اتحذف ${n}`,savedT:n=>`اتحفظ ${n}`,none:"مفيش حاجة هنا لسه.",
+ reqErr:f=>`${f} مطلوب.`,
+ gallery:"معرض الصور",galleryD:"صور وفيديوهات وروابط مضمّنة. اسحب للترتيب، واختار أي واحدة لتعديل وصفها.",galleryAdd:"إضافة صور أو فيديو",galleryAddS:"JPG أو PNG أو WebP أو MP4 · أو الصق رابط",caption:"الوصف",type:"النوع",image:"صورة",video:"فيديو",embed:"رابط مضمّن",embedLink:"الرابط",
+ looks:"اللوكات",looksD:"كل لوك مجموعة صور ليها اسم.",lookName:"اسم اللوك",photos:n=>`${n} صور`,
+ digitals:"صور الديجيتال",digitalsD:"صور بسيطة من غير ريتوش عشان الناس تشوفك زي ما أنت دلوقتي.",shot:"نوع اللقطة",taken:"تاريخ التصوير",
+ showreel:"الشوريل",showreelD:"الريل بتاعك من يوتيوب أو فيميو أو رفع مباشر.",vlink:"رابط الفيديو",title:"العنوان",platform:"المنصة",length:"المدة",thumb:"الصورة المصغرة",
+ equipment:"المعدات",equipmentD:"المعدات اللي بتشتغل بيها.",name:"الاسم",category:"الفئة",brand:"الماركة",model:"الموديل",notes:"ملاحظات",
+ software:"البرامج",softwareD:"البرامج اللي بتشتغل عليها.",level:"المستوى",
+ brands:"علامات اشتغلت معها",brandsD:"العلامات اللي اشتغلت معاها، مع المشروع والسنة.",bname:"اسم العلامة",project:"اسم المشروع",year:"السنة",link:"الرابط",logo:"الشعار",
+ projects:"المشاريع",projectsD:n=>`${n} مشاريع عليها المهارة دي. المشاريع ليها صفحة لوحدها.`,openProjects:"افتح المشاريع",
+ reviews:"التقييمات",reviewsD:"بيكتبها العملاء. فريقنا بيوافق على كل تقييم قبل ما يظهر في بروفايلك.",all:"الكل",pending:"قيد المراجعة",approved:"معتمد",rejected:"مرفوض",noRev:"مفيش تقييمات بالدرجة دي لسه.",
+ recognitions:"التزكيات",recognitionsD:"زملاء بيزكّوك. كل تزكية بتتراجع قبل ما تظهر.",
+ explore:"أحب أجرّب",exploreD:"مهارات حابب الناس تسألك عنها. بتحددها من هيكل البروفايل.",openStructure:"تعديل من هيكل البروفايل",
+ upload:"رفع"}
+};
+const t=(k,...a)=>{const v=T[lang][k];return typeof v==="function"?v(...a):v};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const withLang=f=>lang==="ar"?f.replace(/(#|$)/,"?lang=ar$1"):f;
+document.documentElement.lang=lang; document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+
+/* field schemas, one per list block (from the blueprint's "Inputs by block") */
+const OPT={
+ category:["Camera","Lens","Lighting","Audio","Grip","Drone","Accessory"],
+ level:["Beginner","Intermediate","Advanced","Expert"],
+ platform:["YouTube","Vimeo","Uploaded"],
+ shot:["Front","Side","Back","Full","Headshot","Smile"]
+};
+const SCHEMA={
+ looks:[{k:"name",l:"lookName",req:1,full:1}],
+ digitals:[{k:"shot",l:"shot",type:"select",o:"shot"},{k:"date",l:"taken",type:"date"},{k:"photo",l:"upload",type:"file",full:1}],
+ showreel:[{k:"url",l:"vlink",req:1,type:"url",full:1},{k:"title",l:"title"},{k:"platform",l:"platform",type:"select",o:"platform"},{k:"length",l:"length"},{k:"thumb",l:"thumb",type:"file"}],
+ equipment:[{k:"name",l:"name",req:1},{k:"category",l:"category",type:"select",o:"category"},{k:"brand",l:"brand"},{k:"model",l:"model"},{k:"notes",l:"notes",type:"textarea",full:1}],
+ software:[{k:"name",l:"name",req:1},{k:"level",l:"level",type:"select",o:"level"}],
+ brands:[{k:"name",l:"bname",req:1},{k:"project",l:"project"},{k:"year",l:"year",type:"number"},{k:"url",l:"link",type:"url"},{k:"logo",l:"logo",type:"file",full:1}]
+};
+const TITLE={looks:i=>i.name,digitals:i=>i.shot,showreel:i=>i.title||i.url,equipment:i=>i.name,software:i=>i.name,brands:i=>i.name};
+const SUB={looks:i=>t("photos",i.photos||0),digitals:i=>i.date,showreel:i=>[i.platform,i.length].filter(Boolean).join(" · "),equipment:i=>[i.category,i.brand,i.model].filter(Boolean).join(" · "),software:i=>i.level,brands:i=>[i.project,i.year].filter(Boolean).join(" · ")};
+
+const SECTIONS=[
+ {id:"universal",name:t("pw"),blocks:[
+   {b:"reviews",v:true},{b:"recognitions",v:true},
+   {b:"brands",v:true,items:[{name:"Nomad Coffee Co.",project:"Autumn launch",year:2025,url:""},{name:"Nefertari Cosmetics",project:"2026 campaign",year:2026,url:""},{name:"El Gouna Resorts",project:"Resort lookbook",year:2024,url:""},{name:"Cairo Linen",project:"Heritage collection",year:2025,url:""}]},
+   {b:"explore",v:true}]},
+ {id:"styling",name:lang==="ar"?"التنسيق":"Styling",primary:true,projects:4,blocks:[
+   {b:"gallery",v:true,items:[{k:"image",c:"Nomad Coffee — autumn tailoring"},{k:"image",c:"Nefertari 2026 backstage"},{k:"video",c:"Rail to set, in 40 seconds"},{k:"image",c:"Modest evening edit"},{k:"embed",c:"Behance case study"}]},
+   {b:"looks",v:true,items:[{name:"Autumn tailoring",photos:8},{name:"Modest evening",photos:6},{name:"Street layers",photos:5}]},
+   {b:"projects",v:true}]},
+ {id:"modelling",name:lang==="ar"?"عرض الأزياء":"Modelling",projects:2,blocks:[
+   {b:"gallery",v:true,items:[{k:"image",c:"Runway — Cairo Fashion Week"},{k:"image",c:"Beach editorial"},{k:"image",c:"Beauty close-up"}]},
+   {b:"looks",v:true,items:[{name:"Runway 2026",photos:12}]},
+   {b:"digitals",v:true,items:[{shot:"Front",date:"2026-09-12"},{shot:"Side",date:"2026-09-12"},{shot:"Full",date:"2026-09-12"},{shot:"Headshot",date:"2026-09-12"}]},
+   {b:"projects",v:true}]},
+ {id:"photography",name:lang==="ar"?"التصوير الفوتوغرافي":"Photography",projects:2,blocks:[
+   {b:"gallery",v:true,items:[{k:"image",c:"Desert light"},{k:"image",c:"Studio portrait"}]},
+   {b:"projects",v:true},
+   {b:"equipment",v:false,items:[{name:"Sony A7 IV",category:"Camera",brand:"Sony",model:"A7 IV"},{name:"Profoto B10",category:"Lighting",brand:"Profoto",model:"B10"}]}]}
+];
+const REVIEWS=[
+ {s:5,st:"approved",q:"Calm on set, sharp eye for light, and the rail was ready before we were.",who:"Mariam Fouad · Creative director · Studio Nile"},
+ {s:5,st:"approved",q:"Brought our autumn campaign to life and delivered a week early.",who:"Omar Sherif · Brand manager · Nomad Coffee"},
+ {s:4,st:"approved",q:"Great range across looks. We'd book again.",who:"Yara Adel · Stylist"},
+ {s:5,st:"pending",q:"A pleasure from call sheet to wrap.",who:"Hana Mostafa · Producer · Cairo Films"}];
+const RECS=[{st:"approved",q:"Finds the story in a rail of clothes before anyone else does.",who:"Omar Saleh · shot three campaigns together"},{st:"pending",q:"Generous with credit and exact about fit.",who:"Rania K. · worked on the 2026 lookbook"}];
+
+/* a skill's tab is its projects only (3 Oct 2026): photos, video, looks and the rest are added inside each project */
+/* skill tabs only held a link to Projects, so this page keeps the profile-wide sections; projects have their own page */
+SECTIONS.splice(0,SECTIONS.length,...SECTIONS.filter(sc=>sc.id==="universal"));
+/* reviews are switched off for now (FAMA_FEATURES in shell.js) */
+if(!FAMA_FEATURES.reviews) SECTIONS.forEach(sc=>sc.blocks=sc.blocks.filter(b=>b.b!=="reviews"));
+let cur=SECTIONS.find(s=>s.id===q.get("section"))?.id||"universal";
+let editing=null; /* {b, i} — i = -1 for a new item */
+let revFilter="all", selTile=null;
+
+/* ---- helpers ---- */
+let toastT,undoFn=null;
+function toast(msg,undo){$("toastTx").textContent=msg;undoFn=undo||null;$("toastUndo").hidden=!undo;$("toastUndo").textContent=t("undo");$("toast").hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{$("toast").hidden=true;undoFn=null},5000)}
+$("toastUndo").onclick=()=>{undoFn&&undoFn();$("toast").hidden=true;undoFn=null};
+function confirmDel(name,fn){$("delTitle").textContent=t("delTitle",name);$("delHelp").textContent=t("delHelp");$("delOk").textContent=t("delOk");$("delCancel").textContent=t("cancel");
+  const d=$("dlgDel");d.returnValue="";d.showModal();d.onclose=()=>{if(d.returnValue==="ok")fn()}}
+const sec=()=>SECTIONS.find(s=>s.id===cur);
+const blk=b=>sec().blocks.find(x=>x.b===b);
+
+/* ---- section row ---- */
+function renderTabs(){
+  $("tabs").innerHTML=SECTIONS.map(s=>`<button role="tab" aria-selected="${s.id===cur}" data-s="${s.id}">${s.primary?'<span class="pin" aria-hidden="true"></span>':""}${esc(s.name)}<span class="n">${s.blocks.length}</span></button>`).join("");
+  $("tabhint").textContent=t("hint");
+  $("tabs").style.display=SECTIONS.length<2?"none":""; /* one group left: no tab row */
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;cur=b.dataset.s;editing=null;selTile=null;
+  const u=new URL(location.href);u.searchParams.set("section",cur);history.replaceState(null,"",u);renderTabs();renderBlocks();b.focus()});
+$("tabs").addEventListener("keydown",e=>{if(!["ArrowLeft","ArrowRight"].includes(e.key))return;const i=SECTIONS.findIndex(s=>s.id===cur);
+  const dir=(e.key==="ArrowRight")!==(lang==="ar")?1:-1;const n=SECTIONS[(i+dir+SECTIONS.length)%SECTIONS.length];$("tabs").querySelector(`[data-s="${n.id}"]`).click()});
+
+/* ---- blocks ---- */
+function head(bk,actions){
+  return `<div class="bhead"><h2 class="h2">${esc(t(bk.b))}</h2>${bk.v?"":`<span class="tag tag-hidden">${t("hidden")}</span>`}<span class="acts">${actions||""}</span></div>
+    <p class="bdesc">${bk.v?(typeof T[lang][bk.b+"D"]==="function"?t(bk.b+"D",sec().projects||0):t(bk.b+"D")):t("hiddenHelp")}</p>`;
+}
+function formHTML(b,item){
+  const it=item||{};
+  return `<form class="form" data-form="${b}" novalidate><h3>${item?t("edit"):t("add")} · ${esc(t(b))}</h3><div class="grid">
+    ${SCHEMA[b].map(f=>{const id=`f-${b}-${f.k}`,lab=t(f.l),val=esc(it[f.k]);
+      const tag=f.type==="select"?`<select class="sel" id="${id}" name="${f.k}">${OPT[f.o].map(o=>`<option ${o===it[f.k]?"selected":""}>${o}</option>`).join("")}</select>`
+        :f.type==="textarea"?`<textarea class="ta" id="${id}" name="${f.k}">${val}</textarea>`
+        :f.type==="file"?`<button type="button" class="btn btn-2" id="${id}"><svg class="icon"><use href="#i-image"/></svg>${t("upload")}</button>`
+        :`<input class="in" id="${id}" name="${f.k}" type="${f.type||"text"}" value="${val}" ${f.req?"required":""} ${f.type==="url"?'dir="ltr" placeholder="https://"':""}>`;
+      return `<label class="f${f.full?" full":""}" for="${id}"><span>${lab}<small>${f.req?t("required"):t("optional")}</small></span>${tag}</label>`}).join("")}
+    </div><p class="err" hidden></p><div class="acts"><button type="button" class="btn btn-2" data-cancel>${t("cancel")}</button><button class="btn">${t("save")}</button></div></form>`;
+}
+function listBlock(bk){
+  const items=bk.items||[], b=bk.b, isEdit=editing&&editing.b===b;
+  return head(bk,isEdit?"":`<button class="btn btn-2" data-add="${b}"><svg class="icon"><use href="#i-plus"/></svg>${t("add")}</button>`)+
+   (items.length?`<ul class="items" data-list="${b}">${items.map((it,i)=>{const n=TITLE[b](it);
+     if(isEdit&&editing.i===i)return `<li>${formHTML(b,it)}</li>`;
+     return `<li class="item" draggable="true" data-i="${i}"><span class="grip" title="${esc(t("dragA",n))}" aria-hidden="true"><svg class="icon"><use href="#i-grip"/></svg></span>
+       <span><b>${esc(n)}</b><span class="meta">${esc(SUB[b](it))}</span></span>
+       <span class="acts"><button class="iconbtn" data-edit="${i}" aria-label="${esc(t("editA",n))}"><svg class="icon"><use href="#i-edit"/></svg></button><button class="iconbtn del" data-del="${i}" aria-label="${esc(t("delA",n))}"><svg class="icon"><use href="#i-trash"/></svg></button></span></li>`}).join("")}</ul>`
+   :`<p class="none">${t("none")}</p>`)+(isEdit&&editing.i===-1?formHTML(b):"");
+}
+function galleryBlock(bk){
+  const items=bk.items||[], s=selTile!=null?items[selTile]:null;
+  return head(bk)+`<div class="media" data-list="gallery">${items.map((it,i)=>`<button class="tile" draggable="true" data-i="${i}" aria-pressed="${i===selTile}" aria-label="${esc(it.c)}">
+      <span class="ic"><svg class="icon"><use href="#${it.k==="image"?"i-image":"i-play"}"/></svg></span><span class="kind">${t(it.k)}</span><span class="cap">${esc(it.c)}</span></button>`).join("")}
+    <button class="drop" data-upload><svg class="icon"><use href="#i-plus"/></svg>${t("galleryAdd")}<small>${t("galleryAddS")}</small></button></div>
+    ${s?`<form class="form" data-caption><h3>${t("edit")} · ${esc(s.c)}</h3><div class="grid">
+      <label class="f full" for="capIn"><span>${t("caption")}<small>${t("optional")}</small></span><input class="in" id="capIn" value="${esc(s.c)}"></label>
+      <label class="f" for="capType"><span>${t("type")}</span><select class="sel" id="capType">${["image","video","embed"].map(k=>`<option value="${k}" ${k===s.k?"selected":""}>${t(k)}</option>`).join("")}</select></label>
+      </div><div class="acts"><button type="button" class="btn btn-text" data-deltile style="color:var(--rose-fg)">${t("del")}</button><button type="button" class="btn btn-2" data-cancel>${t("cancel")}</button><button class="btn">${t("save")}</button></div></form>`:""}`;
+}
+function reviewsBlock(bk){
+  const counts={all:REVIEWS.length};[5,4,3,2,1].forEach(n=>counts[n]=REVIEWS.filter(r=>r.s===n).length);
+  const list=REVIEWS.filter(r=>revFilter==="all"||r.s===+revFilter);
+  const stars=n=>"★".repeat(n)+`<span>${"★".repeat(5-n)}</span>`;
+  return head(bk,`<a class="link" href="${withLang("reviews.html")}">${lang==="ar"?"كل التقييمات":"All reviews"}<svg class="icon flip" style="width:16px;height:16px"><use href="#i-arrow"/></svg></a>`)+`<div class="filters" role="group">${["all",5,4,3,2,1].map(f=>`<button data-rf="${f}" aria-pressed="${String(f)===String(revFilter)}">${f==="all"?t("all"):f+"★"}<span class="c">${counts[f]}</span></button>`).join("")}</div>
+    ${list.length?`<ul class="revs">${list.map(r=>`<li class="rev"><div class="top"><span class="stars" aria-label="${r.s}/5">${stars(r.s)}</span><span class="pill ${r.st==="approved"?"p-live":r.st==="rejected"?"p-bad":"p-off"}">${t(r.st)}</span></div><q>${esc(r.q)}</q><p class="who">${esc(r.who)}</p></li>`).join("")}</ul>`:`<p class="none">${t("noRev")}</p>`}`;
+}
+function recsBlock(bk){
+  return head(bk)+`<ul class="revs">${RECS.map(r=>`<li class="rev rec"><div class="top"><span class="pill ${r.st==="approved"?"p-live":"p-off"}">${t(r.st)}</span></div><q style="margin-top:var(--s3)">${esc(r.q)}</q><p class="who">— ${esc(r.who)}</p></li>`).join("")}</ul>`;
+}
+function linkBlock(bk,href,label){return head(bk)+`<p style="margin-top:var(--s4)"><a class="link" href="${withLang(href)}">${label}<svg class="icon flip"><use href="#i-arrow"/></svg></a></p>`}
+
+function renderBlocks(){
+  $("blocks").innerHTML=sec().blocks.map(bk=>{
+    const inner=bk.b==="gallery"?galleryBlock(bk):bk.b==="reviews"?reviewsBlock(bk):bk.b==="recognitions"?recsBlock(bk)
+      :bk.b==="projects"?linkBlock(bk,"projects.html",t("openProjects")):bk.b==="explore"?linkBlock(bk,"profile-structure.html#explore",t("openStructure")):listBlock(bk);
+    return `<section class="block${bk.v?"":" off"}" data-b="${bk.b}" aria-label="${esc(t(bk.b))}">${inner}</section>`}).join("");
+  const f=$("blocks").querySelector("[data-form] input, [data-caption] input");if(f)f.focus({preventScroll:true});
+}
+
+/* ---- actions ---- */
+$("blocks").addEventListener("click",e=>{
+  const sb=e.target.closest("[data-b]"); if(!sb)return; const b=sb.dataset.b, bk=blk(b);
+  const a=e.target.closest("[data-add]"); if(a){editing={b,i:-1};renderBlocks();return}
+  const ed=e.target.closest("[data-edit]"); if(ed){editing={b,i:+ed.dataset.edit};renderBlocks();return}
+  const c=e.target.closest("[data-cancel]"); if(c){editing=null;selTile=null;renderBlocks();return}
+  const d=e.target.closest("[data-del]"); if(d){const i=+d.dataset.del,it=bk.items[i],n=TITLE[b](it);
+    confirmDel(n,()=>{bk.items.splice(i,1);renderBlocks();toast(t("deleted",n),()=>{bk.items.splice(i,0,it);renderBlocks()})});return}
+  const tile=e.target.closest(".tile"); if(tile){const i=+tile.dataset.i;selTile=selTile===i?null:i;renderBlocks();return}
+  const up=e.target.closest("[data-upload]"); if(up){bk.items.push({k:"image",c:"New image"});selTile=bk.items.length-1;renderBlocks();return}
+  const dt=e.target.closest("[data-deltile]"); if(dt){const i=selTile,it=bk.items[i];confirmDel(it.c,()=>{bk.items.splice(i,1);selTile=null;renderBlocks();toast(t("deleted",it.c),()=>{bk.items.splice(i,0,it);renderBlocks()})});return}
+  const rf=e.target.closest("[data-rf]"); if(rf){revFilter=rf.dataset.rf;renderBlocks();return}
+});
+$("blocks").addEventListener("submit",e=>{e.preventDefault();const f=e.target;
+  if(f.matches("[data-caption]")){const it=blk("gallery").items[selTile];it.c=$("capIn").value;it.k=$("capType").value;const n=it.c;selTile=null;renderBlocks();toast(t("savedT",n));return}
+  const b=f.dataset.form, bk=blk(b), data={};
+  SCHEMA[b].forEach(fd=>{const el=f.elements[fd.k];if(el)data[fd.k]=el.value.trim()});
+  const miss=SCHEMA[b].find(fd=>fd.req&&!data[fd.k]);
+  if(miss){const el=f.elements[miss.k];el.closest(".f").classList.add("bad");const er=f.querySelector(".err");er.hidden=false;er.textContent=t("reqErr",t(miss.l));el.setAttribute("aria-invalid","true");el.focus();return}
+  if(editing.i===-1)(bk.items=bk.items||[]).push(Object.assign({photos:0},data));else Object.assign(bk.items[editing.i],data);
+  editing=null;renderBlocks();toast(t("savedT",TITLE[b](data)));
+});
+/* drag to reorder inside a block */
+let drag=null;
+$("blocks").addEventListener("dragstart",e=>{const el=e.target.closest("[draggable=true]");if(!el)return;drag={b:el.closest("[data-b]").dataset.b,i:+el.dataset.i};el.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain","")});
+$("blocks").addEventListener("dragend",()=>{drag=null;document.querySelectorAll(".dragging").forEach(x=>x.classList.remove("dragging"))});
+$("blocks").addEventListener("dragover",e=>{if(drag&&e.target.closest(`[data-b="${drag.b}"] [data-list]`))e.preventDefault()});
+$("blocks").addEventListener("drop",e=>{if(!drag)return;const over=e.target.closest("[data-i]");if(!over||!e.target.closest(`[data-b="${drag.b}"]`))return;e.preventDefault();
+  const list=blk(drag.b).items,[it]=list.splice(drag.i,1);list.splice(+over.dataset.i,0,it);selTile=null;renderBlocks()});
+
+renderTabs(); renderBlocks();
+</script>
+</body></html>

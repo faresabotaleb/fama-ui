@@ -1,0 +1,183 @@
+/* Project editor, WYSIWYG mockup (24 Oct 2026). Only the layer the editor adds on top of the project page:
+   the page underneath is project.html as published, so what the talent edits is what visitors get. */
+.emk-review{position:relative;z-index:60;display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s4);padding:var(--s2) var(--s5);background:#fff;border-bottom:1px dashed #b9b2a8;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#4F4A45}
+.emk-review b{color:var(--ink)}
+.emk-review a{color:var(--ink)}
+.emk-review a[aria-current]{font-weight:700;text-decoration:none;background:var(--lavender,#F3EAF8);padding:2px 6px;border-radius:4px}
+
+/* the editor bar replaces the cover's Share / Like: where the work stands, and what to do with it */
+.emk-bar{position:sticky;top:72px;z-index:40;background:rgba(251,250,242,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:var(--border)}
+.emk-bar .in{max-width:1200px;margin:0 auto;padding:var(--s2) var(--s5);display:flex;align-items:center;gap:var(--s3)}
+.emk-bar .back{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--grey);text-decoration:none;min-height:40px}
+.emk-bar .back:hover{color:var(--ink)}
+.emk-bar .saved{font-size:13px;color:var(--grey);margin-inline-end:auto;display:inline-flex;align-items:center;gap:6px}
+.emk-bar .saved i{width:7px;height:7px;border-radius:999px;background:var(--mint-fg,#1B6B52)}
+.emk-bar .pill{font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--line);color:#4F4A45}
+.emk-bar .btn{min-height:40px;padding:0 var(--s4)}
+.emk-bar svg,.emk-tools svg,.emk-ins svg,.emk-menu svg,.emk-media svg,.emk-panel svg,.emk-chip svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* everything the talent can type into: a quiet dashed outline on hover, a purple one while typing */
+.emk [data-emk-edit]{outline:1px dashed transparent;outline-offset:6px;border-radius:4px;transition:outline-color var(--duration-quick,150ms) ease-out;cursor:text}
+.emk [data-emk-edit]:hover{outline-color:rgba(20,17,15,.28)}
+.emk [data-emk-edit]:focus,.emk [data-emk-edit].emk-on{outline:2px solid var(--purple);outline-offset:6px}
+.emk .cover [data-emk-edit]:hover{outline-color:rgba(255,255,255,.6)}
+.emk .cover [data-emk-edit]:focus,.emk .cover [data-emk-edit].emk-on{outline-color:#fff}
+.emk [data-emk-edit]:empty::before{content:attr(data-ph);opacity:.45}
+
+/* the cover: its own controls where the Share / Like buttons sit on the page */
+.emk .cover .acts{display:none}
+.emk-cover{position:absolute;top:var(--s5);right:var(--s5);z-index:3;display:flex;gap:var(--s2)}
+.emk-cover .btn{background:rgba(255,255,255,.94);border-color:transparent;color:var(--ink);min-height:40px}
+.emk-auto{display:inline-flex;align-items:center;gap:6px;margin-inline-start:var(--s3);font-size:11px;letter-spacing:.04em;text-transform:none;font-weight:500;opacity:.8}
+
+/* colophon: Client and Role type in place; Skills are chips; See it live is a link field */
+.emk .colo dd[data-emk-edit]{min-height:1.4em}
+.emk-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 10px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:13px;font-weight:600;margin:0 4px 4px 0}
+.emk-chip.add{background:transparent;color:var(--ink);border:1px dashed rgba(20,17,15,.35);padding:2px 10px;cursor:pointer}
+
+/* every block: tools in the left margin, shown on hover or while the block is being edited */
+.emk .story .emk-b{position:relative}
+.emk-tools{position:absolute;top:0;right:calc(100% + 14px);display:flex;flex-direction:column;gap:2px;padding:4px;border-radius:12px;background:#fff;border:var(--border);box-shadow:0 6px 18px rgba(20,17,15,.08);opacity:0;transform:translateX(4px);transition:opacity var(--duration-quick,150ms) ease-out,transform var(--duration-quick,150ms) ease-out;pointer-events:none}
+.emk-b:hover>.emk-tools,.emk-b.emk-on>.emk-tools{opacity:1;transform:none;pointer-events:auto}
+.emk-tools button{width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.emk-tools button:hover{background:var(--line)}
+.emk-tools .grip{cursor:grab;color:var(--grey)}
+.emk-tools .kind{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-align:center;padding:4px 0 2px;writing-mode:vertical-rl;transform:rotate(180deg)}
+.emk-b.emk-on{box-shadow:0 0 0 2px var(--purple);border-radius:6px}
+
+/* pictures: one button to replace, on the picture */
+.emk-media{position:absolute;top:var(--s3);right:var(--s3);z-index:3;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:999px;background:rgba(255,255,255,.94);color:var(--ink);font:600 13px/1 inherit;cursor:pointer;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out;box-shadow:0 2px 8px rgba(20,17,15,.15)}
+.emk-b:hover .emk-media,.emk-b.emk-on .emk-media{opacity:1}
+
+/* between blocks: a thin line with + that opens the block menu (typing / does the same) */
+.emk-ins{position:relative;height:28px;margin:-14px 0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out;z-index:4}
+.emk-ins::before{content:"";position:absolute;inset:50% 0 auto;height:1px;background:var(--purple)}
+.emk-ins:hover,.emk-ins.is-open{opacity:1}
+.emk-ins button{position:relative;width:28px;height:28px;border-radius:999px;border:0;background:var(--purple);color:#fff;display:grid;place-items:center;cursor:pointer}
+
+/* the block menu: what can go here, grouped, with how it shows on the page */
+.emk-menu{position:absolute;top:34px;left:50%;transform:translateX(-50%);width:360px;max-height:430px;overflow:auto;background:#fff;border:var(--border);border-radius:16px;box-shadow:0 18px 40px rgba(20,17,15,.16);padding:var(--s2);text-align:start;z-index:10}
+.emk-menu p{margin:var(--s2) var(--s3) var(--s1);font-size:12px;font-weight:600;color:var(--grey)}
+.emk-menu button{width:100%;display:grid;justify-items:start;text-align:start;grid-template-columns:36px 1fr;gap:2px var(--s3);align-items:center;padding:var(--s2) var(--s3);border:0;border-radius:10px;background:none;text-align:start;cursor:pointer;color:var(--ink);font:inherit}
+.emk-menu button:hover,.emk-menu button.is-hl{background:var(--lavender,#F3EAF8)}
+.emk-menu .ico{grid-row:span 2;width:36px;height:36px;border-radius:9px;border:var(--border);display:grid;place-items:center;background:var(--cream)}
+.emk-menu b{font-weight:600;font-size:14px;display:block;grid-column:2}
+.emk-menu small{grid-column:2}
+.emk-menu small{font-size:12px;color:var(--grey);line-height:1.35}
+
+/* settings: what visitors never see */
+.emk-panel{position:fixed;top:0;right:0;bottom:0;z-index:70;width:min(400px,100vw);background:#fff;border-left:var(--border);box-shadow:-18px 0 40px rgba(20,17,15,.12);padding:var(--s6);overflow:auto;transform:translateX(100%);transition:transform var(--duration-fast,250ms) var(--ease-smooth-out,cubic-bezier(.22,1,.36,1))}
+.emk-panel.is-open{transform:none}
+.emk-panel{border-radius:0}
+.emk-panel h2{color:var(--ink);font-family:var(--font-display);font-weight:600;font-size:28px;margin:0 0 var(--s1)}
+.emk-panel .lead2{color:var(--grey);font-size:14px;margin:0 0 var(--s5)}
+.emk-panel .row{display:block;padding:var(--s4) 0;border-top:var(--border)}
+.emk-panel label{display:block;font-weight:600;margin-bottom:var(--s2)}
+.emk-panel small{display:block;color:var(--grey);font-size:13px;margin-top:var(--s1);line-height:1.45}
+.emk-panel input[type=month]{width:100%;min-height:44px;border:var(--border);border-radius:var(--s3);padding:0 var(--s3);font:inherit;background:var(--cream)}
+.emk-panel .tog{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s4)}
+.emk-panel .sw{width:44px;height:26px;border-radius:999px;background:var(--line);position:relative;flex:none;border:0;cursor:pointer}
+.emk-panel .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform var(--duration-quick,150ms) ease-out}
+.emk-panel .sw[aria-checked=true]{background:var(--ink)}
+.emk-panel .sw[aria-checked=true]::after{transform:translateX(18px)}
+.emk-panel .x{position:absolute;top:var(--s4);right:var(--s4);width:40px;height:40px;border:0;border-radius:999px;background:var(--line);display:grid;place-items:center;cursor:pointer}
+.emk-scrim{position:fixed;inset:0;z-index:65;background:rgba(20,17,15,.25);opacity:0;pointer-events:none;transition:opacity var(--duration-fast,250ms) ease-out}
+.emk-scrim.is-open{opacity:1;pointer-events:auto}
+
+/* the parts of the published page an editor has no use for */
+.emk .hire,.emk .next,.emk .more,.emk #hirebar{display:none!important}
+@media (max-width:1100px){.emk-tools{right:auto;left:0;top:-46px;flex-direction:row}.emk-tools .kind{writing-mode:horizontal-tb;transform:none;padding:0 6px;align-self:center}}
+@media (prefers-reduced-motion:reduce){.emk-tools,.emk-ins,.emk-media,.emk-panel,.emk-scrim{transition:none}}
+/* the menu sits inside the story, so it shields itself from the story's own type and spacing */
+.emk-menu button{height:auto!important;min-height:56px;line-height:1.3;margin:0!important;grid-template-rows:auto auto}
+.emk-menu b,.emk-menu small{position:static!important;margin:0!important;padding:0!important;font-family:var(--font-body,inherit);letter-spacing:0;text-transform:none;opacity:1!important;transform:none!important}
+.emk-menu p{font-family:var(--font-body,inherit);letter-spacing:0;text-transform:none;line-height:1.3}
+
+/* the scrolling gallery, as an editable strip (it is pinned and sideways on the page) */
+.emk .cases{height:auto!important;min-height:0!important}
+.emk-gal{padding:var(--s5) 0}
+.emk-gal-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s6);margin-bottom:var(--s5)}
+.emk-gal-k{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--purple-dk)}
+.emk-gal-t{font-family:var(--font-display);font-weight:600;font-size:clamp(32px,3.4vw,48px);line-height:1;margin:var(--s2) 0 var(--s3)}
+.emk-gal-i{max-width:58ch;margin:0;font-size:16px;line-height:1.6}
+.emk-gal-note{display:flex;gap:var(--s3);align-items:flex-start;max-width:280px;margin:0;padding:var(--s3) var(--s4);border-radius:var(--s3);background:var(--lavender,#F3EAF8);font-size:13px;line-height:1.45;color:#4F4A45}
+.emk-gal-note b{display:block;color:var(--ink);font-weight:600}
+.emk-gal-note svg,.emk-ph-acts svg,.emk-ph.add svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.emk-gal-note svg{margin-top:2px;color:var(--purple-dk)}
+.emk-strip{list-style:none;margin:0;padding:var(--s2) 0 var(--s4);display:flex;gap:var(--s4);overflow-x:auto;scroll-snap-type:x proximity;align-items:flex-start}
+.emk-ph{flex:none;scroll-snap-align:start}
+.emk-ph.w-l{width:380px}.emk-ph.w-m{width:280px}.emk-ph.w-s{width:210px}
+.emk-ph-img{position:relative;height:300px;border-radius:var(--s3);background:var(--line) center/cover no-repeat;outline:1px solid rgba(20,17,15,.06);outline-offset:-1px}
+.emk-ph-n{position:absolute;top:var(--s2);left:var(--s2);height:24px;padding:0 8px;display:inline-flex;align-items:center;border-radius:999px;background:rgba(255,255,255,.94);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.emk-ph-acts{position:absolute;top:var(--s2);right:var(--s2);display:flex;gap:4px;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out}
+.emk-ph:hover .emk-ph-acts,.emk-ph:focus-within .emk-ph-acts{opacity:1}
+.emk-ph-acts button{width:32px;height:32px;border:0;border-radius:999px;background:rgba(255,255,255,.94);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(20,17,15,.15)}
+.emk-ph-acts button:first-child{cursor:grab}
+.emk-ph-cap{margin:var(--s2) 0 0;font-size:13px;color:var(--grey);line-height:1.4;min-height:1.4em}
+.emk-ph.add button{width:210px;height:300px;border:1.5px dashed rgba(20,17,15,.3);border-radius:var(--s3);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s1);color:var(--ink);font:inherit;cursor:pointer}
+.emk-ph.add button:hover{border-color:var(--purple);background:var(--lavender,#F3EAF8)}
+.emk-ph.add b{font-weight:600}.emk-ph.add small{font-size:12px;color:var(--grey)}
+.emk-gal-hint{margin:0;font-size:13px;color:var(--grey)}
+@media (max-width:760px){.emk-gal-head{flex-direction:column;align-items:flex-start}.emk-ph.w-l{width:260px}.emk-ph.w-m{width:200px}.emk-ph.w-s{width:160px}.emk-ph-img,.emk-ph.add button{height:220px}}
+
+/* the look: pins drag on the photo, the list edits in place */
+.emk .look-img{cursor:crosshair}
+.emk .look-img .dot{cursor:grab;touch-action:none}
+.emk .look-img .dot::after{animation:none}
+.emk .look-img .dot.emk-drag{cursor:grabbing;transform:scale(1.2);background:var(--purple-dk)}
+.emk-look-rep{opacity:1!important}
+.emk-b.look>.emk-media{display:none}
+.emk-look-tip{position:absolute;left:var(--s3);bottom:var(--s3);margin:0;padding:6px 12px;border-radius:999px;background:rgba(20,17,15,.72);color:#fff;font-size:12px;font-weight:500;pointer-events:none;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out}
+.emk-b.look:hover .emk-look-tip,.emk-b.look.emk-on .emk-look-tip{opacity:1}
+.emk-look-h{display:flex;align-items:baseline;gap:var(--s2);border-top:1px solid var(--line);padding-top:var(--s4);margin-bottom:var(--s3);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--grey);text-transform:uppercase}
+.emk-look-name{color:var(--ink);text-transform:none;letter-spacing:0;font-size:15px;font-weight:600;min-width:4ch}
+.emk-look-h>span:last-child::before{content:"· "}
+.emk .look-list li{position:relative;padding-inline-end:76px}
+.emk .look-list li b,.emk .look-list li span[data-emk-edit]{display:block;min-height:1.4em;outline-offset:3px}
+.emk-li-acts{position:absolute;top:50%;right:0;transform:translateY(-50%);display:flex;gap:2px;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out}
+.emk .look-list li:hover .emk-li-acts,.emk .look-list li:focus-within .emk-li-acts{opacity:1}
+.emk-li-acts button{width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--grey);display:grid;place-items:center;cursor:pointer}
+.emk-li-acts button:hover{background:var(--line);color:var(--ink)}
+.emk-li-acts .g{cursor:grab}
+.emk-li-acts svg,.emk-look-add svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.emk-look-add{display:flex;align-items:center;gap:var(--s2);width:100%;margin-top:var(--s2);padding:var(--s3) 0;border:0;border-top:1px dashed rgba(20,17,15,.25);background:none;color:var(--ink);font:600 15px/1.2 var(--font-body,inherit);cursor:pointer;text-align:start}
+.emk-look-add small{font-weight:400;font-size:13px;color:var(--grey);margin-inline-start:var(--s1)}
+.emk-look-add:hover{color:var(--purple-dk)}
+.emk .look-list .emk-look-add small{display:inline;border:0;padding:0;margin:0 0 0 var(--s1);letter-spacing:0;text-transform:none;font-size:13px;font-weight:400;color:var(--grey)}
+
+/* the other parts */
+.emk-item{position:relative}
+.emk-x{position:absolute;top:6px;right:6px;z-index:4;width:28px;height:28px;border:0;border-radius:999px;background:rgba(255,255,255,.94);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(20,17,15,.18);opacity:0;transition:opacity var(--duration-quick,150ms) ease-out}
+.emk-item:hover>.emk-x,.emk-item:focus-within>.emk-x{opacity:1}
+.emk-x svg,.emk-url svg,.emk-add-tile svg,.emk-add-li svg,.emk-media-s svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.emk figure{position:relative}
+.emk-ba-acts{position:absolute;bottom:var(--s3);left:0;right:0;display:flex;justify-content:space-between;padding:0 var(--s3);z-index:5;pointer-events:none;opacity:0;transition:opacity var(--duration-quick,150ms) ease-out}
+.emk-b:hover .emk-ba-acts,.emk-b.emk-on .emk-ba-acts{opacity:1}
+.emk-media-s{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:0;border-radius:999px;background:rgba(255,255,255,.94);color:var(--ink);font:600 13px/1 var(--font-body,inherit);cursor:pointer;box-shadow:0 2px 8px rgba(20,17,15,.15)}
+.emk .ba-tag[data-emk-edit]{pointer-events:auto;cursor:text;z-index:6}
+.emk-note{margin:var(--s2) 0 0;font-size:13px;color:var(--grey)}
+.emk-url{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s3);padding:0 var(--s3);min-height:44px;border:1px solid var(--line);border-radius:var(--s3);background:#fff;color:var(--grey)}
+.emk-url input{flex:1;min-width:0;border:0;background:none;font:14px/1.2 var(--font-body,inherit);color:var(--ink);outline:none}
+.emk-url:focus-within{border-color:var(--purple);box-shadow:0 0 0 1px var(--purple)}
+.emk-url small{font-size:12px;white-space:nowrap}
+.emk-url.sm{margin-top:var(--s2);min-height:38px}
+.emk-add-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:140px;padding:var(--s4);border:1.5px dashed rgba(20,17,15,.3);border-radius:var(--s3);background:transparent;color:var(--ink);font:inherit;text-align:center;cursor:pointer}
+.emk-add-tile:hover{border-color:var(--purple);background:var(--lavender,#F3EAF8)}
+.emk-add-tile b{font-weight:600;font-size:15px;font-family:var(--font-body,inherit);letter-spacing:0}
+.emk-add-tile small{font-size:12px;color:var(--grey);font-family:var(--font-body,inherit);letter-spacing:0;text-transform:none}
+.emk .res .emk-x{top:-6px;right:-6px}
+.emk-add-li{list-style:none}
+.emk-add-li button{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:56px;padding:var(--s2) 0;border:0;border-top:1px dashed rgba(20,17,15,.25);background:none;color:var(--ink);font:inherit;cursor:pointer;text-align:start}
+.emk-add-li b{font-weight:600}.emk-add-li small{color:var(--grey);font-size:13px}
+.emk-add-li button:hover{color:var(--purple-dk)}
+.emk .cred .emk-x{top:50%;transform:translateY(-50%);right:0;box-shadow:none;background:none}
+.emk .cred .emk-x:hover{background:var(--line)}
+.emk-emb-t{display:block}
+.emk-add-inline{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s5);padding:var(--s3) var(--s4);border:1.5px dashed rgba(20,17,15,.3);border-radius:var(--s3);background:transparent;color:var(--ink);font:inherit;cursor:pointer;text-align:start}
+.emk-add-inline:hover{border-color:var(--purple);background:var(--lavender,#F3EAF8)}
+.emk-add-inline svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.emk-add-inline b{font:600 15px/1.2 var(--font-body,inherit);letter-spacing:0}
+.emk-add-inline small{font:400 12px/1.2 var(--font-body,inherit);color:var(--grey);letter-spacing:0;text-transform:none}
+.emk .cred li.emk-add-li{display:block!important;grid-template-columns:none!important;padding:0!important}
+.emk .cred li.emk-add-li button{flex-direction:row;flex-wrap:wrap}
+.emk .cred li:not(.emk-add-li){padding-inline-end:44px}

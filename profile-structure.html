@@ -1,0 +1,1270 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile structure · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/fields.css?v=9">
+<link rel="stylesheet" href="assets/css/views.css?v=24">
+<link rel="stylesheet" href="assets/css/exp.css?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Sofia+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---- tokens.css, copied verbatim so the file stays self-contained ---- */
+:root{
+  color-scheme: light;
+  --cream:#FBFAF2; --white:#FFFFFF; --ink:#14110F; --grey:#6B6560; --line:#E6E2D8;
+  --purple:#AD50D3; --purple-dk:#8A2FA8; --yellow:#FFEB73;
+  --mint:#6CEAC2; --rose:#E8927C; --sky:#8FE1FF;
+  --mint-bg:#E2F9F0; --mint-fg:#1B6B52;
+  --rose-bg:#FCE8E2; --rose-fg:#9B4526;
+  --font-display:"Oswald",sans-serif;
+  --font-body:"Sofia Sans",sans-serif;
+  --font-ar:"KO Sans","Zanjabeel",sans-serif;
+  --t-display:96px; --t-display-lh:1;
+  --t-h1:44px; --t-h2:30px; --t-h3:18px;
+  --t-body:16px; --t-body-lh:1.5;
+  --t-label:14px; --t-meta:14px;
+  --t-display-ar:72px; --t-display-ar-lh:1.25;
+  --t-h2-ar:28px; --t-body-ar-lh:1.8;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:64px; --s9:104px;
+  --section-gap:104px; --section-gap-mobile:64px;
+  --radius:20px; --radius-pill:999px;
+  --border:1px solid var(--line); --shadow:none;
+  --ease:cubic-bezier(.2,.9,.3,1); --fast:120ms; --slow:260ms;
+  --content:1060px; --columns:12; --gutter:24px;
+}
+/* ---- end tokens ---- */
+
+/* Screen: /talent/profile — "Profile structure" in the Fama V1 Blueprint.
+   Audit fixes on this page: #4 no caps or tracking, #7 grey text passes AA,
+   #9 one control pattern for every section row, #11 primary and remove are
+   separate, labelled, 44px targets. */
+:root{--pattern:url("assets/img/pattern-stars.png");--ar:var(--font-ar),"IBM Plex Sans Arabic",Tahoma,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:96px}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-body);font-size:var(--t-body);line-height:var(--t-body-lh);-webkit-font-smoothing:antialiased}
+[dir=rtl] body{font-family:var(--ar);line-height:var(--t-body-ar-lh)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+p{margin:0}
+:focus-visible{outline:2px solid var(--purple-dk);outline-offset:2px}
+.wrap{max-width:calc(var(--content) + 2 * var(--s5));margin-inline:auto;padding-inline:var(--s5)}
+.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+[dir=rtl] .flip{transform:scaleX(-1)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.label{font-weight:500;font-size:var(--t-label);color:var(--purple-dk)}
+.meta{font-size:var(--t-meta);color:var(--grey)}
+.h2{font-family:var(--font-display);font-weight:600;font-size:var(--t-h2);line-height:1.1;margin:var(--s1) 0 0}
+[dir=rtl] .h2{font-family:var(--ar);font-weight:700;font-size:var(--t-h2-ar);line-height:1.4}
+.lead{color:var(--grey);margin-top:var(--s2);max-width:60ch}
+
+/* buttons */
+.btn{font-weight:600;font-size:15px;min-height:44px;padding:var(--s2) var(--s5);border-radius:var(--radius);border:1px solid var(--ink);background:var(--ink);color:var(--cream);display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn .st{color:var(--yellow)}
+.btn-2{background:var(--white);color:var(--ink);border:var(--border)}
+.btn-2:hover{border-color:var(--ink)}
+.btn-text{background:none;border:0;color:var(--purple-dk);padding-inline:var(--s2);min-height:44px}
+.btn-text:hover{color:var(--ink)}
+.btn-danger{background:var(--rose-fg);border-color:var(--rose-fg);color:var(--white)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* hero — the one purple block and the one pattern on this screen */
+.hero{margin-top:var(--s6);background:var(--purple);color:var(--white);border-radius:var(--radius);overflow:hidden}
+.hero .body{padding:var(--s6) var(--s7);display:grid;grid-template-columns:auto 1fr 340px;gap:var(--s5) var(--s6);align-items:center}
+.hero .ph{width:96px;height:96px;border-radius:var(--radius-pill);background:var(--white);color:var(--purple-dk);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:36px}
+.hero .hello{font-weight:600;font-size:20px}
+.hero h1{font-family:var(--font-display);font-weight:600;font-size:var(--t-h1);line-height:1.05;margin:var(--s1) 0 0}
+[dir=rtl] .hero h1{font-family:var(--ar);font-weight:700;line-height:1.3}
+.band{height:40px;background:var(--pattern) repeat-x;background-size:auto 100%}
+.pub{background:var(--white);color:var(--ink);border-radius:var(--radius);padding:var(--s5)}
+/* soft photo hero (6 Oct 2026): cream, ink type, the photo inside the star on the right; the profile link sits under the name */
+.hero.soft{position:relative;overflow:hidden;background:var(--lavender,#F3EAF8);color:var(--ink);border:1px solid var(--lavender-line,#E9DAF2)}
+.hero.soft .band{display:none}
+.hero.soft .body{grid-template-columns:auto minmax(0,1fr);padding-right:670px;min-height:216px} /* clear of the star at this height */
+.hero.soft .ph{background:var(--purple);color:var(--white)}
+.hero.soft .hello{color:var(--purple-dk);font-size:15px}
+.hero.soft h1{color:var(--ink)}
+.hero.soft .pub{grid-column:2;background:none;padding:0;margin-top:calc(-1 * var(--s4));display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+/* review 7 Oct 2026: the profile link is a button that copies itself, and the state is Live or Private with a tooltip */
+.linkbtn{display:inline-flex;align-items:center;gap:var(--s2);min-height:40px;padding:0 var(--s3) 0 var(--s4);border-radius:var(--radius-pill);border:1px solid #DCC6EA;background:var(--white);color:var(--ink);font-weight:600;font-size:15px;cursor:pointer;transition:border-color var(--fast) var(--ease),background var(--fast) var(--ease)}
+.linkbtn:hover{border-color:var(--purple-dk)}
+.linkbtn .lb-ic{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--purple-dk);padding:4px 10px;border-radius:var(--radius-pill);background:var(--lavender,#F3EAF8)}
+.linkbtn .lb-ic .icon{width:15px;height:15px}
+.linkbtn.copied{border-color:var(--mint-fg)}
+.linkbtn.off{cursor:not-allowed;border:1px dashed #CDBBD8;color:var(--grey);background:transparent;padding-inline-end:var(--s3);font-weight:500}
+.linkbtn.off:hover{border-color:#CDBBD8}
+/* Private: just a lock where Copy was, no word; the reserved address stays, faded */
+.linkbtn.off .lb-ic{background:none;padding:0;color:var(--grey)}
+.linkbtn.off .lb-ic .icon{width:16px;height:16px}
+.linkbtn.off #copyTx{display:none}
+/* 9 Oct 2026: while Private the address isn't shown at all; only the status says where the profile stands */
+.linkbtn.off{display:none}
+.linkbtn.copied .lb-ic{background:var(--mint-bg);color:var(--mint-fg)}
+.stat{position:relative;display:inline-flex;align-items:center;gap:2px}
+.tipbtn{width:32px;height:32px;border-radius:var(--radius-pill);border:0;background:none;color:var(--grey);display:inline-flex;align-items:center;justify-content:center;cursor:help;padding:0}
+.tipbtn:hover{color:var(--ink)}
+.tipbtn .icon{width:18px;height:18px}
+.tip{position:absolute;top:calc(100% + 8px);inset-inline-start:0;z-index:20;width:300px;background:var(--ink);color:var(--cream);border-radius:var(--s3);padding:var(--s3) var(--s4);font-size:14px;line-height:1.45;font-weight:400;box-shadow:0 8px 24px rgba(20,17,15,.18);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity var(--fast) var(--ease),transform var(--fast) var(--ease),visibility var(--fast)}
+.tip p+p{margin-top:var(--s2)}
+.tip b{color:var(--yellow);font-weight:600}
+.tip p.cur{color:var(--white)}
+.tip p:not(.cur){opacity:.72}
+.stat:hover .tip,.stat:focus-within .tip{opacity:1;visibility:visible;transform:none}
+.hero.soft{overflow:visible;overflow-x:clip} /* the tooltip may drop below; the star may not widen the page */
+.hero.soft .fx-star{border-radius:0 var(--radius) var(--radius) 0}
+.pub .top{display:flex;justify-content:space-between;align-items:center;gap:var(--s3)}
+.pub .row{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3)}
+.pub .state{font-weight:600;font-size:var(--t-h3)}
+.pub p{font-size:var(--t-meta);color:var(--grey);margin-top:var(--s2)}
+.pub p.err{color:var(--rose-fg)}
+
+/* switch */
+.switch{width:48px;height:28px;border-radius:var(--radius-pill);border:1px solid var(--purple);background:var(--purple);position:relative;cursor:pointer;flex:none;padding:0;transition:background var(--fast) var(--ease)}
+.switch i{position:absolute;top:3px;inset-inline-start:23px;width:20px;height:20px;border-radius:var(--radius-pill);background:var(--white);transition:inset-inline-start var(--fast) var(--ease)}
+.switch[aria-checked=false]{background:var(--line);border-color:var(--line)}
+.switch[aria-checked=false] i{inset-inline-start:3px}
+.switch:disabled{cursor:not-allowed;opacity:.5}
+.pill{font-weight:600;font-size:13px;border-radius:var(--radius-pill);padding:2px var(--s3);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:var(--radius-pill);background:currentColor}
+.p-live{background:var(--mint-bg);color:var(--mint-fg)}
+.p-off{background:var(--line);color:#4F4A45}
+.p-idx{background:var(--white);color:var(--ink);border:1px solid var(--lavender-line,#E9DAF2)}
+.p-idx[hidden]{display:none}
+.p-idx::before{background:var(--purple)}
+.p-bad{background:var(--rose-bg);color:var(--rose-fg)}
+.tag{font-weight:600;font-size:13px;border-radius:var(--radius-pill);padding:2px var(--s3);white-space:nowrap}
+.tag-primary{background:var(--ink);color:var(--cream);display:inline-flex;align-items:center;gap:5px}
+/* primary skill: a pin (Lucide), it's the skill the profile opens on */
+.tag-primary::before,.pin{content:"";display:inline-block;vertical-align:-2px;width:13px;height:13px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center/contain no-repeat}
+.tag-hidden{background:var(--line);color:var(--grey)}
+
+/* layout: section index + the form */
+.layout{margin-top:var(--s7)}
+.saved{margin-top:var(--s5);display:flex;align-items:center;gap:var(--s2);font-size:var(--t-meta);color:var(--grey)}
+.saved::before{content:"";width:8px;height:8px;border-radius:var(--radius-pill);background:var(--mint-fg)}
+.saved.busy::before{background:var(--grey)}
+
+/* settings-style page (3 Oct 2026): every part is a card with a one-line summary and Edit.
+   One part opens at a time; the rest stay short, so the page reads at a glance. */
+.saved.top{justify-content:flex-end;margin:var(--s5) 0 0}
+.intro{color:var(--grey);margin-top:var(--s2)}
+.sec{scroll-margin-top:var(--s5)}
+.panel{background:var(--white);border:var(--border);border-radius:var(--radius);margin-top:var(--s4)}
+.panel.open{border-color:var(--ink)}
+.phead{display:flex;align-items:center;gap:var(--s4);padding:var(--s5) var(--s6)}
+.ptitle{flex:1;min-width:0}
+.h3x{font-family:var(--font-display);font-weight:600;font-size:24px;margin:0;line-height:1.2;letter-spacing:0}
+[dir=rtl] .h3x{font-family:var(--ar);font-weight:700}
+.hrow{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.pdesc{color:var(--grey);font-size:15px;margin-top:var(--s1);max-width:68ch}
+.dirty:not(.savebar){display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--purple-dk);background:var(--lavender,#F3EAF8);border-radius:var(--radius-pill);padding:2px 10px}
+.dirty:not(.savebar)::before{content:"";width:6px;height:6px;border-radius:var(--radius-pill);background:currentColor}
+.dirty[hidden]{display:none}
+.panel.changed{border-color:#CFAEE0}
+.sum{color:var(--grey);font-size:15px;margin-top:var(--s1);display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s3)}
+.sum b{color:var(--ink);font-weight:500}
+.sum .soc{display:flex;gap:var(--s2)}
+.sum .soc span{width:32px;height:32px;border-radius:var(--radius-pill);border:var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.sum .soc .soc-ic{width:16px;height:16px}
+.sum .av{width:40px;height:40px;border-radius:var(--radius-pill);background:var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--ink);flex:none}
+.sum .who{display:flex;align-items:center;gap:var(--s3);min-width:0}
+.sum .who>span:last-child>span{display:block}
+.sum .clip{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;width:100%}
+.edit[aria-expanded=true]{display:none}
+.pbody{padding:0 var(--s6) var(--s6);border-top:var(--border);padding-top:var(--s5)}
+.pbody[hidden]{display:none}
+#body-now{border-top:0;padding-top:0}
+.pbody>.lead{margin:0 0 var(--s5)}
+.pdone{display:flex;justify-content:flex-end;margin-top:var(--s5)}
+.nowlist .nowrow:first-child{border-top:var(--border);padding-top:var(--s3)}
+.nowlist .nowrow{padding-block:var(--s3)}
+/* skills: one row per skill, its details open on Edit */
+#skillList{border-top:var(--border)}
+.sk{border-bottom:var(--border)}
+.sk:last-child{border-bottom:0}
+.sk .shead{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 var(--s4);padding:var(--s4) var(--s6)}
+.sk .shead .ssum{grid-column:1/-1}
+.sk .stitle{flex:1;min-width:0}
+.sk .stitle b{font-weight:600;display:inline-flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+.sk.is-new .stitle b::after{content:"New";font-size:12px;font-weight:600;color:var(--purple-dk)}
+.sk .ssum{color:var(--grey);font-size:15px;margin:2px 0 0}
+.sk .sbody{padding:0 var(--s6) var(--s5)}
+.sk .sbody[hidden]{display:none}
+.sk.open{background:var(--cream)}
+.sk.open .sbody .chip:not([aria-pressed=true]){background:var(--white)}
+.sk .skacts{display:flex;gap:var(--s2);flex:none}
+.sk.open .skacts{display:none}
+.sk .shdone{display:none}
+.sk.open .shdone{display:inline-flex}
+/* while a skill is open its name and Done stay in view */
+.sk.open .shead{position:sticky;top:72px;z-index:5;background:var(--cream);border-bottom:var(--border)}
+.sk.open .sbody>.pdone{display:none}
+.sk .fld{scroll-margin-top:220px}
+.sk.open .sbody{padding-top:var(--s2)}
+.skrm:hover:not(:disabled){color:var(--rose-fg);border-color:var(--rose-fg)}
+.sk .sacts{display:flex;gap:var(--s1);flex-wrap:wrap;margin-top:calc(-1 * var(--s2))}
+.sk .specs{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s2)}
+.sk .specs-l{margin-top:var(--s4);font-size:var(--t-meta);color:var(--grey)}
+.sk .fx-fields .in,.sk .fx-fields .sel{background:var(--white)}
+.card{background:var(--white);border:var(--border);border-radius:var(--radius);padding:var(--s6);margin-top:var(--s5)}
+
+/* fields */
+.form{max-width:none}
+.f{display:block;margin-top:var(--s5)}
+.f:first-child{margin-top:0}
+.f>span,.lbl{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 var(--s3);font-weight:600;font-size:15px;margin-bottom:var(--s2)}
+.f>span small,.lbl small{font-weight:400;color:var(--grey);font-size:var(--t-meta)}
+.in,.ta,.sel{width:100%;min-width:0;max-width:100%;min-height:48px;background:var(--white);border:1px solid var(--line);border-radius:var(--s3);padding:var(--s3) var(--s4);font-size:16px;color:var(--ink)}
+.in:hover,.ta:hover,.sel:hover{border-color:var(--grey)}
+.in:focus,.ta:focus,.sel:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.ta{min-height:120px;resize:vertical;line-height:1.5}
+.help{font-size:var(--t-meta);color:var(--grey);margin-top:var(--s2)}
+.help.err{color:var(--rose-fg)}
+.f.bad .in{border-color:var(--rose-fg)}
+.url{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:var(--s3);overflow:hidden;background:var(--white)}
+.url:focus-within{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.url b{display:flex;align-items:center;padding-inline:var(--s4);background:var(--cream);border-inline-end:var(--border);font-weight:500;color:var(--grey);direction:ltr}
+.url .in{border:0;border-radius:0;box-shadow:none!important;flex:1;min-width:0}
+.f>span.url{flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:0;font-weight:400;font-size:inherit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+.two>.f{margin-top:0}
+.photo{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
+.photo .ph{width:80px;height:80px;border-radius:var(--radius-pill);background:var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:24px}
+.photo .acts{display:flex;gap:var(--s2);flex-wrap:wrap}
+.photo .acts [hidden]{display:none}
+.ph.has{background-size:cover;background-position:center;color:transparent}
+.prompts{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.chip{min-height:36px;padding:var(--s1) var(--s3);border-radius:var(--radius-pill);border:var(--border);background:var(--white);font-size:var(--t-meta);font-weight:500;cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+
+/* now */
+.nowrow{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);padding-block:var(--s4);border-top:var(--border)}
+.nowrow:first-child{border-top:0;padding-top:0}
+.nowrow b{display:block;font-weight:600}
+.nowdesc{font-size:var(--t-meta);color:var(--grey);margin-top:2px;max-width:60ch}
+.nowprev{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;background:var(--lavender,#F3EAF8);border-radius:var(--s3);padding:var(--s3) var(--s4);margin-bottom:var(--s3)}
+.nowprev-l{font-size:var(--t-meta);color:var(--purple-dk);font-weight:500}
+.nowchips{display:flex;gap:var(--s2);flex-wrap:wrap}
+.nowchips span{background:var(--white);color:var(--ink);border-radius:var(--radius-pill);padding:2px var(--s3);font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.nowchips span::before{content:"";width:8px;height:8px;border-radius:var(--radius-pill);background:var(--line)}
+.nowchips .on::before{background:var(--mint-fg)}
+.nowchips span:not(:first-child)::before{display:none}
+
+/* social links */
+.links{list-style:none;margin:0;padding:0}
+.links li{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) 44px;gap:var(--s3);align-items:center;padding-block:var(--s2);border-top:0}
+.links li:first-child{padding-top:0}
+.platbtn{display:inline-flex;align-items:center;gap:var(--s2);height:48px;padding:0 var(--s3);border:1px solid var(--line);border-radius:var(--s3);background:var(--cream);color:var(--ink);cursor:pointer}
+.platbtn:hover,.platbtn[aria-expanded=true]{border-color:var(--ink)}
+.platbtn .soc-ic{width:20px;height:20px}
+.platbtn .caret{width:16px;height:16px;color:var(--grey)}
+.links .url{min-height:48px}
+.links .url.web .in{padding-inline-start:var(--s4)}
+.links .newrow .url{border-style:dashed}
+.links .rm{color:var(--grey)}
+.links .rm:hover{color:var(--rose-fg)}
+.platmenu{position:absolute;z-index:30;top:calc(100% - 2px);inset-inline-start:0;width:min(320px,100%);background:var(--white);border:var(--border);border-radius:var(--s4);box-shadow:0 12px 32px rgba(20,17,15,.14);padding:var(--s2) 0;max-height:360px;overflow:auto}
+.pm-h{font-size:var(--t-meta);font-weight:600;color:var(--grey);padding:var(--s2) var(--s4) var(--s3);border-bottom:var(--border);margin-bottom:var(--s1)}
+.pm-o{display:grid;grid-template-columns:20px 20px minmax(0,1fr) auto;gap:var(--s3);align-items:center;width:100%;min-height:44px;padding:0 var(--s4);border:0;background:none;font:inherit;color:var(--ink);text-align:start;cursor:pointer}
+.pm-o:hover,.pm-o:focus-visible{background:var(--cream);outline:none}
+.pm-o[aria-disabled=true]{color:var(--grey);cursor:not-allowed}
+.pm-o .soc-ic{width:18px;height:18px}
+.pm-ck .icon{width:18px;height:18px}
+.pm-x{font-size:12px;color:var(--grey)}
+/* the platform is read from the link: its icon sits beside the field */
+.links .plat{width:44px;height:44px;border-radius:var(--radius-pill);background:var(--cream);border:var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.links .plat.none{color:var(--line)}
+.soc-ic{width:20px;height:20px;flex:none}
+
+.links li:first-child{border-top:0;padding-top:0}
+.iconbtn{width:44px;height:44px;border-radius:var(--radius-pill);border:var(--border);background:var(--white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--grey);flex:none}
+.iconbtn:hover{color:var(--rose-fg);border-color:var(--rose-fg)}
+
+
+/* sections — one row pattern everywhere (audit #9):
+   [drag] name → edits content · meta · Move to · Visible */
+.place{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s4)}
+.seg{display:inline-flex;gap:var(--s1);border:var(--border);border-radius:var(--radius-pill);padding:var(--s1);background:var(--white)}
+.seg button{border:0;background:none;border-radius:var(--radius-pill);min-height:36px;padding:0 var(--s4);font-size:var(--t-meta);font-weight:500;color:var(--grey);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--cream)}
+.group{margin-top:var(--s5);border:var(--border);border-radius:var(--radius);background:var(--white);overflow:hidden}
+.group.solo{margin-top:0;border:0;border-radius:0}
+.group.solo .rows{padding-inline:0}
+.group>h3{margin:0}
+.ghead{width:100%;display:flex;align-items:center;gap:var(--s3);padding:var(--s4) var(--s5);background:var(--white);border:0;cursor:pointer;text-align:start;font-weight:600;font-size:var(--t-h3)}
+.ghead .meta{font-weight:400}
+.ghead .icon{margin-inline-start:auto;transition:transform var(--fast) var(--ease)}
+.ghead[aria-expanded=false] .icon{transform:rotate(-90deg)}
+[dir=rtl] .ghead[aria-expanded=false] .icon{transform:rotate(90deg)}
+.rows{list-style:none;margin:0;padding:0 var(--s5) var(--s3);min-height:56px}
+.rows[hidden]{display:none}
+.rows.drop-ok{background:var(--cream)}
+.rows.drop-no{background:var(--rose-bg)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto 48px;gap:var(--s3);align-items:center;padding-block:var(--s2);border-top:var(--border);min-height:60px}
+.row:first-child{border-top:0}
+.row.off .name{color:var(--grey)}
+.row.dragging{opacity:.4}
+.grip{width:32px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--grey);cursor:grab;border:0;background:none;padding:0}
+.name{display:inline-flex;align-items:center;gap:var(--s2);font-weight:600;text-decoration:none;min-height:44px}
+.name .icon{width:16px;height:16px;color:var(--purple-dk)}
+.row .sel{min-height:40px;padding-block:var(--s1);font-size:var(--t-meta)}
+.empty{padding:var(--s4) 0;color:var(--grey);font-size:var(--t-meta)}
+
+/* willing to explore */
+.wte{list-style:none;margin:0;padding:0}
+.wte li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:var(--s3);padding-block:var(--s4);border-top:var(--border);align-items:start}
+.wte li:first-child{border-top:0;padding-top:0}
+.wte .note{grid-column:1/3}
+/* the role dialog */
+#dlgRole{max-width:720px}
+#dlgRole .role{padding:0;display:flex;flex-direction:column;max-height:min(86vh,860px)}
+.role-h{display:flex;justify-content:space-between;align-items:center;padding:var(--s5) var(--s6);border-bottom:var(--border)}
+.role-b{padding:var(--s5) var(--s6);overflow:auto}
+.role-b .f{margin-top:var(--s4)}
+.role-b>.f:first-child,.role-b>.two:first-child .f{margin-top:0}
+.role-b .two>.f,.role-b .three>.f{margin-top:0}
+.role-b .two,.role-b .three{margin-top:var(--s4)}
+.role-b>.two:first-child{margin-top:0}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.my{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s2)}
+.chk{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s4);font-weight:500;min-height:44px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--purple-dk)}
+.role-f{display:grid;grid-template-columns:auto 1fr auto auto;gap:var(--s2);align-items:center;padding:var(--s4) var(--s6);border-top:var(--border)}
+.role-f .del{color:var(--rose-fg);padding-inline:0}
+.role-f .del[hidden]{display:none}
+.f.bad .in{border-color:var(--rose-fg)}
+#rEnd[hidden]{display:none}
+#rSk{display:flex;flex-wrap:wrap;gap:var(--s2)}
+#brands .phead,#explore .phead{align-items:flex-start}
+.showsw{display:inline-flex;align-items:center;gap:var(--s3);font-size:var(--t-meta);font-weight:500;color:var(--grey);cursor:pointer;min-height:44px;white-space:nowrap}
+.hidtag[hidden]{display:none}
+.panel.is-off .pbody{opacity:.55}
+.panel.is-off .pbody:focus-within{opacity:1}
+.brl{list-style:none;margin:0;padding:0}
+.brl li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 88px minmax(0,1fr) 44px;gap:var(--s3);padding-block:var(--s4);border-top:var(--border);align-items:end}
+.brl li:first-child{border-top:0;padding-top:0}
+.brl .none{color:var(--grey);grid-template-columns:1fr}
+
+/* dialogs */
+dialog{border:0;border-radius:var(--radius);padding:0;max-width:480px;width:calc(100% - 32px);background:var(--white);color:var(--ink)}
+dialog::backdrop{background:rgba(20,17,15,.5)}
+.dlg{padding:var(--s6)}
+.dlg h2{font-family:var(--font-display);font-weight:600;font-size:26px;margin:0}
+[dir=rtl] .dlg h2{font-family:var(--ar);font-weight:700}
+.dlg p{color:var(--grey);margin-top:var(--s2)}
+.dlg .acts{display:flex;justify-content:flex-end;gap:var(--s2);margin-top:var(--s5);flex-wrap:wrap}
+.picklist{list-style:none;margin:var(--s4) 0 0;padding:0;max-height:320px;overflow:auto;border:var(--border);border-radius:var(--s3)}
+.picklist label{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);border-top:var(--border);cursor:pointer;min-height:48px}
+.picklist li:first-child label{border-top:0}
+.picklist label:hover{background:var(--cream)}
+.picklist input{accent-color:var(--purple-dk);width:18px;height:18px}
+.pickbtn{font:inherit;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:var(--s2);width:100%;text-align:start;cursor:pointer;background-image:none}
+.pickbtn .icon{width:18px;height:18px;color:var(--grey);flex:none}
+.picklist .via{display:block;font-size:var(--t-meta);color:var(--grey)}
+
+.toast{position:fixed;bottom:112px;inset-inline-start:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:var(--s3) var(--s5);border-radius:var(--radius-pill);font-weight:500;display:flex;gap:var(--s4);align-items:center;z-index:50}
+[dir=rtl] .toast{transform:translateX(50%)}
+.toast[hidden]{display:none}
+.toast button{background:none;border:0;color:var(--yellow);font-weight:600;cursor:pointer;min-height:32px}
+
+
+/* review 7 Oct 2026: every part is open and editable in place. Changes collect in a draft, and the bar at the
+   bottom saves or discards them, so it's always clear whether the profile is saved. */
+.layout{padding-bottom:120px}
+.panel{margin-top:var(--s5)}
+.panel .pbody{border-top:var(--border)}
+.savebar{position:fixed;inset-inline:0;bottom:var(--s5);z-index:40;display:flex;justify-content:center;padding-inline:var(--s5);pointer-events:none}
+.savebar .in-bar{pointer-events:auto;width:100%;max-width:var(--content);display:flex;align-items:center;gap:var(--s4);padding:var(--s3) var(--s3) var(--s3) var(--s5);border-radius:var(--radius);background:var(--white);border:var(--border);box-shadow:0 10px 30px rgba(20,17,15,.10);transition:background var(--slow) var(--ease),border-color var(--slow) var(--ease)}
+.savebar .msg{flex:1;min-width:0;display:flex;align-items:center;gap:var(--s3);font-weight:600}
+.savebar .msg small{display:block;font-weight:400;font-size:var(--t-meta);color:var(--grey)}
+.savebar .dot{width:10px;height:10px;border-radius:var(--radius-pill);background:var(--mint-fg);flex:none}
+.savebar .acts{display:flex;gap:var(--s2);flex:none}
+.savebar .acts[hidden]{display:none}
+.savebar.dirty .in-bar{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.savebar.dirty .dot{background:var(--yellow)}
+/* 24 Oct 2026: the draft would take the profile out of Live */
+.savebar.risk .in-bar{box-shadow:inset 0 0 0 2px var(--yellow)}
+.f.risk .in{border-color:var(--purple-dk);box-shadow:0 0 0 1px var(--purple-dk)}
+.savebar.dirty .msg small{color:#C9C3BB}
+.savebar.dirty .btn-2{background:transparent;color:var(--cream);border-color:#4A4440}
+.savebar.dirty .btn-2:hover{border-color:var(--cream)}
+.savebar .btn-save{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.savebar.bad .dot{background:var(--rose)}
+/* 24 Oct 2026 (critique): the bar only shows while there is something to save, and for a moment after a save.
+   It rises in at 250ms and leaves at 150ms. */
+.savebar{transition:transform var(--duration-fast) var(--ease-smooth-out),opacity var(--duration-fast) var(--ease-smooth-out),visibility 0s}
+.savebar.is-away{transform:translateY(calc(2 * var(--distance-base)));opacity:0;visibility:hidden;transition-duration:var(--duration-quick),var(--duration-quick),0s;transition-delay:0s,0s,var(--duration-quick)}
+.savebar.is-away .in-bar{pointer-events:none}
+@media (prefers-reduced-motion:reduce){.savebar,.savebar.is-away{transition:none}}
+/* skills: in the order of the profile tabs; the first opens first */
+.sk .shead{grid-template-columns:auto minmax(0,1fr) auto}
+.sk .grip{cursor:grab}
+.sk .grip:active{cursor:grabbing}
+.sk .order{font-size:13px;font-weight:600;color:var(--purple-dk);background:var(--lavender,#F3EAF8);border-radius:var(--radius-pill);padding:2px 10px}
+.sk .ssum{grid-column:2/-1}
+.sk .sbody{padding:0 var(--s6) var(--s5) calc(var(--s6) + 44px)}
+.sk.dragging{opacity:.45}
+.sk.drop-before{box-shadow:inset 0 3px 0 var(--purple)}
+.sk.drop-after{box-shadow:inset 0 -3px 0 var(--purple)}
+.sk .fx-done,.sk .fx-closed .fx-open{display:none}
+/* open fields sit quietly inside the skill: a light frame, not the ink one used when a field was opened on its own */
+.sk .fld.fx-opened{border:1px solid var(--line);background:var(--white);margin-block:var(--s3) 0}
+.sk .fld.fx-opened:focus-within{border-color:var(--grey)}
+.sk .fx-fields{border-top:0;padding-top:0}
+.sk .stitle b{font-size:var(--t-h3)}
+.sk .fx-fields{margin-top:var(--s4)}
+.sk details.fxd>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:var(--s2);font-weight:600;font-size:15px;min-height:44px}
+.sk details.fxd>summary::-webkit-details-marker{display:none}
+.sk details.fxd>summary .icon{width:18px;height:18px;transition:transform var(--fast) var(--ease)}
+.sk details.fxd:not([open])>summary .icon{transform:rotate(-90deg)}
+.sk details.fxd>summary small{font-weight:400;color:var(--grey);font-size:var(--t-meta)}
+.sk .mv{width:40px;height:40px}
+.sk .mv:disabled{opacity:.35;cursor:not-allowed}
+.sk .mv:hover:not(:disabled){color:var(--ink);border-color:var(--ink)}
+
+@media (max-width:960px){
+  .hero .body{grid-template-columns:auto minmax(0,1fr)}
+  .pub{grid-column:1/-1}
+}
+@media (max-width:760px){
+  .wrap{padding-inline:var(--s4)}
+  .hero{margin-top:var(--s5)}
+  .hero .body{padding:var(--s5)}
+  .hero .ph{width:64px;height:64px;font-size:26px}
+  .hero.soft{background-size:auto 150px;background-position:right top}
+  .hero.soft .body{padding:212px var(--s5) var(--s5);min-height:0}
+  .band{height:32px}
+  .layout{margin-top:var(--s7)}
+  .card{padding:var(--s5)}
+  .phead{padding:var(--s4);align-items:flex-start}
+  .pbody{padding:var(--s4)}
+  .sk .shead{padding:var(--s4)}
+  .sk .sbody{padding:0 var(--s4) var(--s4)}
+  .sk .mv{width:36px;height:36px}
+  .savebar{bottom:var(--s3);padding-inline:var(--s3)}
+  .savebar .in-bar{padding:var(--s3);flex-wrap:wrap}
+  .savebar .acts{width:100%}
+  .savebar .acts .btn{flex:1}
+  /* phones: one row while editing. A short title, Discard as text, Save. Risk and errors keep their second line */
+  .savebar.dirty:not(.risk):not(.bad) .in-bar{flex-wrap:nowrap;padding:var(--s2) var(--s2) var(--s2) var(--s4);gap:var(--s2)}
+  .savebar.dirty:not(.risk):not(.bad) .msg small{display:none}
+  .savebar.dirty:not(.risk):not(.bad) .msg>span{min-width:0}
+  .savebar.dirty:not(.risk):not(.bad) #sbTitle{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .savebar.dirty:not(.risk):not(.bad) .acts{width:auto}
+  .savebar.dirty:not(.risk):not(.bad) .acts .btn{flex:none}
+  .savebar.dirty #sbDiscard{border-color:transparent;padding-inline:var(--s2)}
+  .tip{width:min(300px,calc(100vw - 48px))}
+  .hero.soft .pub{margin-top:0;grid-column:1/-1}
+  .linkbtn{max-width:100%;min-width:0}
+  .linkbtn #pubState{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .hero.soft h1{overflow-wrap:anywhere}
+  .sk .skacts .btn{min-height:40px;min-width:44px;padding-inline:var(--s3)}
+  #skills .phead{flex-wrap:wrap}
+  #skills .phead .ptitle{flex:1 1 100%}
+  #skills .phead #addSkill{order:3}
+  #brands .phead,#explore .phead{flex-wrap:wrap}
+  #explore .phead .ptitle{flex:1 1 100%}
+  #brands .phead .ptitle{flex:1 1 100%}
+  /* the platform icon already says where it goes: on a phone the username gets the whole field */
+  .links .url b{display:none}
+  .links .url .in{padding-inline-start:var(--s4)}
+  .sk.open .shead{top:64px}
+  .sk .sbody{padding:0 var(--s4) var(--s4)}
+  .edit span,.skrm span{display:none}
+  .skrm{padding-inline:var(--s3)}
+  .edit{padding-inline:var(--s3)}
+  .two,.three{grid-template-columns:minmax(0,1fr)}
+  .role-h,.role-b,.role-f{padding-inline:var(--s4)}
+  .platbtn{padding:0 var(--s2)}
+  .pfield .url b{padding-inline:var(--s2);font-size:14px}
+  .rows{padding-inline:var(--s4)}
+  .ghead{padding-inline:var(--s4)}
+  .row{grid-template-columns:minmax(0,1fr) 48px;row-gap:0}
+  .row .rmeta{display:none}
+  .row .switch{grid-row:1;grid-column:2}
+  .wte li{grid-template-columns:minmax(0,1fr) 44px}
+  .wte li>label{grid-column:1}
+  .wte li>.iconbtn{grid-column:2;grid-row:1;margin-top:34px}
+  .brl li{grid-template-columns:minmax(0,1fr) 96px}
+  .brl li>label:nth-child(-n+3),.brl li>label:nth-child(5){grid-column:1/-1}
+  .brl li>.iconbtn{grid-column:2;grid-row:4}
+}
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<!-- Lucide icons, ISC licence -->
+<symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+</svg>
+
+<div data-fama-nav></div>
+
+<main class="wrap">
+
+<section class="hero soft">
+  <div class="body">
+    <span class="ph" id="phHero" aria-hidden="true">DT</span>
+    <div>
+      <span class="hello" data-t="hero.label"></span>
+      <h1 id="heroName"></h1>
+    </div>
+    <div class="pub">
+      <button type="button" class="linkbtn" id="copyLink" aria-describedby="copyNote"><span id="pubState" dir="ltr">fama.so/demo-talent</span><span class="lb-ic"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span id="copyTx"></span></span></button>
+      <span class="vh" id="copyNote" aria-live="polite"></span>
+      <span class="stat"><span class="pill" id="pubPill"></span><span class="pill p-idx" id="pubIdx" hidden></span><button type="button" class="tipbtn" aria-describedby="pubTip" data-t-aria="pub.tipA"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg></button><span class="tip" role="tooltip" id="pubTip"></span></span>
+    </div>
+  </div>
+  <div class="band" role="presentation"></div>
+</section>
+
+<!-- the dashboard lives here now (7 Oct 2026): the steps to the index while Private, and the views, only for the talent -->
+<section class="vw" id="gate" aria-label="Creatives Index" hidden></section>
+<section class="vw" id="views" aria-label="Profile views"></section>
+<div class="layout">
+  
+    <section class="sec panel" id="core">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.core"></h2><span class="dirty" data-dirty="core" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="d.core"></p></div>
+      </div>
+      <div class="pbody" id="body-core">
+      <div class="form">
+        <div class="f">
+          <span data-t="core.photo"></span>
+          <div class="photo">
+            <span class="ph" id="phBig" aria-hidden="true">DT</span>
+            <div>
+              <div class="acts"><button class="btn btn-2" type="button" id="phPick"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg><span id="phPickT"></span></button><button class="btn btn-text" type="button" id="phRm" data-t="core.photo.remove"></button>
+                <input type="file" id="phFile" accept="image/jpeg,image/png,image/webp" hidden></div>
+              <p class="help" id="phHelp" data-t="core.photo.help"></p>
+            </div>
+          </div>
+        </div>
+        <div class="two f">
+          <label class="f" id="fDisplayWrap"><span><span data-t="core.display"></span><small data-t="core.display.req"></small></span><input class="in" id="fDisplay" maxlength="255" autocomplete="name"><p class="help" id="fDisplayHelp" data-t="core.display.help"></p></label>
+          <label class="f" id="fUserWrap"><span data-t="core.user"></span><span class="url"><b>fama.so/</b><input class="in" id="fUser" maxlength="60" autocomplete="off" spellcheck="false" dir="ltr"></span><p class="help" id="fUserHelp" data-t="core.user.help"></p></label>
+        </div>
+        <label class="f"><span><span data-t="core.headline"></span><small data-t="optional"></small></span><input class="in" id="fHeadline" maxlength="255"></label>
+        <label class="f"><span><span data-t="core.bio"></span><small id="bioCount"></small></span><textarea class="ta" id="fBio" maxlength="5000"></textarea><p class="help" data-t="core.bio.help"></p></label>
+        <div class="f">
+          <label for="fPov" class="lbl"><span data-t="core.pov"></span><small id="povCount"></small></label>
+          <textarea class="ta" id="fPov" maxlength="2000"></textarea>
+          <p class="help" data-t="core.pov.help"></p>
+          <div class="prompts" id="povPrompts"></div>
+        </div>
+        <div class="two f">
+          <label class="f"><span data-t="core.city"></span><input class="in" id="fCity" maxlength="255" autocomplete="address-level2"></label>
+          <label class="f"><span data-t="core.country"></span><input class="in" id="fCountry" maxlength="255" autocomplete="country-name"></label>
+        </div>
+      </div>
+      </div>
+    </section>
+  
+    <section class="sec panel" id="now">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.now"></h2><span class="dirty" data-dirty="now" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="now.short"></p></div>
+        
+      </div>
+      <div class="pbody" id="body-now">
+      <!-- 9 Oct 2026: what each switch does, and how it looks on the profile, right here -->
+      <div class="nowprev" aria-live="polite"><span class="nowprev-l" data-t="now.prev"></span><span class="nowchips" id="nowChips"></span></div>
+      <div class="nowlist">
+        <div class="nowrow"><div><b id="lTaking" data-t="now.taking"></b><p class="nowdesc" id="dTaking"></p></div><button class="switch" id="nTaking" role="switch" aria-checked="true" aria-labelledby="lTaking" aria-describedby="dTaking"><i></i></button></div>
+        <div class="nowrow"><div><b id="lTravel" data-t="now.travel"></b><p class="nowdesc" id="dTravel"></p></div><button class="switch" id="nTravel" role="switch" aria-checked="false" aria-labelledby="lTravel" aria-describedby="dTravel"><i></i></button></div>
+      </div>
+    
+        
+      </div>
+    </section>
+  
+    <section class="sec panel" id="social">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.social"></h2><span class="dirty" data-dirty="social" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="social.lead"></p></div>
+      </div>
+      <div class="pbody" id="body-social">
+      <div class="pin-card">
+        <ul class="links" id="links"></ul>
+        <button class="btn btn-2" type="button" id="addLink" style="margin-top:var(--s3)"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span data-t="social.addLink"></span></button>
+
+      </div>
+      </div>
+    </section>
+  <section class="sec panel" id="skills">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.skills"></h2><span class="dirty" data-dirty="skills" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="skills.lead"></p></div>
+        <button class="btn btn-2" type="button" id="addSkill"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span data-t="skills.add"></span></button>
+      </div>
+      <div id="skillList"></div>
+  </section>
+  
+    <section class="sec panel" id="explore">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.explore"></h2><span class="tag tag-hidden hidtag" data-t="show.hidden" hidden></span><span class="dirty" data-dirty="explore" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="wte.lead"></p></div>
+        <label class="showsw"><span data-t="show.on"></span><button type="button" class="switch" role="switch" data-pw="explore" aria-checked="true"><i></i></button></label>
+      </div>
+      <div class="pbody" id="body-explore">
+      <div class="pin-card">
+        <ul class="wte" id="wte"></ul>
+        <button class="btn btn-2" type="button" id="addWte" style="margin-top:var(--s4)"><svg class="icon"><use href="#i-plus"/></svg><span data-t="wte.add"></span></button>
+      </div>
+      </div>
+    </section>
+  
+    <section class="sec panel" id="brands">
+      <div class="phead">
+        <div class="ptitle"><div class="hrow"><h2 class="h3x" data-t="s.brands"></h2><span class="tag tag-hidden hidtag" data-t="show.hidden" hidden></span><span class="dirty" data-dirty="brands" data-t="unsaved" hidden></span></div><p class="pdesc" data-t="br.lead"></p></div>
+        <label class="showsw"><span data-t="show.on"></span><button type="button" class="switch" role="switch" data-pw="brands" aria-checked="true"><i></i></button></label>
+        <button class="btn btn-2" type="button" id="addBrand"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span data-t="br.add"></span></button>
+      </div>
+      <div class="pbody" id="body-brands">
+        <div id="exp"></div>
+      </div>
+    </section>
+  
+</div>
+
+</main>
+
+<div class="savebar" id="savebar">
+  <div class="in-bar">
+    <p class="msg" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span><span id="sbTitle"></span><small id="sbNote"></small></span></p>
+    <div class="acts" id="sbActs" hidden><button type="button" class="btn btn-2" id="sbDiscard" data-t="discard"></button><button type="button" class="btn btn-save" id="sbSave" data-t="save"></button></div>
+  </div>
+</div>
+
+<div data-fama-foot></div>
+
+<dialog id="dlgAdd"><form method="dialog" class="dlg">
+  <h2 id="addTitle"></h2>
+  <p id="addHelp"></p>
+  <input class="in" id="addSearch" type="search" style="margin-top:var(--s4)" data-t-ph="add.search">
+  <ul class="picklist" id="addList"></ul>
+  <div class="acts"><button class="btn btn-2" value="cancel" data-t="cancel"></button><button class="btn" value="ok" id="addOk"></button></div>
+</form></dialog>
+
+<dialog id="dlgRole" aria-labelledby="roleT"><form method="dialog" class="dlg role" novalidate>
+  <div class="role-h"><h2 id="roleT"></h2><button type="button" class="iconbtn plain" data-x aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></div>
+  <div class="role-b">
+    <div class="two"><label class="f" id="rTW"><span data-t="role.title"></span><input class="in" id="rT" maxlength="80" placeholder="Lead stylist"><p class="help err" hidden data-t="role.need"></p></label>
+      <label class="f" id="rNW"><span data-t="role.org"></span><input class="in" id="rN" maxlength="80" placeholder="Maison Nour"><p class="help err" hidden data-t="role.need"></p></label></div>
+    <div class="three"><label class="f"><span data-t="role.et"></span><select class="sel" id="rEt"></select></label>
+      <label class="f"><span data-t="role.loc"></span><input class="in" id="rLoc" maxlength="60" placeholder="City"></label>
+      <label class="f"><span data-t="role.lt"></span><select class="sel" id="rLt"></select></label></div>
+    <label class="chk"><input type="checkbox" id="rCur"><span data-t="role.cur"></span></label>
+    <div class="two"><div class="f"><span class="lbl" data-t="role.start"></span><div class="my"><select class="sel" id="rSm" aria-label="Start month"></select><select class="sel" id="rSy" aria-label="Start year"></select></div><p class="help err" id="rSErr" hidden></p></div>
+      <div class="f" id="rEnd"><span class="lbl" data-t="role.end"></span><div class="my"><select class="sel" id="rEm" aria-label="End month"></select><select class="sel" id="rEy" aria-label="End year"></select></div></div></div>
+    <label class="f"><span><span data-t="role.hl"></span><small id="rHlN"></small></span><textarea class="ta" id="rHl" maxlength="2000"></textarea><p class="help" data-t="role.hlHelp"></p></label>
+    <div class="f"><span class="lbl" id="rSkL" data-t="role.sk"></span><p class="help" style="margin:0 0 var(--s2)" data-t="role.skHelp"></p><div class="specs" id="rSk" role="group" aria-labelledby="rSkL"></div></div>
+  </div>
+  <div class="role-f"><button type="button" class="btn btn-text del" id="rDel" data-t="role.del"></button><span></span><button type="button" class="btn btn-2" data-x data-t="cancel"></button><button type="button" class="btn" id="rOk"></button></div>
+</form></dialog>
+
+<dialog id="dlgRemove"><form method="dialog" class="dlg">
+  <h2 id="rmTitle"></h2>
+  <p data-t="rm.help"></p>
+  <div class="acts"><button class="btn btn-2" value="cancel" data-t="cancel"></button><button class="btn btn-danger" value="ok" data-t="rm.ok"></button></div>
+</form></dialog>
+
+<div class="toast" id="toast" hidden role="status"><span id="toastTx"></span><button id="toastUndo" data-t="undo"></button></div>
+
+<script src="assets/js/skills.js?v=6"></script>
+<script src="assets/js/fields.js?v=4"></script>
+<script src="assets/js/profile.js?v=24"></script>
+<script src="assets/js/views.js?v=18"></script>
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+/* V1 has no language switcher: Arabic lives at its own address. Here, ?lang=ar shows it.
+   Review: ?state=incomplete (not in the Creatives Index yet). Data is placeholder. */
+const q=new URLSearchParams(location.search);
+const lang="en"; // Arabic paused (27 Sep 2026). Restore: q.get("lang")==="ar"?"ar":"en"
+/* ?state=incomplete: live at its link, not yet in the Creatives Index. No publish step, no approval. */
+const COMPLETE=q.get("state")!=="incomplete";
+/* what the hero shows. The steps card owns the rules; it reports here whenever Live or listed changes (24 Oct 2026) */
+const PUB={live:COMPLETE,listed:COMPLETE&&q.get("state")!=="unlisted"};
+
+/* the 41 skills live in assets/js/skills.js, shared by every page that lists skills */
+const SK={}, SP={};
+FAMA_SKILLS.forEach(k=>{SK[k.id]={en:k.name,ar:k.name,specs:k.specs.map(x=>x.id),blocks:k.blocks};k.specs.forEach(x=>SP[x.id]=[x.name,x.name])});
+const BL={gallery:["Gallery","معرض الصور"],looks:["Looks","اللوكات"],digitals:["Digitals","صور الديجيتال"],projects:["Projects","المشاريع"],showreel:["Showreel","الشوريل"],equipment:["Equipment","المعدات"],software:["Software","البرامج"],audio:["Audio","الصوت"],samples:["Writing samples","نماذج كتابة"],
+ reviews:["Reviews","التقييمات"],credits:["Credits","المشاركات"],recognitions:["Recognitions","التزكيات"],explore:["Willing to explore","أحب أجرّب"],brands:["Experience","الخبرات"]};
+
+const T={
+en:{
+ "hero.label":"Your profile","toc.label":"On this page",
+ "pub.label":"Your profile","pub.in":"In the Creatives Index","pub.out":"Not in the index yet",
+ "pub.in.n":"Live for anyone with the link, and brands can find you when they search.","pub.out.n":"Live for anyone with the link. Complete it to be listed where brands search.",
+ "pub.on.n":"Anyone with your link can see your profile.","pub.off.n":"Only you can see it. Switch it on when you're ready.",
+ "pub.noname":"Add a display name first. It's needed to publish.","live":"Live",
+ "s.core":"Core details","s.now":"Availability","s.social":"Social links","s.skills":"Skills","s.sections":"Sections","s.explore":"Willing to explore","s.brands":"Experience",
+ "saved":"All changes saved","edit":"Edit","done":"Done","intro":"What brands see on your profile. Open a part to change it; everything saves as you go.",
+ "sum.noname":"No display name yet","sum.nolinks":"No links yet","sum.noexplore":"Nothing yet","sum.nobrands":"Nothing yet",
+ "sum.shown":(n,m)=>n===m?`All ${m} sections show`:`${n} of ${m} sections show`,"sum.fx":(n,m)=>`${n} of ${m} practice details`,"sum.nospecs":"No specialities chosen",
+ "sum.more":n=>`+${n} more`,"saving":"Saving…","optional":"Optional",
+ "core.label":"Who you are","core.photo":"Profile photo","core.photo.change":"Change photo","core.photo.add":"Upload photo","core.photo.big":"That photo is over 5 MB. Choose a smaller one.","core.photo.type":"Use a JPG, PNG or WebP photo.","core.photo.remove":"Remove","core.photo.help":"JPG, PNG or WebP, up to 5 MB. Shown in a circle.",
+ "core.display":"Display name","core.display.req":"Needed to go Live","core.display.help":"The name people see on your profile.","core.display.err":"Add a display name. Your profile needs one to go Live.",
+ "core.user":"Username","core.user.help":"Letters, numbers and dashes. It becomes your profile address.","core.user.err":"Use only letters, numbers and dashes.",
+ "core.headline":"Headline","core.bio":"Bio","core.bio.help":"Your background and track record.",
+ "core.pov":"Point of view","core.pov.help":"Your taste, in your words. Not a second bio.",
+ "core.city":"City","core.country":"Country",
+ "pov.p":["What do you notice that others miss?","A reference you keep going back to","Work you won't take, and why"],
+ "now.label":"Right now","now.lead":"These save as soon as you flip them, and show at the top of your profile.",
+ "now.taking":"Open for work","now.travel":"Happy to travel for work",
+ "now.prev":"On your profile","now.chipOn":"Open for work","now.chipOff":"Not open for work","now.chipTravel":"Will travel",
+ "now.takingOn":"Brands see you’re open for work, and can send you a job now.","now.takingOff":"Brands see you’re not open for work right now. Your profile stays up.",
+ "now.travelOn":c=>`Brands see you’ll take jobs outside ${c||"your city"}.`,"now.travelOff":c=>`Brands see only that you’re based in ${c||"your city"}.`,"now.changed":w=>`Last changed ${w}`,"ago3":"3 days ago","ago20":"20 days ago","justnow":"just now",
+ "social.label":"Elsewhere","social.lead":"Choose the platform, then type your username. Your profile shows its icon and links to your page. Up to nine.",
+ "social.type":"Account type","social.addLink":"Add another link","social.other":"Other","social.newPh":"Link to social profile","social.pick":p=>`Account type: ${p}. Change`,"social.added":"Added","social.add":"Add a platform","social.url":"Link",
+ "social.user":p=>`Your ${p} username`,"social.site":"Your website address","social.addA":p=>`Add ${p}`,"social.full":"You've added nine. Remove one to add another.","social.open":p=>`Open your ${p} page`,
+ "social.remove":p=>`Remove ${p} link`,"social.web":"Website","social.wait":"Paste a link","social.dup":"You've already added this link.",
+ "skills.label":"What you do","skills.lead":"Each skill is a tab on your profile, in this order. The first one opens first. Drag to reorder.","now.short":"Tell brands if they can book you right now. It shows under your name on your profile.",
+ "d.core":"Your name, your address on Fama, and how you introduce yourself.",
+ "copy":"Copy","copied":"Copied","copyA":"Copy your profile link","copiedA":"Link copied to the clipboard",
+ "pub.live":"Live","pub.private":"Private","pub.tipA":"What Live and Private mean",
+ "pub.tip.private":"<b>Private</b> Only you can see it. Finish Go Live and your link works.",
+ "pub.tip.live":"<b>Live</b> Anyone with your link can open your profile.",
+ "pub.tip.index":"<b>In the Creatives Index</b> Brands find you when they search.","pub.tip.indexTo":"<b>In the Creatives Index</b> Brands find you when they search. Add something to show to get there.","pub.index":"In the Index",
+ "copyOff":"Locked","copyOffA":"Your link can be shared once your profile is Live","copyOffN":"Finish Go Live first. Then you can share your link.",
+ "unsaved":"Unsaved","save":"Save changes","discard":"Discard",
+ "sb.clean":"All changes saved","sb.cleanN":"Your profile is up to date.","sb.savedAt":w=>`Saved ${w}`,"sb.now":"just now",
+ "sb.dirty":n=>n===1?"You have unsaved changes in 1 part":`You have unsaved changes in ${n} parts`,"sb.dirtyN":"Save to update your profile, or discard to undo them.",
+ "sb.bad":"Fix the highlighted field before saving","sb.badN":"Your profile needs a display name and a valid username.",
+ "sb.badName":"Add a display name to save","sb.badNameN":"Your profile needs one, and brands see it first.",
+ "sb.badUser":"Fix your username to save","sb.badUserN":"Use letters, numbers and dashes only.",
+ "t.discarded":"Changes discarded","t.saved":"Changes saved",
+ "skills.first":"Opens first","skills.up":s=>`Move ${s} up`,"skills.down":s=>`Move ${s} down`,"skills.drag":s=>`Reorder ${s}. Use the arrow keys, or drag.`,
+ "skills.moved":(s,n)=>`${s} is now tab ${n}`,"skills.details":"About your practice","skills.detailsN":(n,m)=>`${n} of ${m} added`,
+ "skills.add":"Add skill","skills.about":"About your practice","skills.specs":"Specialities","skills.primary":"Primary","skills.makePrimary":"Make primary","skills.remove":"Remove",
+ "skills.makePrimaryA":s=>`Make ${s} your primary skill`,"skills.removeA":s=>`Remove ${s}`,
+ "sec.label":"What's on your profile","sec.lead":"Every profile follows the same order, so brands always know where to look. Switch a section off to hide it. Hidden sections keep their content.",
+ "sec.place":"Show reviews, recognitions and experience","sec.above":"Before your work","sec.below":"After your work",
+ "sec.pw":"Profile-wide","sec.pw.meta":"Shows on every tab","sec.count":n=>`${n} ${n===1?"section":"sections"}`,
+ "sec.move":"Move to…","sec.moveA":s=>`Move ${s} to another tab`,"sec.visA":s=>`Show ${s} on your profile`,"sec.drag":s=>`Drag to reorder ${s}`,
+ "sec.hidden":"Hidden","sec.empty":"No sections here. Drag one in, or use Move to.","sec.hiddenTab":"This tab stays hidden until a visible section has content.",
+ "br.label":"Who you've worked for","br.lead":"Your roles at companies and brands, newest first. It shows on your profile after your work.",
+ "br.add":"Add role","role.addT":"Add a role","role.editT":"Edit role","role.title":"Job title","role.org":"Company or brand","role.need":"Add this to save the role.",
+ "role.et":"Employment type","role.loc":"Location","role.lt":"Location type","role.cur":"I currently work here","role.start":"Start date","role.end":"End date",
+ "role.hl":"Highlights","role.hlHelp":"One per line: projects, problems you solved, or results you got.","role.sk":"Skills","role.skHelp":"Which of your skills this role used.",
+ "show.on":"Show on profile","show.hidden":"Hidden from your profile","show.offA":p=>`${p} is hidden from your profile. It keeps its content.`,"role.del":"Delete role","role.add":"Add role","role.save":"Update role","role.month":"Month","role.year":"Year","role.needY":"Add the year you started.","role.order":"The end date can't be before the start date.",
+ "role.none":"Nothing here yet. Add the companies and brands you've worked with, and your roles there.","t.roleAdded":r=>`${r} added`,"t.roleUpdated":r=>`${r} updated`,"br.name":"Company or brand","br.role":"Your role","br.project":"Project","br.year":"Year","br.link":"Link","br.remove":n=>`Remove ${n||"this experience"}`,"br.none":"Nothing here yet. Add the companies and brands you've worked with.",
+ "wte.label":"Next for you","wte.lead":"Skills you'd like to be asked about, even ones you don't hold yet. Up to six.","wte.add":"Add another",
+ "wte.skill":"Skill","wte.spec":"Speciality","wte.any":"Any speciality","wte.note":"Note","wte.noteph":"What you'd like to try, in a line","wte.remove":"Remove this entry",
+ "wte.pickT":"Choose a skill to explore","wte.pickH":"Any of the 41, including one you have no work in yet.","wte.pickOk":"Choose skill",
+ "add.title":"Add a skill","add.help":"It gets its own tab, with default sections you can change.","add.search":"Search skills or specialities","add.ok":"Add skill","add.none":"No skill matches that. Try another word.",
+ "rm.title":s=>`Remove ${s}?`,"rm.help":"Its tab and sections come off your profile. The content inside them is kept, so you can add the skill back later.","rm.ok":"Remove skill",
+ "cancel":"Cancel","undo":"Undo","t.moved":(b,g)=>`${b} moved to ${g}`,"t.removed":s=>`${s} removed`,"t.primary":s=>`${s} is now your primary skill`,"t.added":s=>`${s} added`
+},
+ar:{
+ "hero.label":"تعديل البروفايل","toc.label":"في هذه الصفحة",
+ "pub.label":"النشر","pub.on":"ظاهر للجميع","pub.off":"مخفي",
+ "pub.on.n":"أي حد معاه رابطك يقدر يشوف بروفايلك.","pub.off.n":"أنت بس اللي تقدر تشوفه. فعّله لما تكون جاهز.",
+ "pub.steps":"شوف اللي فاضل",
+ "pub.noname":"ضيف اسم للعرض الأول، لازم عشان تنشر.","live":"منشور",
+ "s.core":"البيانات الأساسية","s.now":"الآن","s.social":"روابط السوشيال","s.skills":"المهارات","s.sections":"الأقسام","s.explore":"أحب أجرّب",
+ "saved":"كل التغييرات محفوظة","saving":"جارٍ الحفظ…","optional":"اختياري",
+ "core.label":"مين أنت","core.photo":"صورة البروفايل","core.photo.change":"تغيير الصورة","core.photo.remove":"إزالة","core.photo.help":"JPG أو PNG أو WebP، حتى ٥ ميجا. بتظهر في دايرة.",
+ "core.display":"اسم العرض","core.display.req":"مطلوب للنشر","core.display.help":"الاسم اللي الناس بتشوفه على بروفايلك.","core.display.err":"ضيف اسم للعرض. مش هتقدر تنشر من غيره.",
+ "core.user":"اسم المستخدم","core.user.help":"حروف وأرقام وشرطات. بيبقى عنوان بروفايلك.","core.user.err":"استخدم حروف وأرقام وشرطات بس.",
+ "core.headline":"العنوان التعريفي","core.bio":"نبذة","core.bio.help":"خلفيتك وأهم شغلك.",
+ "core.pov":"وجهة نظرك","core.pov.help":"ذوقك بكلامك أنت. مش نبذة تانية.",
+ "core.city":"المدينة","core.country":"الدولة",
+ "pov.p":["إيه اللي بتلاحظه والناس مش واخدة بالها منه؟","مرجع بترجعله على طول","شغل مش هتقبله، وليه"],
+ "now.label":"حالياً","now.lead":"بيتحفظوا أول ما تغيّرهم، وبروفايلك بيوضّح آخر مرة اتغيّر فيها كل واحد.",
+ "now.taking":"متاح للشغل","now.travel":"مستعد للسفر","now.changed":w=>`آخر تغيير ${w}`,"ago3":"منذ ٣ أيام","ago20":"منذ ٢٠ يوماً","justnow":"الآن",
+ "social.label":"في أماكن تانية","social.lead":"رابط واحد لكل منصة، لحد ٩ روابط.","social.add":"إضافة رابط","social.handle":"اسم الحساب","social.url":"الرابط","social.platform":"المنصة","social.remove":p=>`إزالة رابط ${p}`,
+ "skills.label":"بتعمل إيه","skills.lead":"كل مهارة ليها تبويب في بروفايلك. تبويب المهارة الأساسية بيفتح الأول.",
+ "skills.add":"إضافة مهارة","skills.specs":"التخصصات","skills.primary":"أساسية","skills.makePrimary":"اجعلها أساسية","skills.remove":"إزالة",
+ "skills.makePrimaryA":s=>`اجعل ${s} مهارتك الأساسية`,"skills.removeA":s=>`إزالة ${s}`,
+ "sec.label":"ترتيب بروفايلك","sec.lead":"اختار اسم القسم عشان تعدّل محتواه. اسحب لتغيير الترتيب، أو انقل القسم لتبويب تاني. الأقسام المخفية بتحتفظ بمحتواها.",
+ "sec.place":"أقسام البروفايل العامة تظهر","sec.above":"فوق تبويبات المهارات","sec.below":"تحت تبويبات المهارات",
+ "sec.pw":"على مستوى البروفايل","sec.pw.meta":"بتظهر في كل التبويبات","sec.count":n=>`${n} ${n===1?"قسم":"أقسام"}`,
+ "sec.move":"نقل إلى…","sec.moveA":s=>`نقل ${s} لتبويب تاني`,"sec.visA":s=>`إظهار ${s} في بروفايلك`,"sec.drag":s=>`اسحب لترتيب ${s}`,
+ "sec.hidden":"مخفي","sec.empty":"مفيش أقسام هنا. اسحب قسم، أو استخدم «نقل إلى».","sec.hiddenTab":"التبويب ده هيفضل مخفي لحد ما يبقى فيه قسم ظاهر وفيه محتوى.",
+ "wte.label":"الخطوة الجاية","wte.lead":"مهارات حابب الناس تسألك عنها، حتى لو لسه مش عندك. لحد ٦.","wte.add":"إضافة واحدة تانية",
+ "wte.skill":"المهارة","wte.spec":"التخصص","wte.any":"أي تخصص","wte.note":"ملاحظة","wte.noteph":"حابب تجرب إيه، في سطر","wte.remove":"إزالة",
+ "add.title":"إضافة مهارة","add.help":"هيبقى ليها تبويب بأقسام افتراضية تقدر تغيّرها.","add.search":"ابحث في المهارات","add.ok":"إضافة المهارة","add.none":"ضفت كل المهارات.",
+ "rm.title":s=>`إزالة ${s}؟`,"rm.help":"التبويب والأقسام هيتشالوا من بروفايلك. المحتوى اللي جواهم هيتحفظ، فتقدر ترجّع المهارة بعدين.","rm.ok":"إزالة المهارة",
+ "cancel":"إلغاء","undo":"تراجع","t.moved":(b,g)=>`اتنقل ${b} إلى ${g}`,"t.removed":s=>`اتشالت ${s}`,"t.primary":s=>`${s} بقت مهارتك الأساسية`,"t.added":s=>`اتضافت ${s}`
+}};
+const t=(k,...a)=>{const v=T[lang][k];return typeof v==="function"?v(...a):v};
+const L=i=>lang==="ar"?1:0;
+const skName=id=>SK[id][lang];
+const spName=id=>SP[id][L()];
+const blName=id=>BL[id][L()];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const withLang=f=>lang==="ar"?f+"?lang=ar":f;
+
+/* placeholder profile */
+/* one profile, shared with Preview (assets/js/profile.js). Review states only change what's shown, never what's saved. */
+const profile=FAMA_PROFILE.load();
+/* demo ?state=incomplete: one Go Live step left, the city. The steps follow what is saved, so the city starts empty */
+if(!COMPLETE)profile.city="";
+let newSkill=null;
+/* review 7 Oct 2026: edits collect in a draft. The bar at the bottom saves or discards them. */
+const clone=o=>JSON.parse(JSON.stringify(o));
+let base=clone(profile), savedAt=null, badField=null;
+const PARTS={core:["photo","display","user","headline","bio","pov","city","country"],now:["taking","travel"],social:["links"],skills:["skills","fields","groups"],explore:["wte"],brands:["brands"]};
+const same=(k)=>JSON.stringify(profile[k]??null)===JSON.stringify(base[k]??null);
+function changedParts(){
+  return Object.keys(PARTS).filter(part=>{
+    const pwv=b=>((profile.groups.pw||[]).find(x=>x.b===b)||{}).v!==((base.groups.pw||[]).find(x=>x.b===b)||{}).v;
+    if(part==="brands"&&pwv("brands"))return true;
+    if(part==="explore"&&pwv("explore"))return true;
+    if(part==="skills")return !same("skills")||!same("fields")||profile.skills.some(sk=>JSON.stringify(profile.groups[sk.id])!==JSON.stringify(base.groups[sk.id]));
+    return PARTS[part].some(k=>!same(k));
+  });
+}
+function invalid(){
+  if(!profile.display.trim())return "fDisplay";
+  if(!profile.user.trim()||!/^[a-z0-9-]+$/i.test(profile.user))return "fUser";
+  return null;
+}
+function renderBar(){
+  const ch=changedParts(), bar=$("savebar"), dirty=ch.length>0;
+  document.querySelectorAll("[data-dirty]").forEach(el=>{const on=ch.includes(el.dataset.dirty);el.hidden=!on;$(el.dataset.dirty).classList.toggle("changed",on)});
+  bar.classList.toggle("dirty",dirty); bar.classList.toggle("bad",dirty&&!!badField);
+  $("sbActs").hidden=!dirty;
+  if(dirty&&badField){const k=badField==="fDisplay"?"Name":badField==="fUser"?"User":"";$("sbTitle").textContent=t(k?"sb.bad"+k:"sb.bad");$("sbNote").textContent=t(k?"sb.bad"+k+"N":"sb.badN")}
+  else if(dirty){$("sbTitle").textContent=t("sb.dirty",ch.length);$("sbNote").textContent=t("sb.dirtyN")}
+  else{$("sbTitle").textContent=t("sb.clean");$("sbNote").textContent=savedAt?t("sb.savedAt",t("sb.now")):t("sb.cleanN")}
+}
+/* every edit lands here: the draft changed, so the bar and the Unsaved tags follow */
+function saved(){ if(badField&&!invalid())badField=null; renderBar(); }
+document.addEventListener("input",()=>requestAnimationFrame(saved));
+function saveAll(){
+  const bad=invalid();
+  if(bad){badField=bad;renderBar();const f=$(bad);f.scrollIntoView({block:"center",behavior:"smooth"});f.focus({preventScroll:true});return}
+  badField=null; profile.skills.forEach((x,i)=>x.primary=i===0); FAMA_PROFILE.save(clone(profile)); base=clone(profile); savedAt=Date.now(); renderBar();
+}
+function restore(from){
+  const c=clone(from); Object.keys(profile).forEach(k=>delete profile[k]); Object.assign(profile,c);
+  badField=null; renderAll(); renderBar();
+}
+function discardAll(){
+  const draft=clone(profile); restore(base);
+  toast(t("t.discarded"),()=>restore(draft));
+}
+$("sbSave").onclick=saveAll; $("sbDiscard").onclick=discardAll;
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="s"){e.preventDefault();if(changedParts().length)saveAll()}});
+window.addEventListener("beforeunload",e=>{if(changedParts().length){e.preventDefault();e.returnValue=""}});
+
+let toastT, undoFn=null;
+function toast(msg,undo){
+  $("toastTx").textContent=msg; undoFn=undo||null; $("toastUndo").hidden=!undo; $("toast").hidden=false;
+  clearTimeout(toastT); toastT=setTimeout(()=>{$("toast").hidden=true;undoFn=null},5000);
+}
+$("toastUndo").onclick=()=>{if(undoFn)undoFn(); $("toast").hidden=true; undoFn=null};
+
+/* static text */
+document.documentElement.lang=lang; document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+document.querySelectorAll("[data-t]").forEach(el=>el.textContent=t(el.dataset.t));
+document.querySelectorAll("[data-t-aria]").forEach(el=>el.setAttribute("aria-label",t(el.dataset.tAria)));
+document.querySelectorAll("[data-t-ph]").forEach(el=>el.placeholder=t(el.dataset.tPh));
+
+/* ---- publish ---- */
+function renderPub(){
+  /* the link shows what's saved: a username in the draft isn't the profile's address yet */
+  $("pubState").textContent="fama.so/"+(base.user||"");
+  /* Private: the link can't be copied or shared until Go Live is done (9 Oct 2026) */
+  const L=PUB.live, lk=$("copyLink"); lk.classList.toggle("off",!L); lk.setAttribute("aria-disabled",String(!L));
+  lk.querySelector("use").setAttribute("href",L?"#i-copy":"#i-lock");
+  $("copyTx").textContent=t(L?"copy":"copyOff"); lk.setAttribute("aria-label",L?t("copyA")+", fama.so/"+(base.user||""):t("copyOffA"));
+  lk.title=L?"":t("copyOffA");
+  $("pubPill").textContent=t(L?"pub.live":"pub.private");
+  $("pubPill").className="pill "+(L?"p-live":"p-off");
+  const ix=$("pubIdx"); ix.hidden=!PUB.listed; ix.textContent=t("pub.index");
+  /* three states, and every line that is true is lit */
+  $("pubTip").innerHTML=`<p${L?"":' class="cur"'}>${t("pub.tip.private")}</p><p${L?' class="cur"':""}>${t("pub.tip.live")}</p><p${PUB.listed?' class="cur"':""}>${t(PUB.listed?"pub.tip.index":"pub.tip.indexTo")}</p>`;
+}
+let copyT;
+$("copyLink").onclick=async()=>{
+  if(!PUB.live){toast(t("copyOffN"));const g=$("gate");if(g&&!g.hidden)g.scrollIntoView({block:"start",behavior:"smooth"});return}
+  const url="https://fama.so/"+(base.user||"");
+  try{await navigator.clipboard.writeText(url)}catch(e){const ta=document.createElement("textarea");ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(_){}ta.remove()}
+  const b=$("copyLink"); b.classList.add("copied"); $("copyTx").textContent=t("copied"); b.querySelector("use").setAttribute("href","#i-check"); $("copyNote").textContent=t("copiedA");
+  clearTimeout(copyT); copyT=setTimeout(()=>{b.classList.remove("copied");$("copyTx").textContent=t("copy");b.querySelector("use").setAttribute("href","#i-copy");$("copyNote").textContent=""},2000);
+};
+
+/* ---- profile photo (9 Oct 2026): picked here, shrunk to 320 px, and shown in the hero too ---- */
+function renderPhoto(){
+  const has=!!profile.photo, ini=(profile.display||profile.user||"?").split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  ["phBig","phHero"].forEach(id=>{const el=$(id);if(!el)return;el.style.backgroundImage=has?`url(${profile.photo})`:"";el.classList.toggle("has",has);el.textContent=has?"":ini});
+  $("phPickT").textContent=t(has?"core.photo.change":"core.photo.add"); $("phRm").hidden=!has;
+}
+$("phPick").onclick=()=>$("phFile").click();
+$("phRm").onclick=()=>{const old=profile.photo;profile.photo="";renderPhoto();saved();toast(t("t.removed",t("core.photo")),()=>{profile.photo=old;renderPhoto();saved()})};
+$("phFile").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const help=$("phHelp");
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)){help.textContent=t("core.photo.type");help.classList.add("err");return}
+  if(f.size>5*1024*1024){help.textContent=t("core.photo.big");help.classList.add("err");return}
+  help.textContent=t("core.photo.help");help.classList.remove("err");
+  const img=new Image();img.onload=()=>{const c=document.createElement("canvas"),k=Math.min(1,320/Math.min(img.width,img.height)),w=Math.round(img.width*k),h=Math.round(img.height*k);
+    c.width=c.height=Math.min(w,h);c.getContext("2d").drawImage(img,(Math.min(w,h)-w)/2,(Math.min(w,h)-h)/2,w,h);
+    profile.photo=c.toDataURL("image/jpeg",.85);URL.revokeObjectURL(img.src);renderPhoto();saved()};
+  img.src=URL.createObjectURL(f)};
+
+/* ---- core details ---- */
+const CORE=[];
+const bind=(id,key,after)=>{const el=$(id);CORE.push([id,key,after]);el.value=profile[key];el.addEventListener("input",()=>{profile[key]=el.value;after&&after()});el.addEventListener("change",saved)};
+function renderCore(){CORE.forEach(([id,key,after])=>{$(id).value=profile[key]??"";after&&after()});$("heroName").textContent=base.display||"—"}
+const count=(el,out,max)=>{$(out).textContent=`${el.value.length.toLocaleString(lang==="ar"?"ar-EG":"en")} / ${max.toLocaleString(lang==="ar"?"ar-EG":"en")}`};
+bind("fDisplay","display",()=>{
+  const bad=!profile.display.trim(); $("fDisplayWrap").classList.toggle("bad",bad);
+  $("fDisplayHelp").textContent=t(bad?"core.display.err":"core.display.help"); $("fDisplayHelp").classList.toggle("err",bad);
+});
+bind("fUser","user",()=>{
+  const ok=/^[a-z0-9-]+$/i.test(profile.user); $("fUserWrap").classList.toggle("bad",!ok);
+  $("fUserHelp").textContent=t(ok?"core.user.help":"core.user.err"); $("fUserHelp").classList.toggle("err",!ok);
+});
+bind("fHeadline","headline"); bind("fCity","city"); bind("fCountry","country");
+bind("fBio","bio",()=>count($("fBio"),"bioCount",5000)); count($("fBio"),"bioCount",5000);
+bind("fPov","pov",()=>count($("fPov"),"povCount",2000)); count($("fPov"),"povCount",2000);
+$("heroName").textContent=base.display;
+$("povPrompts").innerHTML=t("pov.p").map(p=>`<button type="button" class="chip">${esc(p)}</button>`).join("");
+$("povPrompts").onclick=e=>{const b=e.target.closest("button");if(!b)return;const ta=$("fPov");
+  ta.value=(ta.value?ta.value.trimEnd()+"\n\n":"")+b.textContent+"\n";profile.pov=ta.value;count(ta,"povCount",2000);ta.focus();saved()};
+
+/* ---- now ---- */
+/* no "last changed" date (3 Oct 2026): the switch says it all */
+function nowSwitch(id,key){
+  const sw=$(id); sw.setAttribute("aria-checked",profile[key]);
+  const draw=()=>{sw.setAttribute("aria-checked",profile[key]);nowText()};
+  sw.onclick=()=>{profile[key]=!profile[key];draw();saved()};
+  return draw;
+}
+/* each switch says what brands will see, and the chips show it the way the profile does */
+function nowText(){
+  $("dTaking").textContent=t(profile.taking?"now.takingOn":"now.takingOff");
+  $("dTravel").textContent=t(profile.travel?"now.travelOn":"now.travelOff",profile.city);
+  $("nowChips").innerHTML=`<span class="${profile.taking?"on":""}">${t(profile.taking?"now.chipOn":"now.chipOff")}</span>${profile.travel?`<span>${t("now.chipTravel")}</span>`:""}`;
+}
+const nowRedraw=[nowSwitch("nTaking","taking"),nowSwitch("nTravel","travel")];
+nowText(); $("fCity").addEventListener("input",nowText);
+
+/* ---- social links (9 Oct 2026): a platform menu on each row, then the username after a fixed address.
+   One empty row waits at the end: paste any link there and it works out the platform. ---- */
+const SOC=FAMA_SOCIAL;
+const platOf=l=>l.p||(SOC.detect(l.u)||{id:"web"}).id;
+const platName=id=>id==="web"?t("social.other"):(SOC.list.find(x=>x.id===id)||{name:id}).name;
+const LINKIC=`<svg class="soc-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`;
+const platIcon=id=>id==="web"?LINKIC:SOC.icon(id);
+let draftRow={p:"web"}, showNew=false; /* the empty row at the end: shown when there are no links, or after "Add another link"; it joins the list once something is typed */
+function linkRow(l,i,isNew){const id=isNew?draftRow.p:platOf(l),n=platName(id),h=isNew?"":SOC.handle(l.u,id),web=id==="web";
+  return `<button type="button" class="platbtn" data-plat="${isNew?"new":i}" aria-haspopup="listbox" aria-expanded="false" aria-label="${esc(t("social.pick",n))}">${platIcon(id)}<svg class="icon caret" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    <span class="url${web?" web":""}">${web?"":`<b>${esc(SOC.prefix(id))}</b>`}<input class="in" data-i="${isNew?"new":i}" data-k="h" value="${esc(h)}" placeholder="${web?esc(t("social.newPh")):"username"}" aria-label="${esc(web?t("social.newPh"):t("social.user",n))}" dir="ltr" autocomplete="off" autocapitalize="none" spellcheck="false"></span>
+    ${isNew?"<span></span>":`<button type="button" class="iconbtn plain rm" data-rm="${i}" aria-label="${esc(t("social.remove",n))}"><svg class="icon"><use href="#i-trash"/></svg></button>`}`}
+function renderLinks(){
+  const full=profile.links.length>=9;
+  const blank=!full&&(showNew||!profile.links.length);
+  $("links").innerHTML=profile.links.map((l,i)=>`<li data-row="${i}">${linkRow(l,i)}</li>`).join("")+(blank?`<li class="newrow">${linkRow(null,0,true)}</li>`:"");
+  $("addLink").hidden=full||blank;
+}
+/* the platform menu */
+let platMenu=null;
+function closePlat(focus){if(!platMenu)return;const b=platMenu.btn;platMenu.el.remove();b.setAttribute("aria-expanded","false");platMenu=null;if(focus)b.focus()}
+function openPlat(btn){
+  closePlat(); const key=btn.dataset.plat, cur=key==="new"?draftRow.p:platOf(profile.links[+key]);
+  const used=profile.links.map((l,j)=>String(j)===key?null:platOf(l)).filter(x=>x&&x!=="web");
+  const opts=SOC.list.map(x=>x.id).concat(["web"]);
+  const el=document.createElement("div"); el.className="platmenu"; el.setAttribute("role","listbox"); el.setAttribute("aria-label",t("social.type"));
+  el.innerHTML=`<p class="pm-h">${t("social.type")}</p>`+opts.map(id=>{const off=used.includes(id);
+    return `<button type="button" role="option" class="pm-o" data-id="${id}" aria-selected="${id===cur}" ${off?'aria-disabled="true"':""}><span class="pm-ck" aria-hidden="true">${id===cur?'<svg class="icon"><use href="#i-check"/></svg>':""}</span>${platIcon(id)}<span class="pm-n">${esc(platName(id))}</span>${off?`<span class="pm-x">${t("social.added")}</span>`:""}</button>`}).join("");
+  btn.closest("li").appendChild(el); btn.setAttribute("aria-expanded","true"); platMenu={el,btn,key};
+  const sel=el.querySelector('[aria-selected="true"]')||el.querySelector(".pm-o");
+  sel.focus({preventScroll:true}); el.scrollTop=Math.max(0,sel.offsetTop-el.clientHeight/2);
+}
+function setPlat(key,id){
+  if(key==="new"){draftRow.p=id;renderLinks();$("links").querySelector('[data-i="new"]').focus();return}
+  const l=profile.links[+key], h=SOC.handle(l.u,platOf(l)); l.p=id; l.u=SOC.build(id,h); renderLinks(); saved();
+  $("links").querySelector(`[data-i="${key}"]`).focus();
+}
+$("links").addEventListener("click",e=>{
+  const pb=e.target.closest("[data-plat]"); if(pb){platMenu&&platMenu.btn===pb?closePlat(true):openPlat(pb);return}
+  const o=e.target.closest(".pm-o"); if(o){if(o.getAttribute("aria-disabled")==="true")return;const k=platMenu.key;closePlat();setPlat(k,o.dataset.id);return}
+  const b=e.target.closest("[data-rm]");if(!b)return;const i=+b.dataset.rm,old=profile.links[i],n=platName(platOf(old));
+  profile.links.splice(i,1);renderLinks();saved();toast(t("t.removed",n),()=>{profile.links.splice(i,0,old);renderLinks();saved()})});
+$("links").addEventListener("keydown",e=>{
+  if(!platMenu)return; const os=[...platMenu.el.querySelectorAll(".pm-o:not([aria-disabled=true])")], i=os.indexOf(document.activeElement);
+  if(e.key==="Escape"){e.preventDefault();closePlat(true)}
+  else if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();const n=os[(i+(e.key==="ArrowDown"?1:-1)+os.length)%os.length];n.focus({preventScroll:true});n.scrollIntoView({block:"nearest"})}
+  else if(e.key==="Tab")closePlat();
+});
+document.addEventListener("click",e=>{if(platMenu&&!e.target.closest(".platmenu,[data-plat]"))closePlat()});
+$("addLink").onclick=()=>{showNew=true;renderLinks();$("links").querySelector('[data-i="new"]').focus()};
+/* typing builds the full address. A pasted link keeps only the username, and switches the row to its platform. */
+$("links").addEventListener("input",e=>{const el=e.target;if(el.dataset.k!=="h")return;let v=el.value;
+  if(el.dataset.i==="new"){ if(!v.trim())return;
+    const d=/[.\/]/.test(v)?SOC.detect(v):null, id=d&&d.id!=="web"&&!profile.links.some(x=>platOf(x)===d.id)?d.id:draftRow.p;
+    const h=id==="web"?v:SOC.handle(v,id); profile.links.push({p:id,u:SOC.build(id,h)}); draftRow={p:"web"}; showNew=false; renderLinks(); saved();
+    const f=$("links").querySelector(`[data-i="${profile.links.length-1}"]`); f.focus(); f.setSelectionRange(f.value.length,f.value.length); return}
+  const i=+el.dataset.i,l=profile.links[i];let id=platOf(l);
+  const d=/[.\/]/.test(v)&&id!=="web"?SOC.detect(v):null;
+  if(d&&d.id!=="web"&&d.id!==id&&!profile.links.some((x,j)=>j!==i&&platOf(x)===d.id)){l.p=d.id;id=d.id;l.u=SOC.build(id,SOC.handle(v,id));renderLinks();const f=$("links").querySelector(`[data-i="${i}"]`);f.focus();f.setSelectionRange(f.value.length,f.value.length);saved();return}
+  if(id==="web"){const d2=SOC.detect(v);if(d2&&d2.id!=="web"&&!profile.links.some((x,j)=>j!==i&&platOf(x)===d2.id)){l.p=d2.id;l.u=SOC.build(d2.id,SOC.handle(v,d2.id));renderLinks();const f=$("links").querySelector(`[data-i="${i}"]`);f.focus();saved();return}}
+  if(id!=="web"&&/[\/@]/.test(v)){const h=SOC.handle(v,id);if(h!==v){el.value=h;v=h}}
+  l.p=id; l.u=SOC.build(id,v); saved()});
+renderLinks();
+
+/* ---- skills ---- */
+/* review 7 Oct 2026: every skill is open, in the order of its profile tab. No primary: the first tab opens first. */
+function renderSkills(){
+  const N=profile.skills.length;
+  $("skillList").innerHTML=profile.skills.map((s,i)=>{const n=skName(s.id),l=FX.forSkill(s.id),got=l.filter(f=>FX.filled(f.id,profile.fields[f.id])).length;
+    return `<div class="sk skill${s.id===newSkill?" is-new":""}" data-s="${s.id}">
+    <div class="shead">
+      <button type="button" class="grip" draggable="true" data-grip="${s.id}" aria-label="${esc(t("skills.drag",n))}"><svg class="icon" aria-hidden="true"><use href="#i-grip"/></svg></button>
+      <div class="stitle"><b>${esc(n)}${i===0?`<span class="order">${t("skills.first")}</span>`:""}</b></div>
+      <span class="skacts">
+        <button type="button" class="iconbtn mv" data-mv="-1" aria-label="${esc(t("skills.up",n))}" ${i===0?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
+        <button type="button" class="iconbtn mv" data-mv="1" aria-label="${esc(t("skills.down",n))}" ${i===N-1?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button>
+        <button type="button" class="btn btn-2 skrm" data-remove="${s.id}" aria-label="${esc(t("skills.removeA",n))}" ${N<2?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg><span>${t("skills.remove")}</span></button></span>
+    </div>
+    <div class="sbody" id="sb-${s.id}">
+      <p class="specs-l" id="sl-${s.id}">${t("skills.specs")}</p>
+      <div class="specs" role="group" aria-labelledby="sl-${s.id}">${SK[s.id].specs.map(sp=>`<button type="button" class="chip" data-spec="${sp}" aria-pressed="${s.specs.includes(sp)}">${esc(spName(sp))}</button>`).join("")}</div>
+      ${l.length?`<details class="fxd" open><summary><svg class="icon" aria-hidden="true"><use href="#i-chev"/></svg>${t("skills.details")} <small data-fxn>${t("skills.detailsN",got,l.length)}</small></summary>${skFields(s.id)}</details>`:""}
+    </div>
+  </div>`}).join("");
+}
+const skRow=id=>$("skillList").querySelector(`.sk[data-s="${id}"]`);
+function moveSkill(id,to,focusSel){
+  const i=profile.skills.findIndex(x=>x.id===id); if(to<0||to>=profile.skills.length||to===i)return;
+  const [m]=profile.skills.splice(i,1); profile.skills.splice(to,0,m); profile.skills.forEach((x,j)=>x.primary=j===0);
+  const open=[...$("skillList").querySelectorAll("details.fxd")].reduce((o,d)=>(o[d.closest(".sk").dataset.s]=d.open,o),{});
+  renderSkills(); $("skillList").querySelectorAll("details.fxd").forEach(d=>d.open=open[d.closest(".sk").dataset.s]!==false);
+  saved(); $("copyNote").textContent=t("skills.moved",skName(id),to+1);
+  const r=skRow(id); r.scrollIntoView({block:"nearest",behavior:"smooth"}); (r.querySelector(focusSel)||r.querySelector("[data-grip]")).focus({preventScroll:true});
+}
+/* drag a skill by its grip; the arrow keys on the grip, or the up and down buttons, do the same */
+let dragSk=null;
+$("skillList").addEventListener("dragstart",e=>{const g=e.target.closest("[data-grip]");if(!g){e.preventDefault();return}dragSk=g.dataset.grip;const r=skRow(dragSk);r.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",dragSk);try{e.dataTransfer.setDragImage(r.querySelector(".shead"),24,24)}catch(_){}});
+$("skillList").addEventListener("dragover",e=>{if(!dragSk)return;const r=e.target.closest(".sk");if(!r)return;e.preventDefault();
+  $("skillList").querySelectorAll(".sk").forEach(x=>x.classList.remove("drop-before","drop-after"));
+  if(r.dataset.s===dragSk)return;const b=r.getBoundingClientRect();r.classList.add(e.clientY<b.top+b.height/2?"drop-before":"drop-after")});
+$("skillList").addEventListener("drop",e=>{if(!dragSk)return;e.preventDefault();const r=e.target.closest(".sk");
+  if(r&&r.dataset.s!==dragSk){const after=r.classList.contains("drop-after");let to=profile.skills.findIndex(x=>x.id===r.dataset.s);const from=profile.skills.findIndex(x=>x.id===dragSk);if(after)to++;if(from<to)to--;moveSkill(dragSk,to,"[data-grip]")}});
+$("skillList").addEventListener("dragend",()=>{$("skillList").querySelectorAll(".sk").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));dragSk=null});
+$("skillList").addEventListener("keydown",e=>{const g=e.target.closest("[data-grip]");if(!g||(e.key!=="ArrowUp"&&e.key!=="ArrowDown"))return;e.preventDefault();
+  const i=profile.skills.findIndex(x=>x.id===g.dataset.grip);moveSkill(g.dataset.grip,i+(e.key==="ArrowUp"?-1:1),"[data-grip]")});
+/* custom fields from the Skills spec (assets/js/fields.js). Shared fields hold one value for the whole profile. */
+const FX=FAMA_FIELDS;
+let openFx=null; /* "skill:field" — one field open at a time */
+const fxEd=(sk,f,opt)=>FX.editor(f,profile.fields[f],opt,profile.fields,true);
+const skFields=id=>{const l=FX.forSkill(id);if(!l.length)return "";const got=l.filter(f=>FX.filled(f.id,profile.fields[f.id])).length;
+  return `<div class="fx-fields">${l.map(f=>fxEd(id,f.id,f.opt)).join("")}</div>`};
+const fxCount=()=>profile.skills.forEach(sk=>{const r=skRow(sk.id),n=r&&r.querySelector("[data-fxn]");if(!n)return;const l=FX.forSkill(sk.id);n.textContent=t("skills.detailsN",l.filter(f=>FX.filled(f.id,profile.fields[f.id])).length,l.length)});
+function redrawFields(sk){const r=skRow(sk);if(!r)return;const box=r.querySelector(".fx-fields");if(box)box.outerHTML=skFields(sk)}
+FX.bind($("skillList"),profile.fields,(id,el,typing)=>{
+  saved();
+  fxCount();
+  if(typing){ /* keep the cursor: only refresh the small read-outs */
+    const box=el.closest(".fld"),v=profile.fields[id];
+    const out=box.querySelector("[data-out]");if(out)out.textContent=v?FX.view(id,v).match(/class="fx-dim">([^<]+)/)?.[1]||"":"";
+    const er=box.querySelector("[data-err]");if(er){const r=v||{};er.hidden=!(r.min&&r.max&&r.max-r.min<5)}
+    return;
+  }
+  /* redraw this field everywhere it appears (two skills can share one), and Reach when Platforms change */
+  const card=el&&el.closest(".skill")?.dataset.s, sel=el?(el.dataset.opt!=null?`[data-opt="${CSS.escape(el.dataset.opt)}"]${el.dataset.g!=null?`[data-g="${el.dataset.g}"]`:""}`:el.dataset.k?`[data-k="${CSS.escape(el.dataset.k)}"]`:el.hasAttribute("data-addpair")?"[data-addpair]":el.dataset.upload?`[data-upload]`:null):null;
+  [id].concat(id==="platforms"?["reach"]:[]).forEach(f=>$("skillList").querySelectorAll(`.fld[data-fld="${f}"]`).forEach(box=>{
+    const sk=box.closest(".skill").dataset.s,o=FX.forSkill(sk).find(x=>x.id===f);box.outerHTML=fxEd(sk,f,o&&o.opt)}));
+  if(sel&&card){const n=$("skillList").querySelector(`.skill[data-s="${card}"] .fld[data-fld="${id}"] ${sel}`);if(n)n.focus({preventScroll:true})}
+},(id,was,name)=>{
+  /* removed: off the profile, with Undo; focus stays in that field */
+  const f=$("skillList").querySelector(`.fld[data-fld="${id}"]`);if(f)(f.querySelector("input,select,button")||f).focus({preventScroll:true});
+  toast(t("t.removed",name),()=>{profile.fields[id]=was;saved();$("skillList").querySelectorAll(`.fld[data-fld="${id}"]`).forEach(box=>{
+    const sk=box.closest(".skill").dataset.s,o=FX.forSkill(sk).find(x=>x.id===id);box.outerHTML=fxEd(sk,id,o&&o.opt)});
+    fxCount()});
+});
+$("skillList").addEventListener("click",e=>{
+  const sp=e.target.closest("[data-spec]"), rm=e.target.closest("[data-remove]"), mv=e.target.closest("[data-mv]");
+  if(mv){const id=mv.closest(".sk").dataset.s,i=profile.skills.findIndex(x=>x.id===id),d=+mv.dataset.mv;
+    moveSkill(id,i+d,`[data-mv="${d}"]:not(:disabled)`);return}
+  if(sp){const s=profile.skills.find(x=>x.id===sp.closest(".skill").dataset.s);const on=s.specs.includes(sp.dataset.spec);
+    s.specs=on?s.specs.filter(x=>x!==sp.dataset.spec):[...s.specs,sp.dataset.spec];sp.setAttribute("aria-pressed",!on);saved()}
+  if(rm){askRemove(rm.dataset.remove)}
+});
+function askRemove(id){
+  $("rmTitle").textContent=t("rm.title",skName(id)); const d=$("dlgRemove"); d.returnValue=""; d.showModal();
+  d.onclose=()=>{if(d.returnValue!=="ok")return;const i=profile.skills.findIndex(x=>x.id===id),old=profile.skills[i],blocks=profile.groups[id];
+    profile.skills.splice(i,1); delete profile.groups[id]; profile.skills.forEach((x,j)=>x.primary=j===0);
+    renderSkills();renderGroups();saved();
+    toast(t("t.removed",skName(id)),()=>{profile.skills.splice(i,0,old);profile.skills.forEach((x,j)=>x.primary=j===0);profile.groups[id]=blocks;renderSkills();renderGroups();saved()})};
+}
+/* add skill — a searchable list, so it still works when the list grows past nine */
+/* one skill picker for the whole page: searchable, so it works for all 41 skills.
+   Used to add a skill, and to choose one you're willing to explore. */
+let pick={exclude:[],current:null};
+function renderAddList(){
+  const qv=$("addSearch").value.trim().toLowerCase();
+  /* matches the skill name or any of its specialities, so "gaffer" finds Lighting & grip */
+  const hit=id=>!qv||skName(id).toLowerCase().includes(qv)?"":SK[id].specs.map(spName).find(n=>n.toLowerCase().includes(qv));
+  const left=Object.keys(SK).filter(id=>!pick.exclude.includes(id)&&(!qv||skName(id).toLowerCase().includes(qv)||hit(id)));
+  const on=left.includes(pick.current)?pick.current:left[0];
+  $("addList").innerHTML=left.length?left.map(id=>{const h=hit(id);return `<li><label><input type="radio" name="newskill" value="${id}" ${id===on?"checked":""}><span>${esc(skName(id))}${h?`<small class="via">${esc(h)}</small>`:""}</span></label></li>`}).join(""):`<li class="empty" style="padding:var(--s4)">${t("add.none")}</li>`;
+  $("addOk").disabled=!left.length;
+}
+$("addSearch").addEventListener("input",renderAddList);
+function openPicker(o){
+  return new Promise(res=>{
+    pick={exclude:o.exclude||[],current:o.current||null};
+    $("addTitle").textContent=o.title; $("addHelp").textContent=o.help; $("addOk").textContent=o.ok;
+    $("addSearch").value=""; renderAddList();
+    const d=$("dlgAdd"); d.returnValue=""; d.showModal(); $("addSearch").focus();
+    d.querySelector('input[name=newskill]:checked')?.scrollIntoView({block:"nearest"});
+    d.onclose=()=>{const r=d.querySelector("input[name=newskill]:checked");res(d.returnValue==="ok"&&r?r.value:null)};
+  });
+}
+$("addSkill").onclick=async()=>{
+  const id=await openPicker({exclude:profile.skills.map(s=>s.id),title:t("add.title"),help:t("add.help"),ok:t("add.ok")});
+  if(!id){$("addSkill").focus();return}
+  profile.skills.push({id,primary:false,specs:[]});profile.groups[id]=SK[id].blocks.map(b=>({b,v:true}));newSkill=id;
+  renderSkills();renderGroups();saved();toast(t("t.added",skName(id)));
+  const r=skRow(id); r.scrollIntoView({block:"center",behavior:"smooth"}); (r.querySelector(".chip")||r).focus({preventScroll:true}); /* ready for its specialities */
+};
+
+/* ---- sections: one row pattern for every section ---- */
+/* only the profile-wide sections can be switched off; a skill's tab is always its projects (3 Oct 2026) */
+const groupOrder=()=>["pw"];
+const gName=g=>g==="pw"?t("sec.pw"):skName(g);
+let open=new Set(["pw",profile.skills[0].id]);
+/* 9 Oct 2026: no Sections part. Each profile-wide part has its own "Show on profile" switch in its head;
+   Recognitions has its switch on the Credits & recognitions page. A hidden part keeps its content. */
+function renderGroups(){
+  document.querySelectorAll("[data-pw]").forEach(sw=>{const part=sw.dataset.pw,r=(profile.groups.pw||[]).find(x=>x.b===part),on=!r||r.v;
+    sw.setAttribute("aria-checked",on); const sec=$(part); sec.classList.toggle("is-off",!on); sec.querySelector(".hidtag").hidden=on;
+    sw.setAttribute("aria-label",t("show.on")+": "+t(part==="brands"?"s.brands":"s.explore"))});
+}
+document.querySelector(".layout").addEventListener("click",e=>{const sw=e.target.closest("[data-pw]");if(!sw)return;
+  const r=profile.groups.pw.find(x=>x.b===sw.dataset.pw); if(!r)return; r.v=!r.v; renderGroups(); saved();
+  if(!r.v)$("copyNote").textContent=t("show.offA",t(r.b==="brands"?"s.brands":"s.explore"))});
+/* ---- willing to explore ---- */
+function renderWte(){
+  $("wte").innerHTML=profile.wte.map((w,i)=>`<li>
+    <div><span class="lbl" id="wl-${i}">${t("wte.skill")}</span><button type="button" class="sel pickbtn" data-pick="${i}" aria-haspopup="dialog" aria-labelledby="wl-${i} wp-${i}"><span id="wp-${i}">${esc(skName(w.s))}</span><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button></div>
+    <label><span class="lbl"><span>${t("wte.spec")}</span><small>${t("optional")}</small></span><select class="sel" data-i="${i}" data-k="sp"><option value="">${t("wte.any")}</option>${SK[w.s].specs.map(sp=>`<option value="${sp}" ${sp===w.sp?"selected":""}>${esc(spName(sp))}</option>`).join("")}</select></label>
+    <button type="button" class="iconbtn" data-rm="${i}" aria-label="${t("wte.remove")}" style="margin-top:34px"><svg class="icon"><use href="#i-trash"/></svg></button>
+    <label class="note"><span class="lbl"><span>${t("wte.note")}</span><small>${w.n.length} / 160</small></span><input class="in" data-i="${i}" data-k="n" maxlength="160" value="${esc(w.n)}" placeholder="${t("wte.noteph")}"></label></li>`).join("");
+  $("addWte").disabled=profile.wte.length>=6;
+}
+$("wte").addEventListener("change",e=>{const el=e.target;if(!el.dataset.k)return;const w=profile.wte[el.dataset.i];w[el.dataset.k]=el.value;if(el.dataset.k==="s")w.sp="";renderWte();saved()});
+$("wte").addEventListener("input",e=>{const el=e.target;if(el.dataset.k==="n"){profile.wte[el.dataset.i].n=el.value;el.closest("label").querySelector("small").textContent=`${el.value.length} / 160`}});
+const wtePick=(i,current)=>openPicker({exclude:profile.wte.filter((_,j)=>j!==i).map(w=>w.s),current,title:t("wte.pickT"),help:t("wte.pickH"),ok:t("wte.pickOk")});
+$("wte").addEventListener("click",async e=>{
+  const p=e.target.closest("[data-pick]");
+  if(p){const i=+p.dataset.pick,id=await wtePick(i,profile.wte[i].s);
+    if(id&&id!==profile.wte[i].s){profile.wte[i].s=id;profile.wte[i].sp="";renderWte();saved()}
+    $("wte").querySelector(`[data-pick="${i}"]`).focus();return}
+  const b=e.target.closest("[data-rm]");if(!b)return;const i=+b.dataset.rm,old=profile.wte[i];profile.wte.splice(i,1);renderWte();saved();
+  toast(t("t.removed",skName(old.s)),()=>{profile.wte.splice(i,0,old);renderWte();saved()})});
+/* ---- experience (9 Oct 2026): roles, LinkedIn-style. The list shows them by company; a role is added or edited in a dialog,
+   and the change joins the draft like everything else on the page. ---- */
+function renderBrands(){
+  const B=profile.brands||(profile.brands=[]);
+  $("exp").innerHTML=B.some(b=>b.n||b.t)?FAMA_EXP.html(B,{edit:true,skill:id=>SK[id]?skName(id):""}):`<p class="empty">${t("role.none")}</p>`;
+}
+const ET=["Freelance","Full-time","Part-time","Contract","Internship"], LT=["On-site","Hybrid","Remote"];
+const opt=(v,l,cur)=>`<option value="${esc(v)}" ${String(v)===String(cur)?"selected":""}>${esc(l)}</option>`;
+let roleAt=null;
+function roleErr(id,on,msg){const w=$(id),p=w.querySelector(".err");w.classList.toggle("bad",on);p.hidden=!on;if(msg)p.textContent=msg}
+function openRole(i){
+  roleAt=i; const r=i==null?{t:"",n:"",et:"",loc:profile.city||"",lt:"",sm:0,sy:0,em:0,ey:0,cur:false,hl:"",sk:[]}:profile.brands[i];
+  $("roleT").textContent=t(i==null?"role.addT":"role.editT"); $("rOk").textContent=t(i==null?"role.add":"role.save"); $("rDel").hidden=i==null;
+  $("rT").value=r.t||""; $("rN").value=r.n||""; $("rLoc").value=r.loc||""; $("rHl").value=r.hl||""; $("rCur").checked=!!r.cur;
+  $("rEt").innerHTML=opt("","Please select",r.et)+ET.map(x=>opt(x,x,r.et)).join(""); $("rLt").innerHTML=opt("","Please select",r.lt)+LT.map(x=>opt(x,x,r.lt)).join("");
+  const mo=c=>opt(0,t("role.month"),c)+FAMA_EXP.MON.map((m,j)=>opt(j+1,m,c)).join(""), yrs=c=>opt(0,t("role.year"),c)+Array.from({length:60},(_,k)=>2026-k).map(y=>opt(y,y,c)).join("");
+  $("rSm").innerHTML=mo(r.sm); $("rSy").innerHTML=yrs(r.sy); $("rEm").innerHTML=mo(r.em); $("rEy").innerHTML=yrs(r.ey);
+  $("rSk").innerHTML=profile.skills.map(s=>`<button type="button" class="chip" data-rsk="${s.id}" aria-pressed="${(r.sk||[]).includes(s.id)}">${esc(skName(s.id))}</button>`).join("");
+  ["rTW","rNW"].forEach(id=>roleErr(id,false)); $("rSErr").hidden=true; roleCur(); roleCount();
+  $("dlgRole").showModal(); $("rT").focus();
+}
+const roleCur=()=>{$("rEnd").hidden=$("rCur").checked};
+const roleCount=()=>{$("rHlN").textContent=`${$("rHl").value.length.toLocaleString("en")} / 2,000`};
+$("rCur").onchange=roleCur; $("rHl").oninput=roleCount;
+$("rSk").onclick=e=>{const b=e.target.closest("[data-rsk]");if(b)b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true")};
+$("dlgRole").querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>$("dlgRole").close());
+$("dlgRole").addEventListener("close",()=>{const f=roleAt==null?$("addBrand"):$("exp").querySelector(`[data-edit-role="${roleAt}"]`);(f||$("addBrand")).focus()});
+$("rOk").onclick=()=>{
+  const r={t:$("rT").value.trim(),n:$("rN").value.trim(),et:$("rEt").value,loc:$("rLoc").value.trim(),lt:$("rLt").value,cur:$("rCur").checked,
+    sm:+$("rSm").value,sy:+$("rSy").value,em:+$("rEm").value,ey:+$("rEy").value,hl:$("rHl").value.trim(),sk:[...$("rSk").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.rsk)};
+  if(r.cur){r.em=0;r.ey=0}
+  roleErr("rTW",!r.t); roleErr("rNW",!r.n);
+  const order=!r.cur&&r.ey&&r.sy&&(r.ey*12+(r.em||12))<(r.sy*12+(r.sm||1));
+  $("rSErr").hidden=!(!r.sy||order); $("rSErr").textContent=!r.sy?t("role.needY"):t("role.order");
+  const bad=!r.t?"rT":!r.n?"rN":(!r.sy||order)?"rSy":null; if(bad){$(bad).focus();return}
+  const was=roleAt; if(was==null)profile.brands.push(r); else profile.brands[was]=r;
+  $("dlgRole").close(); renderBrands(); saved(); toast(t(was==null?"t.roleAdded":"t.roleUpdated",r.t));
+};
+$("rDel").onclick=()=>{const i=roleAt,old=profile.brands[i];$("dlgRole").close();profile.brands.splice(i,1);renderBrands();saved();
+  toast(t("t.removed",old.t||t("s.brands")),()=>{profile.brands.splice(i,0,old);renderBrands();saved()})};
+$("exp").addEventListener("click",e=>{const b=e.target.closest("[data-edit-role]");if(b)openRole(+b.dataset.editRole)});
+$("addBrand").onclick=()=>openRole(null);
+
+/* adding starts with the skill, so there's never a row with a skill nobody chose */
+$("addWte").onclick=async()=>{const id=await wtePick(profile.wte.length,null);if(!id){$("addWte").focus();return}
+  profile.wte.push({s:id,sp:"",n:""});renderWte();saved();$("wte").querySelector(`[data-i="${profile.wte.length-1}"][data-k="sp"]`).focus()};
+
+function renderAll(){renderCore();renderPhoto();nowRedraw.forEach(f=>f());renderLinks();renderSkills();renderGroups();renderWte();renderBrands();renderPub()}
+renderPub(); renderSkills(); renderGroups(); renderWte(); renderBrands(); renderBar();
+/* 23 Oct 2026: each step lands on its own field; the steps for the fields here follow what is typed.
+   24 Oct 2026: two lists. The steps to go Live (only what brands search and judge by), and what Fama recommends next. */
+/* 24 Oct 2026 (critique): the steps follow what is SAVED, never the draft. A half-typed edit must not tell anyone
+   they are no longer Live. If saving the draft would take the profile out of Live, the Save bar says so first. */
+const filledIn=(o,...k)=>k.every(x=>String(o[x]||"").trim()!=="");
+const gate=famaGate($("gate"),COMPLETE,{
+  onState:st=>{const was=PUB.live; PUB.live=st.live; PUB.listed=st.listed; if(typeof base!=="undefined")renderPub();
+    /* going Live hands over the link: the copy button lights up in the hero */
+    if(st.wentLive&&!was){const lk=$("copyLink");lk.classList.remove("gt-flash");void lk.offsetWidth;lk.classList.add("gt-flash");setTimeout(()=>lk.classList.remove("gt-flash"),1800)}},
+  go:{name:"#fDisplay",place:"#fCity",skill:"#skills",photo:"#phPick",headline:"#fHeadline",bio:"#fBio",links:"#social .pin-card",brands:"#addBrand"},
+  done:k=>k==="name"?filledIn(base,"display"):k==="place"?filledIn(base,"city"):
+    k==="photo"?!!base.photo:k==="headline"?filledIn(base,"headline"):k==="bio"?filledIn(base,"bio"):k==="links"?(base.links||[]).some(l=>l.u):
+    k==="brands"?(base.brands||[]).some(b=>b.n||b.t):k==="show"||k==="projects3"?COMPLETE&&q.get("state")!=="unlisted":null});
+/* a required field the draft has emptied, while the saved profile has it */
+let barT; matchMedia("(max-width:760px)").addEventListener("change",()=>renderBar());
+const liveRisk=()=>[["display","fDisplay"],["city","fCity"]].filter(([k])=>filledIn(base,k)&&!filledIn(profile,k));
+famaViews($("views")); renderPhoto();
+{const rb0=renderBar; renderBar=function(){
+  rb0();
+  const ch=changedParts(), risk=liveRisk();
+  if(ch.length&&!badField){
+    const names=ch.map(id=>($(id)&&$(id).querySelector("h2")||{}).textContent||id);
+    const noName=risk.some(r=>r[0]==="display");
+    $("sbTitle").textContent=noName?t("sb.badName"):risk.length?"Saving this takes your profile out of Live":names.length===1?`Unsaved changes in ${names[0]}`:`Unsaved changes in ${names.length} sections`;
+    if(noName)$("sbNote").textContent="Add it back to save. Your profile stays as it is until then.";
+    else if(risk.length)$("sbNote").textContent="Your city is empty. Add it back to stay Live.";
+  }
+  $("savebar").classList.toggle("risk",!!(ch.length&&risk.length&&!badField));
+  /* phones keep it to one row: a short title and a short button */
+  const narrow=matchMedia("(max-width:760px)").matches;
+  if(narrow&&ch.length&&!risk.length&&!badField)$("sbTitle").textContent="Unsaved changes";
+  $("sbSave").textContent=narrow?"Save":t("save");
+  /* clean: the bar goes, after a short "Saved just now" when a save just happened */
+  const since=savedAt?Date.now()-savedAt:Infinity; $("savebar").classList.toggle("is-away",!ch.length&&since>2600);
+  clearTimeout(barT); if(!ch.length&&since<=2600)barT=setTimeout(()=>renderBar(),2700-since);
+  [["display","fDisplay"],["city","fCity"]].forEach(([k,id])=>$(id).closest(".f").classList.toggle("risk",risk.some(r=>r[0]===k)));
+  gate&&gate.refresh();
+}}
+renderBar();
+/* links like #skills or #explore land on that part; #display (from the notice) lands on the name field */
+(function(){const h=location.hash.slice(1); if(!h)return;
+  if(h==="display"){const f=$("fDisplay");f.scrollIntoView({block:"center"});f.focus();return}
+  if($(h))$(h).scrollIntoView();
+})();
+/* the notice goes once there's a name to publish under */
+</script>
+<script>famaStar(document.querySelector('.hero.soft'), document.querySelector('.hero.soft .body'), 'assets/img/banners/profile-structure.jpg', {text: 470});</script>
+</body></html>

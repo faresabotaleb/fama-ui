@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="stylesheet" href="assets/css/project-page.css?v=1">
+</head><body>
+<script src="assets/js/ds.js?v=30"></script>
+<script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
+<main class="ed" id="page"></main>
+<div class="hirebar" id="hirebar" aria-hidden="true"></div>
+<dialog class="hiredlg" id="hiredlg" aria-labelledby="hdT"><form method="dialog">
+  <div class="hd-h"><h2 id="hdT">Work with Demo talent</h2><button class="iconbtn plain" value="x" aria-label="Close">✕</button></div>
+  <p class="hd-p" id="hdP">Say what the job is. They get it in their messages, with this project attached.</p>
+  <label class="hd-f"><span>The job</span><textarea class="ta" rows="4" placeholder="A two-day lookbook in Cairo, mid-November. Menswear, about 20 looks."></textarea></label>
+  <div class="hd-row"><label class="hd-f"><span>When</span><input class="in" placeholder="Mid-November"></label><label class="hd-f"><span>Budget (optional)</span><input class="in" placeholder="EGP"></label></div>
+  <div class="hd-a"><button class="btn btn-2" value="x">Cancel</button><button class="btn" value="send">Send</button></div>
+</form></dialog>
+<dialog class="lb" id="lb" aria-label="Pictures"><div class="lb-top"><span class="lb-n" id="lbN"></span><button class="lb-x" id="lbX" aria-label="Close">✕</button></div>
+  <button class="lb-arr lb-prev" id="lbP" aria-label="Previous picture">‹</button><div class="lb-stage" id="lbS"></div><button class="lb-arr lb-next" id="lbNx" aria-label="Next picture">›</button>
+  <p class="lb-cap" id="lbC"></p></dialog>
+<div data-fama-foot></div>
+<script src="assets/js/shell.js?v=55"></script>
+<script src="assets/js/featured.js?v=12"></script>
+<script>
+const {t,esc,href}=FAMA;
+FAMA.T.en={notfound:"This project isn't available.",notfoundP:"It may have been removed, or the link is wrong.",copied:"Link copied",edit:"Edit project"};
+FAMA.T.ar={notfound:"المشروع ده مش متاح.",notfoundP:"ممكن يكون اتشال، أو الرابط غلط.",copied:"اتنسخ الرابط",edit:"تعديل المشروع"};
+/* 16 Oct 2026: the project page as an editorial case study (the client's reference board: magazine spreads,
+   "Cases", Kononenko, Snow Fall). The page lays itself out from the blocks the talent wrote, nothing to choose:
+   - the first text is the opening line; every heading starts a numbered chapter
+   - an image followed by text sits beside it (the one spread); 2 photos are a pair; 4 or more become the "Cases" gallery
+   - a quote is set large in the serif; results show by what was typed; video, before/after, a look with tags, embeds
+   - no headings at all means a short project: words and facts share a row, the pictures carry the page
+   - a confidential client is never named; credits show the owners and confirmed people only; the date is never shown */
+const DB={
+ "desert-light":{title:"Desert Light — 2026",client:"Maison Nour",skills:["Styling","Photography"],specs:["Fashion","Menswear"],role:"Lead stylist",
+   desc:"A resort capsule shot at golden hour outside Siwa. We built every look from the collection's linen base, kept the palette to sand and bone, and let the light do the rest.",
+   results:[["Reach","1.2M"],["Sell-through","68%"],["Store visits","+40%","vs last season"]],url:"https://maisonnour.com",media:5,
+   story:[["img",0],["text","The brief: a resort capsule that felt like Siwa without a single postcard shot. Maison Nour wanted the linen to carry the story."],["img",1,2],
+     ["text","We kept the palette to sand and bone, built every look from the collection’s linen base, and pinned each outfit on the board before the shoot so the team could see the whole edit at once."],["img",3],
+     ["text","Shot over two evenings at golden hour. The capsule sold through 68% in its first month."],["img",4]],
+   people:[{n:"Omar Saleh",u:"omar-saleh",s:"Photography",r:"Photographer",st:"confirmed"},{n:"Rania K.",u:"rania-k",s:"Makeup",r:"Key HMUA",st:"awaiting"},{n:"Hana Mostafa",s:"Direction",r:"Director",st:"listed"}]},
+ "nomad-autumn":{title:"Nomad Coffee — Autumn launch",client:"Nomad Coffee Co.",skills:["Styling"],specs:["Commercial wardrobe"],role:"Stylist",desc:"Warm tailoring for the autumn menu launch across four Cairo branches.",results:[],url:"",media:4,people:[{n:"Hana Mostafa",s:"Direction",r:"Director",st:"listed"}]},
+ "nefertari-ss26":{title:"Nefertari Cosmetics — 2026",client:"Nefertari Cosmetics",skills:["Styling","Modelling"],specs:["Fashion","Beauty"],role:"Stylist and model",desc:"A beauty campaign built around bare skin and one strong lip. I styled the wardrobe and stood in for two of the close-ups.",results:[["Reach","860K"]],url:"",media:4,people:[{n:"Rania K.",u:"rania-k",s:"Makeup",r:"Key HMUA",st:"confirmed"}]},
+ "cfw24":{title:"Cairo Fashion Week 2024",client:"CFW",skills:["Modelling"],specs:["Runway"],role:"Runway model",desc:"Walked four shows across two days, including the closing look for a Cairo label.",results:[],url:"",media:3,people:[]},
+ "studio":{title:"Studio portraits",client:"",skills:["Photography"],specs:["Portrait"],role:"Photographer",desc:"An ongoing series of one-light portraits of people I work with.",results:[],url:"",media:6,people:[]},
+ /* other people's projects that credit Demo talent */
+ "resort26":{owner:["Lina Haddad","lina-haddad"],title:"Maison Nour — Red Sea 2026",client:"Maison Nour",skills:["Photography","Styling"],specs:["Fashion"],role:"Photographer",desc:"Red Sea 2026 shot over two days on the Red Sea coast.",results:[],url:"",media:5,people:[{n:"Demo talent",u:"demo-talent",s:"Styling",r:"Lead stylist",st:"awaiting"}]},
+ "noon":{owner:["Rania K.","rania-k"],title:"Noon Beauty launch",client:"Noon Beauty",skills:["Makeup"],specs:["Beauty"],role:"Key makeup artist",desc:"Launch campaign for a new skin-tint range.",results:[],url:"",media:4,people:[{n:"Demo talent",u:"demo-talent",s:"Makeup",r:"Makeup assistant",st:"awaiting"}]},
+ "atlas":{owner:["Karim F.","karim-f"],title:"Atlas Watches — Winter",client:"Atlas Watches",skills:["Direction"],specs:["Commercials"],role:"Director",desc:"A winter film for Atlas's heritage line.",results:[],url:"",media:3,people:[{n:"Demo talent",u:"demo-talent",s:"Styling",r:"Stylist",st:"confirmed"}]},
+ "cfw25":{owner:["Omar Saleh","omar-saleh"],title:"Cairo Fashion Week 2025 backstage",client:"CFW",skills:["Photography"],specs:["Events & documentary"],role:"Photographer",desc:"Backstage coverage across the week.",results:[],url:"",media:6,people:[{n:"Demo talent",u:"demo-talent",s:"Hair",r:"Hair assistant",st:"confirmed"}]},
+ "zeina-ss27":{owner:["Hana Mostafa","hana-mostafa"],title:"Zeina Swim — 2027",client:"Zeina Swim",skills:["Direction"],specs:["Fashion film"],role:"Director",desc:"A short film for Zeina's modest swim line, shot in El Gouna.",results:[],url:"",media:5,people:[{n:"Demo talent",u:"demo-talent",s:"Modelling",r:"Model",st:"awaiting"}]},
+ "nile-lookbook":{owner:["Mariam Fouad","mariam-fouad"],title:"Nile Studio lookbook",client:"Nile Studio",skills:["Creative direction"],specs:["Campaigns"],role:"Creative director",desc:"Autumn lookbook for a Cairo menswear studio.",results:[],url:"",media:6,people:[{n:"Demo talent",u:"demo-talent",s:"Photography",r:"Second photographer",st:"awaiting"}]},
+ "carmen":{owner:["Yara Adel","yara-adel"],title:"Carmen at the Cairo Opera",client:"Cairo Opera House",skills:["Costume & wardrobe"],specs:["Costume design"],role:"Costume designer",desc:"Costumes for a new staging of Carmen.",results:[],url:"",media:4,people:[{n:"Demo talent",u:"demo-talent",s:"Costume & wardrobe",r:"Wardrobe assistant",st:"awaiting"}]},
+ "linen":{title:"Cairo Linen — Heritage",client:"",skills:["Styling"],specs:["Fashion"],role:"Lead stylist",desc:"A personal study of heritage linen, cut and draped for everyday wear.",results:[],url:"",media:3,people:[]}
+};
+/* the rich sample: the same blocks the project editor starts with (project-edit.html SEED) */
+const DESERT=[
+ {t:"text",v:"A resort capsule shot at golden hour outside Siwa, built from the collection’s linen base."},
+ {t:"heading",v:"The brief"},
+ {t:"text",v:"Maison Nour wanted the linen to carry the story without a postcard shot. We built every look from the collection’s base pieces and kept anything that pulled the eye away from the cloth off the rail."},
+ {t:"image",has:true,cap:"Looks laid out on the table the night before"},
+ {t:"heading",v:"The palette"},
+ {t:"image",has:true,cap:"Swatches against sand"},
+ {t:"text",v:"We kept the palette to sand and bone, and pinned each outfit on the board before the shoot so the team could see the whole edit at once. One accent, a dried-plum silk, came in only where the light dropped."},
+ {t:"gallery",n:2,caps:["The board, day one","Final pick, eleven looks"]},
+ /* 24 Oct 2026: a real flat lay (Unsplash photo-1614676471928), each tag sitting on its piece (x, y in % of the picture) */
+ {t:"look",has:true,title:"Look 04",src:"assets/img/stock/look-04.jpg",items:[{n:"Sweatshirt",d:"Maison Nour · brushed cotton, rust",x:24,y:34},{n:"Cable-knit jumper",d:"Maison Nour · wool, brick",x:70,y:34},{n:"Chelsea boots",d:"Archive, Cairo · tan suede",x:22,y:73},{n:"Check trousers",d:"Maison Nour · wool, rust check",x:70,y:75}]},
+ {t:"quote",v:"The light did half the work. We just stayed out of its way.",by:"Omar Saleh, photographer"},
+ /* 24 Oct 2026: one frame twice, so the slider shows the grade itself (Unsplash photo-1559767180, see SOURCES.md) */
+ {t:"beforeafter",has:true,lb:"Raw frame",la:"Final grade",cap:"The grade warmed the sand and deepened the sky",srcB:"assets/img/stock/grade-before.jpg",srcA:"assets/img/stock/grade-after.jpg"},
+ {t:"heading",v:"On set"},
+ {t:"text",v:"Two evenings, forty-minute windows. Every look was steamed and hung in order so a change took under a minute."},
+ {t:"gallery",n:5,caps:["The rail at the edge of the dunes","Fittings in the tent","Pins, swaps, last notes","Last light, last look","The book, the morning after"]},
+ {t:"video",url:"https://vimeo.com/fama-desert-light",cap:"Behind the scenes, Siwa",len:"1:42"},
+ {t:"embed",url:"https://www.instagram.com/reel/maisonnour-desert-light"},
+ {t:"embed",url:"https://www.tiktok.com/@demo.talent/video/rail-to-set"},
+ {t:"heading",v:"What it did"},
+ {t:"results",items:[["1.2M","Reach"],["68%","Sell-through"],["+40%","Store visits","vs last season"]]},
+ {t:"credits",items:[{n:"Omar Saleh",r:"Photographer",st:"confirmed"},{n:"Rania K.",r:"Key makeup artist",st:"awaiting"},{n:"Hana Mostafa",r:"Director",st:"listed"}]}];
+DB["desert-light"].blocks=DESERT;
+
+const QS=new URLSearchParams(location.search), PKEY=QS.get("p")||"desert-light", PREV=QS.get("preview")==="1", GUEST=QS.get("view")==="guest";
+/* seasons read as plain years (24 Oct 2026), in copies saved before too */
+let ED=null; try{ED=JSON.parse((localStorage.getItem("fama-projects-v1")||"{}").replace(/Resort 26\b/g,"Red Sea 2026").replace(/\b(?:SS|AW|FW)(\d\d)\b/g,"20$1").replace(/(?:’|\\u2019)(2\d)\b/g,"20$1"))[PKEY]||null}catch(e){}
+/* an editor copy still on the old two-block sample takes the new sample */
+if(ED&&PKEY==="desert-light"&&(ED.blocks||[]).map(b=>b.t).join()==="text,gallery,heading,results,credits") ED.blocks=DESERT;
+/* an editor copy saved before the look had its photo (24 Oct 2026) takes the sample's look: picture and tag positions */
+if(ED&&PKEY==="desert-light"){const L=DESERT.find(x=>x.t==="look"),BA=DESERT.find(x=>x.t==="beforeafter");(ED.blocks||[]).forEach((x,i)=>{if(x.t==="look"&&!x.src&&x.title===L.title)ED.blocks[i]=L;if(x.t==="beforeafter"&&!x.srcA&&x.lb===BA.lb)ED.blocks[i]=BA})}
+
+function project(){
+  const d=DB[PKEY]||{};
+  if(ED) return {title:ED.title||"Untitled project",client:ED.client||"",nda:!!ED.nda,role:ED.role||"",skills:ED.skills||[],specs:ED.specs||[],url:ED.link||"",cover:!!ED.cover,coverSrc:ED.coverSrc||"",blocks:ED.blocks||[],draft:ED.status!=="published",owner:d.owner,people:null};
+  if(!DB[PKEY]) return null;
+  const blocks=d.blocks||[{t:"text",v:d.desc},{t:"gallery",n:d.media}].concat(d.results&&d.results.length?[{t:"results",items:d.results.map(r=>[r[1],r[0],r[2]||""])}]:[]);
+  return {title:d.title,client:d.client||"",nda:!!d.nda,role:d.role,skills:d.skills,specs:d.specs,url:d.url,cover:true,blocks,owner:d.owner,people:d.people||[]};
+}
+const p=project();
+const page=document.getElementById("page");
+/* prototype only: sample pictures stand in for the project's media */
+const SAMPLE=["dashboard","feed","projects","activity","credits","notifications","profile-structure","signin","profile"].map(n=>`assets/img/banners/${n}.jpg`);
+const hashK=k=>[...k].reduce((a,c)=>a+c.charCodeAt(0),0);
+/* 24 Oct 2026: real photos per project (featured.js), the project's own first */
+const OFF=hashK(PKEY), pic=i=>window.FAMA_FEATURED?FAMA_FEATURED.photo(PKEY,i):SAMPLE[(OFF+i)%SAMPLE.length];
+const ini=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+const two=n=>String(n).padStart(2,"0");
+const LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect width="16" height="11" x="4" y="11" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+const UP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>';
+
+if(!p){page.innerHTML=`<div class="grid"><div class="empty" style="padding:var(--s9) 0"><h1 class="h2">${t("notfound")}</h1><p>${t("notfoundP")}</p></div></div>`}
+else render();
+
+function render(){
+  document.title=`${p.title} · Fama`;
+  const B=p.blocks.filter(b=>b&&!(b.t==="text"&&!(b.v||"").trim())&&!(b.t==="heading"&&!(b.v||"").trim()));
+  /* people: credits written in the editor, or the sample list. Pending credits stay hidden. */
+  const credits=B.filter(b=>b.t==="credits").flatMap(b=>b.items||[]).filter(x=>x.n);
+  const people=(p.people||credits).map(x=>({n:x.n,r:x.r,u:x.u,st:x.st}));
+  const shown=people.filter(x=>x.st==="confirmed"||x.st==="listed");
+  const lead=p.owner?p.owner[0]:"Demo talent", co=shown.filter(x=>x.st==="confirmed"&&(p.people?x.u:true)).map(x=>x.n);
+  const short=!B.some(b=>b.t==="heading");
+  const clientName=p.nda?"Confidential client":p.client;
+  /* any owner can edit: the talent on their own work, or as a co-owner of someone else's */
+  const mine=!GUEST&&(!p.owner||co.includes("Demo talent"));
+  /* pictures are numbered across the page: 01 / 09 */
+  const total=B.reduce((a,b)=>a+(b.t==="image"&&b.has?1:0)+(b.t==="gallery"?b.n||0:0),0); let no=0, pi=1;
+  /* a picture the talent chose (src, from the editor) wins; otherwise the sample pictures stand in */
+  const fig=(cls,cap,ar,src)=>{no++;const n=`${two(no)} / ${two(total)}`,u=pic(pi++);return `<figure class="${cls}"${ar?` style="--ar:${ar}"`:""}><div class="ph-img" style="background-image:url(${src||u})"></div><figcaption><b>${n}</b>${esc(cap||"")}</figcaption></figure>`};
+  const facts=()=>[
+    ["Client",p.nda?`<span class="nda">${LOCK}Confidential</span><span class="nda-note">The client asked not to be named</span>`:esc(p.client)],
+    ["Role",esc(p.role)],
+    ["Skills",esc(p.skills.join(" · "))+(p.specs.length?`<small>${esc(p.specs.join(", "))}</small>`:"")],
+    ...(p.url&&!p.nda?[["See it live",`<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))} ↗</a>`]]:[])
+  ].filter(f=>f[1]&&(f[0]!=="Client"||p.client||p.nda));
+
+  /* block renderers */
+  const R={
+    txt:b=>`<p class="txt">${esc(b.v)}</p>`,
+    quote:b=>`<blockquote class="quote">${esc(b.v)}${b.by?`<cite>${esc(b.by)}</cite>`:""}</blockquote>`,
+    image:b=>b.has?fig("full",b.cap,"",b.src):"",
+    video:b=>b.url?`<figure class="video" data-video><button type="button" class="vposter" aria-label="Play the video${b.cap?": "+esc(b.cap):""}"><span class="ph-img" style="background-image:url(${pic(pi++)})"></span><span class="vplay" aria-hidden="true">${PLAY}</span>${b.len?`<span class="vlen">${esc(b.len)}</span>`:""}</button><figcaption><b>Film</b>${esc([b.cap,/vimeo/.test(b.url)?"Vimeo":/youtu/.test(b.url)?"YouTube":""].filter(Boolean).join(" · "))}</figcaption></figure>`:"",
+    beforeafter:b=>b.has?`<figure class="ba" data-nolb><div class="ba-box" style="--p:50%"><div class="ph-img ba-after" style="background-image:url(${b.srcA||pic(pi)})"></div><div class="ph-img ba-before${b.srcB?" real":""}" style="background-image:url(${b.srcB||pic(b.srcA?pi:pi++)})"></div>
+      <span class="ba-tag l">${esc(b.lb||"Before")}</span><span class="ba-tag r">${esc(b.la||"After")}</span>
+      <div class="ba-line" role="slider" tabindex="0" aria-label="Compare ${esc(b.lb||"before")} with ${esc(b.la||"after")}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><span class="ba-knob" aria-hidden="true">‹ ›</span></div></div>
+      <figcaption><b>${esc(b.lb||"Before")} / ${esc(b.la||"After")}</b>${esc(b.cap||"")}</figcaption></figure>`:"",
+    look:b=>{const it=(b.items||[]).filter(x=>x.n); if(!b.has||!it.length) return "";
+      const SPOTS=[[38,30],[58,52],[30,74],[64,22],[46,64],[70,80]];
+      return `<div class="look"><figure class="look-img" data-nolb><div class="ph-img" style="background-image:url(${b.src||pic(pi++)})"></div>${it.map((x,k)=>`<button type="button" class="dot" style="left:${x.x!=null?x.x:SPOTS[k%6][0]}%;top:${x.y!=null?x.y:SPOTS[k%6][1]}%" data-tag="${k+1}" aria-label="${k+1}. ${esc(x.n)}">${k+1}</button>`).join("")}</figure>
+        <div class="look-list"><small>${esc((b.title?b.title+" · ":"")+"What's in it").toUpperCase()}</small><ol>${it.map((x,k)=>`<li data-tag="${k+1}"><b>${esc(x.n)}</b><span>${esc(p.nda?(x.d||"").replace(new RegExp(p.client.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"g"),"Client’s own"):x.d||"")}</span></li>`).join("")}</ol></div></div>`},
+    results:b=>{const it=(b.items||[]).filter(m=>m[0]||m[1]); if(!it.length) return "";
+      return `<div class="res">${it.map(m=>{const v=m[0]||"",k=/^\s*[+\-−]/.test(v)?"change":/%\s*$/.test(v)?"percent":"number",down=k==="change"&&/^\s*[\-−]/.test(v),pct=Math.max(0,Math.min(100,parseFloat(v)||0));
+        return `<div class="${k==="change"?(down?"up down":"up"):""}"><b>${k==="change"?`<span class="ar">${UP}</span>`:""}${esc(v)}</b><span>${esc(m[1]||"")}</span>${k==="percent"?`<div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>`:""}${k==="change"&&m[2]?`<small>${esc(m[2])}</small>`:""}</div>`}).join("")}</div>`},
+    embeds:list=>{const card=b=>{const u=b.url||"",pl=/instagram/.test(u)?"Instagram":/tiktok/.test(u)?"TikTok":/behance/.test(u)?"Behance":/youtu/.test(u)?"YouTube":"Link",
+        who=(u.match(/@([\w.\-]+)/)||u.match(/instagram\.com\/(?:reel\/)?([\w.\-]+?)(?:-|\/|$)/)||[])[1]||pl.toLowerCase();
+        return `<figure class="emb" data-nolb><a href="${esc(u)}" target="_blank" rel="noopener" class="emb-card"><span class="emb-top"><span class="av">${esc(ini(who.replace(/[._-]/g," ")))}</span><span><b>${esc(who)}</b><i>${pl==="Instagram"?"Reel · ":""}${pl}</i></span></span><span class="ph-img" style="background-image:url(${pic(pi++)})"></span><span class="emb-play" aria-hidden="true">${PLAY}</span></a><figcaption><a href="${esc(u)}" target="_blank" rel="noopener">View on ${pl} ↗</a></figcaption></figure>`};
+      return `<div class="embeds" style="grid-template-columns:minmax(0,1fr) ${list.map(()=>"260px").join(" ")}"><p class="emb-h"><small>ALSO POSTED</small>Where the work went out</p>${list.map(card).join("")}</div>`},
+    gallery:(b,ch)=>{const n=b.n||0, caps=b.caps||[], S=b.srcs||[]; if(!n) return "";
+      if(n===1) return fig("full",caps[0],"",S[0]); if(n===2) return `<div class="pair">${fig("",caps[0],"",S[0])}${fig("",caps[1],"",S[1])}</div>`;
+      if(n===3) return fig("full",caps[0],"",S[0])+`<div class="pair">${fig("",caps[1],"",S[1])}${fig("",caps[2],"",S[2])}</div>`;
+      /* four or more: the "Cases" gallery, the chapter name stays put while the pictures pass */
+      const start=no+1, W=["w-l","w-s","w-m","w-l","w-s"], AR=["4/3","4/5","1","4/5","3/4"];
+      const figs=Array.from({length:n},(_,k)=>fig("cs-fig "+W[k%5],caps[k],AR[k%5],S[k])).join("");
+      return `<div class="cases" data-cases data-start="${start}"><div class="cs-stage">${ch&&ch.intro!==undefined?`<div class="cs-intro"><span class="cs-k">${ch.k}</span>${ch.intro?`<p class="txt">${esc(ch.intro)}</p>`:""}</div>`:""}
+        <h2 class="cs-title">${esc(ch?ch.title:"Gallery")}</h2><span class="cs-count" aria-hidden="true"><b>${two(start)}</b> / ${two(total)}</span><div class="cs-col">${figs}</div>
+        <ol class="cs-list" aria-hidden="true">${Array.from({length:n},(_,k)=>`<li${k?"":` class="on"`}>${esc(caps[k]||"Picture "+two(start+k))}</li>`).join("")}</ol></div></div>`}
+  };
+
+  let story="";
+  if(!short){
+    let i=0, ch=0, open=false, leadDone=false;
+    const close=()=>{if(open){story+="</section>";open=false}};
+    while(i<B.length){const b=B[i];
+      if(b.t==="credits"){i++;continue}
+      if(!leadDone&&b.t==="text"&&!ch){story+=`<p class="lead">${esc(b.v)}</p>`;leadDone=true;i++;continue}
+      leadDone=true;
+      if(b.t==="heading"){close();ch++;
+        /* a heading, maybe a line of text, then 4+ photos: the chapter becomes the gallery */
+        const nx=B[i+1], nx2=B[i+2], g=nx&&nx.t==="gallery"&&nx.n>=4?nx:nx&&nx.t==="text"&&nx2&&nx2.t==="gallery"&&nx2.n>=4?nx2:null;
+        if(g){story+=`<section class="ch">`+R.gallery(g,{k:"CHAPTER "+two(ch),title:b.v,intro:nx.t==="text"?nx.v:""});open=true;i+=nx.t==="text"?3:2;continue}
+        story+=`<section class="ch"><div class="ch-h"><span>CHAPTER ${two(ch)}</span><h2>${esc(b.v)}</h2></div>`;open=true;i++;continue}
+      if(b.t==="text"){story+=R.txt(b);i++;continue}
+      if(b.t==="image"){const nx=B[i+1]; if(b.has&&nx&&nx.t==="text"){story+=`<div class="spread">${fig("",b.cap,"",b.src)}<div class="side"><p class="txt">${esc(nx.v)}</p></div></div>`;i+=2;continue}
+        story+=R.image(b);i++;continue}
+      if(b.t==="embed"){const list=[];while(B[i]&&B[i].t==="embed"){if(B[i].url)list.push(B[i]);i++} if(list.length) story+=R.embeds(list);continue}
+      story+=(R[b.t]?R[b.t](b):"");i++}
+    close();
+  }else{
+    const first=B.find(b=>b.t==="text"), rest=B.filter(b=>b!==first&&b.t!=="credits");
+    const photos=[];rest.forEach(b=>{if(b.t==="image"&&b.has)photos.push([b.cap||"",b.src]);if(b.t==="gallery")for(let k=0;k<(b.n||0);k++)photos.push([(b.caps||[])[k]||"",(b.srcs||[])[k]])});
+    story+=`<div class="s-intro">${first?`<p class="lead">${esc(first.v)}</p>`:"<span></span>"}<dl class="s-facts">${facts().filter(f=>f[0]!=="See it live").map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl></div>`;
+    if(photos.length) story+=`<div class="sgrid">${photos.map((c,k)=>fig(k===0?"big":"",c[0],"",c[1])).join("")}</div>`;
+    let j=0;const others=rest.filter(b=>!["image","gallery"].includes(b.t));
+    while(j<others.length){const b=others[j];if(b.t==="embed"){const list=[];while(others[j]&&others[j].t==="embed"){if(others[j].url)list.push(others[j]);j++} if(list.length)story+=R.embeds(list);continue}
+      story+=b.t==="text"?R.txt(b):(R[b.t]?R[b.t](b):"");j++}
+  }
+  /* credits: the owners first, then everyone confirmed. Only when there's someone besides the owner. */
+  if(shown.length) story+=`<section class="ch"><div class="ch-h"><span>THE TEAM</span><h2>Credits</h2></div><ul class="cred">
+    <li><span class="av">${ini(lead)}</span><b>${esc(lead)}</b><span class="r">${esc(p.owner?(DB[PKEY]||{}).role||"":p.role)}</span><span class="st">Owner</span></li>
+    ${shown.map(x=>`<li><span class="av">${ini(x.n)}</span><b>${x.u?`<a href="${href("preview.html?view=guest")}">${esc(x.n)}</a>`:esc(x.n)}</b><span class="r">${esc(x.r||"")}</span>${co.includes(x.n)?`<span class="st">Owner</span>`:"<span></span>"}</li>`).join("")}</ul></section>`;
+
+  const others=Object.entries(DB).filter(([k,v])=>k!==PKEY&&(p.owner?v.owner&&v.owner[0]===p.owner[0]:!v.owner)).slice(0,4);
+  const next=others[0], more=others.slice(1,4);
+  /* 24 Oct 2026: "Name — 2026" is two things. The name is the headline; a year joins the line above it,
+     and any other second part ("Autumn launch") sits under the name, smaller. No dash breaking onto its own line. */
+  const [tMain,...tRest]=p.title.split(/\s+[—–-]\s+/), tSub=tRest.join(" — "), tTitleYear=/^(19|20)\d\d$/.test(tSub)?tSub:"", tYear=tTitleYear||(ED&&ED.date?String(ED.date).slice(0,4):"")||FAMA_FEATURED.year(PKEY,"");
+  const h1size=tMain.length>28?"clamp(44px,6vw,88px)":tMain.length>18?"clamp(52px,7.5vw,108px)":"";
+  const profileHref=href(p.owner?"preview.html?view=guest":(GUEST?"preview.html?view=guest":"preview.html"));
+
+  page.className="ed"+(short?" is-short":"");
+  page.innerHTML=(PREV?`<div class="st-prev"><span><b>Preview</b>${p.draft?" · This is a draft. Only you can see it.":" · This is how it looks on your profile."}</span><a class="btn btn-2" href="${href("project-edit.html?p="+PKEY)}">Back to editing</a></div>`:"")+`
+  <header class="cover"><div class="ph-img" style="background-image:url(${p.coverSrc||pic(0)})" role="img" aria-label="${esc(p.title)}, the cover picture"></div>
+    <div class="cap grid"><div><p class="kick">${tYear?`<span class="ytag">${tYear}</span>`:""}${esc([clientName,p.skills[0]].filter(Boolean).join(" · "))}</p><h1${h1size?` style="font-size:${h1size}"`:""}>${esc(tMain)}${tSub&&!tTitleYear?`<span class="vh"> — </span><span class="h1-sub">${esc(tSub)}</span>`:""}${tYear?`<span class="vh">, ${tYear}</span>`:""}</h1>
+      <div class="by"><span class="av" aria-hidden="true">${ini(lead)}</span><span><a href="${profileHref}"><b>${esc(lead)}</b></a>${p.role&&!p.owner?", "+esc(p.role.toLowerCase()):""}${co.length?" · with "+esc(co.join(" and ")):""}</span></div></div>
+      <div class="acts"><button class="btn btn-2" type="button" data-share>Share</button><button class="btn btn-2" type="button" data-like aria-pressed="false">♡ Like</button>${mine?`<a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:""}</div></div></header>
+  ${short?"":`<div class="grid"><dl class="colo" style="grid-template-columns:repeat(${facts().length},minmax(0,1fr))">${facts().map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl></div>`}
+  <div class="grid"><article class="story${short?" short":""}">${story}</article></div>
+  <div class="grid"><section class="hire" id="hire" aria-labelledby="hireT"><span class="av hav" aria-hidden="true">${ini(lead)}</span>
+    <div class="hwho"><p class="hk">${mine&&!p.owner?"Made by you":"Made by"}</p><h2 id="hireT"><a href="${profileHref}">${esc(lead)}</a></h2><p class="hm">${p.owner?"On Fama":"Art director &amp; stylist · Cairo"} <span class="open"><i></i>Open for work</span></p></div>
+    <div class="hacts">${mine?`<a class="btn btn-2" href="${href("project.html?p="+PKEY+"&view=guest")}">See it as a visitor</a><a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:`<button class="btn btn-2" type="button" data-like aria-pressed="false">♡ Like</button><button class="btn" type="button" data-hire>Work with ${esc(lead)}</button>`}</div></section></div>
+  ${next?`<a class="next" href="${href("project.html?p="+next[0]+(GUEST?"&view=guest":""))}"><div class="ph-img" style="background-image:url(${FAMA_FEATURED.pic(next[0])})"></div><div class="cap grid"><small>Next project</small><b>${esc(FAMA_FEATURED.split(next[1].title).name)}</b></div></a>`:""}
+  ${more.length?`<div class="grid"><div class="more">${more.map(([k,v])=>`<a href="${href("project.html?p="+k+(GUEST?"&view=guest":""))}"><div class="ph-img" style="position:relative;background-image:url(${FAMA_FEATURED.pic(k)})">${FAMA_FEATURED.year(k,v.title)?`<span class="mtag">${FAMA_FEATURED.year(k,v.title)}</span>`:""}</div><b>${esc(FAMA_FEATURED.split(v.title).name)}</b><span>${esc(v.nda?"Confidential client":v.client||v.role)}</span></a>`).join("")}</div></div>`:""}`;
+  if(!mine){document.getElementById("hirebar").innerHTML=`<span class="av" aria-hidden="true">${ini(lead)}</span><span class="hb-t"><b>${esc(lead)}</b><span class="open"><i></i>Open for work</span></span><button class="btn" type="button" data-hire tabindex="-1">Work with</button>`;document.getElementById("hdT").textContent="Work with "+lead;document.getElementById("hdP").textContent=`Say what the job is. ${lead} gets it in their messages, with this project attached.`}
+  else document.getElementById("hirebar").remove();
+}
+</script>
+
+<script>FAMA.apply()</script>
+<script>
+/* like, share, hire, before/after, look tags and full-screen pictures. Runs with or without GSAP. */
+(function(){ if(!p) return;
+  const $=(q,r=document)=>[...r.querySelectorAll(q)];
+  page.addEventListener("click",async e=>{
+    const lk=e.target.closest("[data-like]"); if(lk){const on=lk.getAttribute("aria-pressed")!=="true";$("[data-like]").forEach(b=>{b.setAttribute("aria-pressed",on);b.textContent=(on?"♥ ":"♡ ")+"Like"});return}
+    if(e.target.closest("[data-share]")){try{await navigator.clipboard.writeText(location.href.replace(/[?&]preview=1/,""))}catch(_){} FAMA.toast&&FAMA.toast(t("copied"))}
+  });
+  /* hire: a short brief, sent to the talent with this project attached */
+  const dlg=document.getElementById("hiredlg");
+  document.addEventListener("click",e=>{if(e.target.closest("[data-hire]")){dlg.showModal();dlg.querySelector("textarea").focus()}});
+  dlg.addEventListener("close",()=>{if(dlg.returnValue==="send"){FAMA.toast&&FAMA.toast("Sent to "+document.getElementById("hdT").textContent.replace("Work with ",""));dlg.querySelector("form").reset()}});
+  /* on a phone the way to hire follows you once the cover is gone, until the "Made by" band is on screen */
+  const bar=document.getElementById("hirebar");
+  if(bar){let pastCover=false,atHire=false;const sync=()=>{const on=pastCover&&!atHire;bar.classList.toggle("show",on);bar.setAttribute("aria-hidden",!on);const b=bar.querySelector("button");if(b)b.tabIndex=on?0:-1};
+    new IntersectionObserver(([e])=>{pastCover=!e.isIntersecting;sync()}).observe(document.querySelector(".cover"));
+    new IntersectionObserver(([e])=>{atHire=e.isIntersecting;sync()}).observe(document.getElementById("hire"));}
+  /* before / after: drag, click, or arrow keys; a one-time nudge shows the line moves */
+  $(".ba-box").forEach(box=>{const line=box.querySelector(".ba-line");
+    const set=v=>{v=Math.max(0,Math.min(100,v));box.style.setProperty("--p",v+"%");line.setAttribute("aria-valuenow",Math.round(v))};
+    const at=e=>{const r=box.getBoundingClientRect();set((e.clientX-r.left)/r.width*100)};
+    let drag=false;box.addEventListener("pointerdown",e=>{drag=true;box.setPointerCapture(e.pointerId);at(e)});
+    box.addEventListener("pointermove",e=>{if(drag)at(e)});box.addEventListener("pointerup",()=>drag=false);
+    line.addEventListener("keydown",e=>{const v=+line.getAttribute("aria-valuenow");if(e.key==="ArrowLeft"){set(v-5);e.preventDefault()}if(e.key==="ArrowRight"){set(v+5);e.preventDefault()}});
+    if(window.gsap&&window.ScrollTrigger&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const o={v:50};const hint=gsap.to(o,{v:70,duration:.7,yoyo:true,repeat:1,ease:"power2.inOut",onUpdate:()=>set(o.v),scrollTrigger:{trigger:box,start:"top 70%",once:true}});
+      const stop=()=>{hint.scrollTrigger&&hint.scrollTrigger.kill();hint.kill()};box.addEventListener("pointerdown",stop,{once:true});line.addEventListener("keydown",stop,{once:true})}
+  });
+  /* a look with tags: the dot and its line light up together */
+  $(".look").forEach(l=>{const on=k=>$("[data-tag]",l).forEach(x=>x.classList.toggle("on",x.dataset.tag===k));
+    l.addEventListener("pointerover",e=>{const x=e.target.closest("[data-tag]");if(x)on(x.dataset.tag)});
+    l.addEventListener("focusin",e=>{const x=e.target.closest("[data-tag]");if(x)on(x.dataset.tag)});
+    l.addEventListener("pointerleave",()=>on(""))});
+  /* full-screen pictures: every photo on the page in order, and the film */
+  const lb=document.getElementById("lb"),S=document.getElementById("lbS"),N=document.getElementById("lbN"),C=document.getElementById("lbC");
+  const items=()=>$(".story figure:not([data-nolb])").map(f=>({f,video:f.matches("[data-video]"),bg:(f.querySelector(".ph-img")||{}).style?.backgroundImage,cap:(f.querySelector("figcaption")||{}).textContent||""}));
+  let L=[],i=0;
+  const show=k=>{i=(k+L.length)%L.length;const it=L[i];N.textContent=String(i+1).padStart(2,"0")+" / "+String(L.length).padStart(2,"0");
+    S.innerHTML=it.video?`<div class="vfake"><span>The film plays here</span></div>`:`<div class="ph-img" role="img"></div>`;
+    const el=S.firstElementChild;el.style.backgroundImage=it.bg;if(!it.video)el.setAttribute("aria-label",it.cap);
+    C.textContent=it.cap.replace(/^\d+ \/ \d+/,"").replace(/^Film/,"").trim();
+    if(window.gsap)gsap.fromTo(el,{opacity:0,scale:.98},{opacity:1,scale:1,duration:.35,ease:"power2.out"})};
+  page.addEventListener("click",e=>{const f=e.target.closest(".story figure:not([data-nolb])");if(!f||e.target.closest("figcaption"))return;L=items();const k=L.findIndex(x=>x.f===f);if(k<0)return;show(k);lb.showModal()});
+  document.getElementById("lbX").onclick=()=>lb.close();document.getElementById("lbP").onclick=()=>show(i-1);document.getElementById("lbNx").onclick=()=>show(i+1);
+  lb.addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(i+1);if(e.key==="ArrowLeft")show(i-1)});
+  let x0=null;S.addEventListener("pointerdown",e=>x0=e.clientX);S.addEventListener("pointerup",e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)show(i+(dx<0?1:-1))});
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* motion (GSAP ScrollTrigger). It follows the reading; with reduced motion, or no network, the page simply shows. */
+(function(){
+  if(!p||!window.gsap||!window.ScrollTrigger||matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const $=(q,r=document)=>[...r.querySelectorAll(q)], one=q=>document.querySelector(q);
+  /* every picture sits in a frame so it can drift inside it */
+  $(".story figure:not(.cs-fig):not(.video):not([data-nolb]) .ph-img").forEach(el=>{const f=document.createElement("div");f.className="frame";f.style.aspectRatio=getComputedStyle(el).aspectRatio;el.replaceWith(f);f.appendChild(el);el.style.aspectRatio="auto";el.style.height="118%";el.style.marginTop="-9%"});
+  const words=el=>{el.innerHTML=el.innerHTML.replace(/(<[^>]+>)|([^\s<]+)/g,(m,tag,w)=>tag?tag:`<span class="w">${w}</span>`);return $(".w",el)};
+  const h1=one(".cover h1");h1.innerHTML=`<span class="ln"><span>${h1.innerHTML}</span></span>`;
+  gsap.timeline({defaults:{ease:"power3.out"}})
+    .from(".cover .ph-img",{scale:1.15,duration:1.6,ease:"power2.out"},0)
+    .from(".cover h1 .ln>span",{yPercent:110,duration:1},.2)
+    .from([".cover .kick",".cover .by",".cover .acts"],{y:16,opacity:0,duration:.7,stagger:.08},.55);
+  gsap.to(".cover .ph-img",{yPercent:18,ease:"none",scrollTrigger:{trigger:".cover",start:"top top",end:"bottom top",scrub:true}});
+  gsap.to(".cover .cap",{y:-60,opacity:0,ease:"none",scrollTrigger:{trigger:".cover",start:"30% top",end:"bottom top",scrub:true}});
+  if(one(".colo")) gsap.from(".colo>div",{y:20,opacity:0,duration:.6,stagger:.08,ease:"power2.out",scrollTrigger:{trigger:".colo",start:"top 90%"}});
+  if(one(".s-intro")) gsap.from(".s-facts>div",{y:16,opacity:0,duration:.5,stagger:.08,scrollTrigger:{trigger:".s-intro",start:"top 85%"}});
+  const lead=one(".story .lead"); if(lead) gsap.fromTo(words(lead),{opacity:.15},{opacity:1,stagger:.05,ease:"none",scrollTrigger:{trigger:lead,start:"top 80%",end:"bottom 45%",scrub:true}});
+  $(".ch-h").forEach(h=>{gsap.timeline({scrollTrigger:{trigger:h,start:"top 85%"}})
+    .fromTo(h,{backgroundSize:"0% 1px"},{backgroundSize:"100% 1px",duration:1.1,ease:"power3.inOut"})
+    .fromTo(h.querySelector("h2"),{yPercent:60,opacity:0},{yPercent:0,opacity:1,duration:.8,ease:"power3.out"},"<.25")
+    .from(h.querySelector("span"),{opacity:0,y:8,duration:.5},"<")});
+  $(".story .txt").forEach(el=>gsap.from(el,{y:24,opacity:0,duration:.8,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 88%"}}));
+  $(".frame").forEach(f=>{
+    gsap.fromTo(f,{clipPath:"inset(18% 0% 0% 0% round 12px)"},{clipPath:"inset(0% 0% 0% 0% round 12px)",ease:"power2.out",duration:1.1,scrollTrigger:{trigger:f,start:"top 85%"}});
+    gsap.fromTo(f.firstElementChild,{yPercent:-6},{yPercent:6,ease:"none",scrollTrigger:{trigger:f,start:"top bottom",end:"bottom top",scrub:true}})});
+  $(".pair figure:last-child").forEach(f=>gsap.fromTo(f,{y:40},{y:-40,ease:"none",scrollTrigger:{trigger:f.parentElement,start:"top bottom",end:"bottom top",scrub:true}}));
+  /* the "Cases" gallery: pinned stage, the column slides up through it, the list and counter follow */
+  $("[data-cases]").forEach(cs=>{const mm=gsap.matchMedia(), start=+cs.dataset.start;
+    mm.add("(min-width:761px)",()=>{
+      cs.classList.add("live");const stage=cs.querySelector(".cs-stage"),col=cs.querySelector(".cs-col"),figs=$(".cs-fig",cs),lis=$(".cs-list li",cs),num=cs.querySelector(".cs-count b");
+      let cur=-1;const active=()=>{const r=stage.getBoundingClientRect(),mid=r.top+r.height/2;let best=0,bd=1e9;figs.forEach((f,i)=>{const b=f.getBoundingClientRect(),d=Math.abs(b.top+b.height/2-mid);if(d<bd){bd=d;best=i}});
+        if(best!==cur){cur=best;lis.forEach((l,i)=>l.classList.toggle("on",i===best));num.textContent=String(best+start).padStart(2,"0");gsap.fromTo(num,{yPercent:40,opacity:0},{yPercent:0,opacity:1,duration:.35,overwrite:true})}};
+      const ctr=f=>f.offsetTop+f.offsetHeight/2,y0=()=>stage.offsetHeight*.12-figs[0].offsetTop,y1=()=>stage.offsetHeight/2-ctr(figs[figs.length-1])-stage.offsetHeight*.1;
+      gsap.fromTo(col,{y:y0},{y:y1,ease:"none",onUpdate:active,scrollTrigger:{trigger:stage,start:"top 72px",end:()=>"+="+(y0()-y1())*1.1,pin:true,scrub:.6,invalidateOnRefresh:true,onUpdate:active,onRefresh:active}});
+      gsap.from(cs.querySelector(".cs-title"),{yPercent:30,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:stage,start:"top 70%"}});
+      return ()=>cs.classList.remove("live")})});
+  $(".quote").forEach(q=>{const c=q.querySelector("cite");if(c)c.remove();gsap.fromTo(words(q),{opacity:.12},{opacity:1,stagger:.08,ease:"none",scrollTrigger:{trigger:q,start:"top 75%",end:"bottom 50%",scrub:true}});
+    if(c){q.appendChild(c);gsap.from(c,{opacity:0,y:10,duration:.6,scrollTrigger:{trigger:q,start:"bottom 60%"}})}});
+  $(".res").forEach(res=>{const st={trigger:res,start:"top 80%"};
+    $(":scope>div",res).forEach((d,i)=>{const b=d.querySelector("b"),node=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!node)return;
+      const m=node.textContent.trim().match(/^([+\-−]?)([\d.]+)(.*)$/);gsap.from(d,{y:30,opacity:0,duration:.7,delay:i*.12,ease:"power2.out",scrollTrigger:st});if(!m)return;
+      const end=parseFloat(m[2]),dec=(m[2].split(".")[1]||"").length,o={v:0};gsap.to(o,{v:end,duration:1.6,delay:i*.12,ease:"power2.out",scrollTrigger:st,onUpdate:()=>node.textContent=m[1]+o.v.toFixed(dec)+m[3]})});
+    gsap.from($(".bar i",res),{width:0,duration:1.4,delay:.3,ease:"power2.out",scrollTrigger:st});
+    gsap.from($(".ar",res),{scale:0,rotate:-90,duration:.6,delay:.5,ease:"back.out(2)",scrollTrigger:st})});
+  if(one(".cred")) gsap.from(".cred li",{x:-16,opacity:0,duration:.5,stagger:.08,ease:"power2.out",scrollTrigger:{trigger:".cred",start:"top 85%"}});
+  if(one(".next")){gsap.fromTo(".next .ph-img",{scale:1.2},{scale:1,ease:"none",scrollTrigger:{trigger:".next",start:"top bottom",end:"bottom bottom",scrub:true}});
+    gsap.from(".next .cap>*",{y:40,opacity:0,duration:.9,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".next",start:"top 60%"}})}
+  if(one(".more")) gsap.from(".more a",{y:30,opacity:0,duration:.6,stagger:.1,ease:"power2.out",scrollTrigger:{trigger:".more",start:"top 90%"}});
+  addEventListener("load",()=>ScrollTrigger.refresh());
+  document.fonts&&document.fonts.ready.then(()=>ScrollTrigger.refresh());
+})();
+</script>
+</body></html>

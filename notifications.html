@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notifications · Fama</title>
+<link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/shell.css?v=48">
+<link rel="stylesheet" href="assets/css/ds.css?v=35">
+<style>
+/* Screen: notifications — everything from the bell, grouped by when it happened.
+   Mentions (post and comment) are the ones the posting flow promises; the rest share the list. */
+.nbar{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);flex-wrap:wrap}
+.ngrp+.ngrp{margin-top:var(--s6)}
+.ngrp h2{font-weight:600;font-size:var(--t-meta);color:var(--grey);margin:0 0 var(--s2)}
+.ngrp ul{list-style:none;margin:0;padding:0}
+.ngrp .fx-n{font-size:15px;padding:var(--s4) var(--s3)}
+.ngrp li+li{border-top:var(--border)}
+.ngrp .fx-nex{white-space:normal}
+.ngrp .fx-nic{width:40px;height:40px}
+</style></head><body>
+<div data-fama-nav></div>
+<div data-fama-hero data-tone="soft" data-photo="assets/img/banners/notifications-star.png" data-label="Your activity" data-title="Notifications" data-lead="Mentions, credits, comments and follows, newest first."></div>
+<script src="assets/js/ds.js?v=30"></script>
+
+<main class="wrap main">
+  <section class="card">
+    <div class="nbar">
+      <div class="seg" role="group" aria-label="Show" id="show">
+        <button data-v="all" aria-pressed="true">All</button>
+        <button data-v="unread" aria-pressed="false">Unread</button>
+        <button data-v="mention" aria-pressed="false">Mentions</button>
+      </div>
+      <button class="btn btn-2" id="all"><svg class="icon" aria-hidden="true"><use href="#a-check"/></svg>Mark all as read</button>
+    </div>
+    <div id="list" style="margin-top:var(--s5)"></div>
+  </section>
+</main>
+<div data-fama-foot></div>
+
+<script src="assets/js/shell.js?v=55"></script>
+<script>
+const N=FAMA_NOTIFS; let show="all";
+const GROUPS=[["Today",n=>n.day===0],["This week",n=>n.day>0&&n.day<7],["Earlier",n=>n.day>=7]];
+function item(n){
+  const u=!N.isRead(n.id);
+  return `<li><a class="fx-n${u?" unread":""}" href="${N.href(n.url)}" data-nid="${n.id}">
+    <span class="fx-nic" aria-hidden="true"><svg class="fx-icon"><use href="#${N.icon(n)}"/></svg></span>
+    <span class="fx-nb"><span><b>${n.who}</b> ${n.txt}</span>${n.ex?`<span class="fx-nex">${n.ex}</span>`:""}<span class="fx-nago">${n.ago}${u?'<span class="fx-vh"> · unread</span>':""}</span></span>
+    ${u?'<span class="fx-ndot" aria-hidden="true"></span>':""}</a></li>`;
+}
+function render(){
+  const l=N.all().filter(n=>show==="all"||(show==="unread"?!N.isRead(n.id):n.t==="mention"));
+  document.getElementById("list").innerHTML=l.length?GROUPS.map(([g,f])=>{const x=l.filter(f);return x.length?`<section class="ngrp"><h2>${g}</h2><ul>${x.map(item).join("")}</ul></section>`:""}).join("")
+    :`<div class="empty"><h3 class="h2">${show==="unread"?"You're all caught up":"Nothing here yet"}</h3><p>${show==="mention"?"When someone mentions you in a post or comment, it shows up here.":"New notifications show up here."}</p></div>`;
+  document.getElementById("all").disabled=!N.unread();
+}
+document.getElementById("show").onclick=e=>{const b=e.target.closest("button");if(!b)return;show=b.dataset.v;
+  document.querySelectorAll("#show button").forEach(x=>x.setAttribute("aria-pressed",x===b));render()};
+document.getElementById("all").onclick=()=>{N.readAll();render();FAMA.toast("All marked as read")};
+document.getElementById("list").addEventListener("click",e=>{const a=e.target.closest("[data-nid]");if(a)N.read(a.dataset.nid)});
+render();
+</script>
+</body></html>

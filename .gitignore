@@ -1,0 +1,11 @@
+# local tools
+.vercel
+.impeccable
+.DS_Store
+
+# backups and review mockups stay on this Mac, not in the repo
+_backup-*
+_mockups
+_mockup-*.html
+index.v1-backup.html
+index.v2-extras-backup.html
