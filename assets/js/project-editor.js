@@ -232,8 +232,9 @@
   if (head) {
     var inn = $('.in', bar); inn.classList.remove('in'); inn.classList.add('pe-head');
     var mid = document.createElement('div'); mid.className = 'pe-mid';
-    mid.innerHTML = '<b class="pe-name" id="peName"></b>';
-    var sv = $('.saved', inn); mid.appendChild(sv); $('.back', inn).after(mid);
+    mid.innerHTML = '<b class="pe-name" id="peName"></b><span class="pe-meta"></span>';
+    /* 1 Nov 2026: the name alone on top; under it one line of state: Draft / Published, then the save state */
+    var meta = $('.pe-meta', mid); meta.appendChild($('#peStatus', inn)); meta.appendChild($('.saved', inn)); $('.back', inn).after(mid);
     if (docked) { bar.classList.add('pe-docked'); page.parentNode.insertBefore(bar, page); }
     else { head.classList.add('fx-editor'); $('.fx-in', head).appendChild(inn); }
   } else page.parentNode.insertBefore(bar, page);
