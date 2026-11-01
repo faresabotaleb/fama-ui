@@ -90,7 +90,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       '<button type="button" class="fx-sme" id="fxSMe" aria-expanded="false" aria-controls="fxSPop">' +
         '<span class="fx-av fx-av-s" aria-hidden="true">DT</span><span class="fx-sl">Demo talent</span>' +
         '<svg class="fx-icon fx-chev" aria-hidden="true"><use href="#fx-i-chev"/></svg></button>' +
-      /* 1 Nov 2026: + opens a short menu of what can be made, instead of going straight to a new project */
+      /* 1 Nov 2026: + opens a short menu of what can be made (a project or a post), instead of going straight to a new project */
       '<button type="button" class="fx-snew" id="fxSNew" aria-haspopup="menu" aria-expanded="false" aria-controls="fxSNewPop"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-plus"/></svg><span class="fx-sl">' + L.create + '</span></button>' +
       '<nav class="fx-snav" aria-label="' + L.menu + '">' +
         '<ul class="fx-slinks">' +
@@ -114,7 +114,6 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       '<div class="fx-spop fx-newpop" id="fxSNewPop" role="menu" aria-label="' + L.create + '" hidden>' +
         '<a role="menuitem" href="' + href('project-edit.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-grid"/></svg><span><b>' + L.newProject + '</b><small>A case study for your profile</small></span></a>' +
         '<a role="menuitem" href="' + href('feed.html?new=post') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-msg"/></svg><span><b>' + L.newPost + '</b><small>Share an update with your people</small></span></a>' +
-        '<a role="menuitem" href="' + href('feed.html?new=photo') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-image"/></svg><span><b>' + L.newMedia + '</b><small>A post that leads with pictures</small></span></a>' +
       '</div>' +
       /* 30 Oct 2026: hovering Notifications opens the latest six beside the bar; the link itself still opens the page */
       '<div class="fx-npop fx-snpop" id="fxSNPop" hidden role="region" aria-label="' + L.notifs + '">' +
@@ -308,7 +307,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
         if (!snewPop.hidden) return closeNew();
         snewPop.style.top = snew.getBoundingClientRect().top + 'px';
         snewPop.classList.remove('is-closing'); snewPop.hidden = false; snew.setAttribute('aria-expanded', 'true');
-        snewPop.querySelector('a').focus();
+        if (e.detail === 0) snewPop.querySelector('a').focus(); /* keyboard only: a mouse click leaves no focus ring on the first item */
       });
       snewPop.addEventListener('keydown', function (e) {
         var it = [].slice.call(snewPop.querySelectorAll('a')), i = it.indexOf(document.activeElement);
