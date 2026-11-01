@@ -21,7 +21,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       dashboard: 'Dashboard', feed: 'Feed', activity: 'Activity', structure: 'Edit profile',
       content: 'Profile content', projects: 'Projects', credits: 'Credits', preview: 'View profile', viewMine: 'View your profile',
       activityT: 'Saved, liked, and the people you follow', joinShort: 'Join', fold: 'Collapse', unfold: 'Expand',
-      newProject: 'New project', notifs: 'Notifications', gWork: 'Your work', gProfile: 'Your profile',
+      newProject: 'New project', create: 'Create', newPost: 'New post', newMedia: 'Photos or video', notifs: 'Notifications', gWork: 'Your work', gProfile: 'Your profile',
       menu: 'Menu', account: 'Your account', logout: 'Log out', role: 'fama.so/demo-talent', login: 'Log in', join: 'Join as talent',
       brand: 'Fama', foot: 'Where creative talent gets seen.',
       gIncomplete: 'Your profile is Private: only you can see it. Complete it to go Live and share your link.',
@@ -90,7 +90,8 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       '<button type="button" class="fx-sme" id="fxSMe" aria-expanded="false" aria-controls="fxSPop">' +
         '<span class="fx-av fx-av-s" aria-hidden="true">DT</span><span class="fx-sl">Demo talent</span>' +
         '<svg class="fx-icon fx-chev" aria-hidden="true"><use href="#fx-i-chev"/></svg></button>' +
-      '<a class="fx-snew" href="' + href('project-edit.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-plus"/></svg><span class="fx-sl">' + L.newProject + '</span></a>' +
+      /* 1 Nov 2026: + opens a short menu of what can be made, instead of going straight to a new project */
+      '<button type="button" class="fx-snew" id="fxSNew" aria-haspopup="menu" aria-expanded="false" aria-controls="fxSNewPop"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-plus"/></svg><span class="fx-sl">' + L.create + '</span></button>' +
       '<nav class="fx-snav" aria-label="' + L.menu + '">' +
         '<ul class="fx-slinks">' +
           sItem('feed.html', 'home', L.feed) +
@@ -109,6 +110,11 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
         '<a href="' + href('preview.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-eye"/></svg>' + L.viewMine + '</a>' +
         '<a href="' + href('profile-structure.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-upen"/></svg>' + L.structure + '</a>' +
         '<a class="fx-sout" href="login.html"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-out"/></svg>' + L.logout + '</a>' +
+      '</div>' +
+      '<div class="fx-spop fx-newpop" id="fxSNewPop" role="menu" aria-label="' + L.create + '" hidden>' +
+        '<a role="menuitem" href="' + href('project-edit.html') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-grid"/></svg><span><b>' + L.newProject + '</b><small>A case study for your profile</small></span></a>' +
+        '<a role="menuitem" href="' + href('feed.html?new=post') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-msg"/></svg><span><b>' + L.newPost + '</b><small>Share an update with your people</small></span></a>' +
+        '<a role="menuitem" href="' + href('feed.html?new=photo') + '"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-image"/></svg><span><b>' + L.newMedia + '</b><small>A post that leads with pictures</small></span></a>' +
       '</div>' +
       /* 30 Oct 2026: hovering Notifications opens the latest six beside the bar; the link itself still opens the page */
       '<div class="fx-npop fx-snpop" id="fxSNPop" hidden role="region" aria-label="' + L.notifs + '">' +
@@ -137,6 +143,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
     '<symbol id="fx-i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>' +
     '<symbol id="fx-i-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></symbol>' +
     '<symbol id="fx-i-upen" viewBox="0 0 24 24"><path d="M11.5 15H7a4 4 0 0 0-4 4v2"/><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="7" r="4"/></symbol>' +
+    '<symbol id="fx-i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>' +
     '<symbol id="fx-i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>' +
     '<symbol id="fx-i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>' +
     '<symbol id="fx-i-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></symbol>' +
@@ -292,6 +299,23 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       });
       document.addEventListener('click', function (e) { if (!spop.contains(e.target)) closeS(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !spop.hidden) { closeS(); sme.focus(); } });
+
+      /* Create menu: opens beside the bar, lined up with the + button */
+      var snew = document.getElementById('fxSNew'), snewPop = document.getElementById('fxSNewPop');
+      var closeNew = function () { if (snewPop.hidden) return; (window.FX_SHUT ? window.FX_SHUT(snewPop) : (snewPop.hidden = true)); snew.setAttribute('aria-expanded', 'false'); };
+      snew.addEventListener('click', function (e) {
+        e.stopPropagation(); closeS();
+        if (!snewPop.hidden) return closeNew();
+        snewPop.style.top = snew.getBoundingClientRect().top + 'px';
+        snewPop.classList.remove('is-closing'); snewPop.hidden = false; snew.setAttribute('aria-expanded', 'true');
+        snewPop.querySelector('a').focus();
+      });
+      snewPop.addEventListener('keydown', function (e) {
+        var it = [].slice.call(snewPop.querySelectorAll('a')), i = it.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); it[(i + (e.key === 'ArrowDown' ? 1 : -1) + it.length) % it.length].focus(); }
+      });
+      document.addEventListener('click', function (e) { if (!snewPop.contains(e.target)) closeNew(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !snewPop.hidden) { closeNew(); snew.focus(); } });
 
       /* notifications on hover: opens after a short wait (so passing over it does nothing), and stays open
          while the pointer moves from the link into the panel */

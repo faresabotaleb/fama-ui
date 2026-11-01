@@ -318,3 +318,6 @@ figcaption b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
   html.fx-has-side .grid{max-width:calc(var(--content,1440px) + 2 * var(--fx-gut,48px));padding-inline:var(--fx-gut,48px)}
   html.fx-has-side .cover .grid{padding-inline:var(--fx-gut,48px)}
 }
+
+/* 1 Nov 2026: 13-inch laptops — the cover title stays big but leaves room for the photo */
+@media (min-width:1101px) and (max-width:1500px){.cover h1{font-size:clamp(56px,6.6vw,96px)}}

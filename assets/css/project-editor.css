@@ -44,11 +44,12 @@
 
 /* colophon */
 .pe-colo dd[contenteditable]{min-height:1.45em}
-.pe-chip{display:inline-flex;align-items:center;gap:4px;margin:0 4px 6px 0;padding:3px 8px 3px 10px;border:0;border-radius:999px;background:var(--ink);color:var(--cream);font:600 13px/1.2 var(--font-body,inherit);cursor:pointer}
+/* 1 Nov 2026: every chip, chosen or not, is the same box: 32px tall with a 1px border, so a chosen skill is never smaller than "+ Skill" */
+.pe-chip{display:inline-flex;align-items:center;gap:4px;margin:0 4px 6px 0;min-height:32px;box-sizing:border-box;padding:0 10px 0 12px;border:1px solid var(--ink);border-radius:999px;background:var(--ink);color:var(--cream);font:600 13px/1.2 var(--font-body,inherit);cursor:pointer}
 .pe-chip .pe-i{width:13px;height:13px}
-.pe-chip.ghost{background:var(--line);color:var(--ink);font-weight:500}
-.pe-chip.add{background:transparent;color:var(--ink);border:1px dashed rgba(20,17,15,.35);padding:3px 10px}
-.pe-chip.add.sm{font-weight:500}
+.pe-chip.ghost{background:var(--line);border-color:var(--line);color:var(--ink);font-weight:500}
+.pe-chip.add{background:transparent;color:var(--ink);border:1px dashed rgba(20,17,15,.35);padding:0 12px}
+.pe-chip.add.sm{font-weight:600}
 .pe-colo dd small{display:flex;flex-wrap:wrap;margin-top:6px}
 .pe-link{width:100%;min-height:36px;border:0;border-bottom:1px dashed rgba(20,17,15,.3);background:none;font:15px/1.4 var(--font-body,inherit);color:var(--ink);padding:0}
 .pe-link:focus{outline:none;border-bottom:2px solid var(--purple)}
@@ -260,6 +261,15 @@
 .pe-head .saved i{width:6px;height:6px;border-radius:999px;background:var(--mint-fg,#1B6B52)}
 .pe-head .saved i.busy{background:var(--grey)}.pe-head .saved i.bad{background:var(--rose,#E8927C)}
 .pe-head .btn{min-height:40px;padding:0 var(--s4)}
+/* 1 Nov 2026: the buttons' label shares its name with the form-label class in ds.css (flex, 8px under it),
+   which lifted the words 4px above their icons. Here it is plain inline text. */
+.pe-bar .lbl,.pe-head .lbl{display:inline;margin:0}
+/* state badges read as badges, the save line as quiet text: Draft / Published get a frame, a dot and weight */
+.pe-head .pill{min-height:28px;padding:0 12px;border:1px solid transparent;font-size:12px;letter-spacing:.02em}
+.pe-head .pill::before{content:"";width:6px;height:6px;border-radius:999px;background:currentColor}
+.pe-head .pill.p-off{background:#fff;border-color:var(--line);color:var(--ink)}
+.pe-head .pill.p-off::before{background:var(--grey)}
+.pe-head .pill.p-live{border-color:#BFE3D3}
 .fx-editor~.pe-bar{display:none}
 @media (max-width:760px){
   .fx-nav.fx-editor .fx-logo{display:none}

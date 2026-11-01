@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Feed · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=73">
+<link rel="stylesheet" href="assets/css/shell.css?v=75">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="stylesheet" href="assets/css/posts.css?v=32">
 <style>
@@ -170,7 +170,7 @@ document.write(FAMA.ICONS);
   <div class="acts"><button class="btn btn-2" value="cancel" data-t="cancel"></button><button class="btn" value="ok" data-t="show"></button></div></form></dialog>
 <dialog class="dlg wide" id="np"><form class="np" id="npf" novalidate></form></dialog>
 
-<script src="assets/js/shell.js?v=63"></script>
+<script src="assets/js/shell.js?v=64"></script>
 <script>
 const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search), GUEST=FAMA.guest;
 const MY_SKILLS=["Styling","Modelling","Photography"];
@@ -332,6 +332,8 @@ NF.addEventListener("submit",e=>{e.preventDefault();if(need())return;
 FAMA.editPost=p=>openNP(null,p);
 ["start","fabNew"].forEach(id=>document.getElementById(id).onclick=()=>openNP());
 document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>openNP(b.dataset.start));
+/* 1 Nov 2026: the side bar's Create menu lands here with ?new=post or ?new=photo and opens the composer */
+if(!GUEST&&/^(post|photo)$/.test(Q.get("new")||"")){openNP(Q.get("new")==="photo"?"photo":"post");const u=new URL(location.href);u.searchParams.delete("new");history.replaceState(null,"",u)}
 
 renderSide(); render();
 </script>
