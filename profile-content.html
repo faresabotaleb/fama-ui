@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Profile content · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Sofia+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -210,13 +210,13 @@ dialog::backdrop{background:rgba(20,17,15,.5)}
 /* runs before shell.js so the shared hero is written in the page's language */
 (function(){
   var ar=false /* Arabic paused */, h=document.getElementById('heroSlot');
-  h.dataset.label=ar?'املأ بروفايلك':'Fill in your profile';
+  h.dataset.label='';
   h.dataset.title=ar?'محتوى البروفايل':'Profile content';
-  h.dataset.lead=ar?'اختار قسم من فوق، وعدّل كل الأقسام اللي فيه في صفحة واحدة.':'The parts of your profile around your projects: recognitions, brands and what you\u2019d like to explore.';
+  h.dataset.lead='';
   var a=document.getElementById('heroArrange'); a.textContent=ar?'ترتيب الأقسام':'Show or hide sections'; if(ar)a.href='profile-structure.html?lang=ar#sections';
 })();
 </script>
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 /* Placeholder data mirrors Profile structure: Styling (primary), Modelling, Photography. */
 const q=new URLSearchParams(location.search);

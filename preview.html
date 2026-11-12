@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Demo talent · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="stylesheet" href="assets/css/fields.css?v=9">
 <link rel="stylesheet" href="assets/css/exp.css?v=2">
@@ -10,9 +10,12 @@
 /* Screen: /{username}?skill={skill} — "Talent profile" in the Fama V1 Blueprint.
    Also the talent's own Preview (with a strip that says so).
    Review states: ?view=guest (a visitor, public top bar) · ?state=unpublished · ?skill=modelling */
-.pv-strip{background:var(--ink);color:var(--cream)}
-.pv-strip .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:52px;flex-wrap:wrap;padding-block:var(--s2)}
-.pv-strip a{color:var(--yellow);font-weight:600;text-decoration:none}
+/* 12 Nov 2026 review: the black strip was heavy yet easy to miss, and the link read as an afterthought.
+   Now a soft lavender band with a clear message and a real button. */
+.pv-strip{background:var(--lavender);color:var(--ink);border-bottom:1px solid var(--lavender-line)}
+.pv-strip .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:68px;flex-wrap:wrap;padding-block:var(--s3)}
+.pv-strip .wrap>span{font-weight:600;font-size:17px}
+.pv-strip .btn .icon{width:18px;height:18px}
 
 /* profile header — the purple block and the one pattern on this page */
 .phero{margin-top:var(--s6);background:var(--purple);color:var(--white);border-radius:var(--radius);overflow:hidden}
@@ -365,7 +368,7 @@ const GUEST=Q.get("view")==="guest", UNPUB=Q.get("state")==="unpublished";
 document.write(GUEST?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>');
 </script>
 
-<div class="pv-strip" id="strip" hidden><div class="wrap"><span></span><a href="profile-structure.html" data-t="strip.back"></a></div></div>
+<div class="pv-strip" id="strip" hidden><div class="wrap"><span></span><a class="btn" href="profile-structure.html"><svg class="icon" aria-hidden="true"><use href="#i-pen"/></svg><span data-t="strip.back"></span></a></div></div>
 
 <main class="wrap" id="page"></main>
 <div data-fama-foot></div>
@@ -376,7 +379,7 @@ document.write(GUEST?'<div data-fama-nav data-mode="public"></div>':'<div data-f
   <button class="iconbtn nav" id="lbNext" aria-label="Next"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
   <p><span id="lbCap"></span> <span class="lb-n" id="lbN"></span></p></dialog>
 
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 const {t,esc,num,href}=FAMA, ar=false; /* Arabic paused */
 FAMA.T.en={

@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Activity · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="stylesheet" href="assets/css/posts.css?v=32">
 <style>
@@ -44,14 +44,14 @@
 <div data-fama-hero data-tone="soft" data-photo="assets/img/banners/activity-star.png" id="hero"></div>
 <script src="assets/js/posts.js?v=34y"></script>
 <script>
-Object.assign(FAMA.T.en,{"h.label":"Only you see this","h.title":"Activity","h.lead":"What you saved and liked, who you follow, and who follows you.",
+Object.assign(FAMA.T.en,{"h.label":"","h.title":"Activity","h.lead":"",
  saved:"Saved",liked:"Liked",following:"Following",followers:"Followers",search:"Search name or username",allSkills:"All skills",
  sort:"Sort",sRecent:"Recently followed",sAlpha:"Alphabetical",sLeast:"Least active",mutual:"Follows you",quiet:m=>`Quiet since ${m}`,posted:d=>d===0?"Posted today":d===1?"Posted yesterday":`Posted ${d} days ago`,
  unfollow:"Unfollow",unfollowA:n=>`Unfollow ${n}`,followBack:"Follow back",followBackA:n=>`Follow ${n} back`,followingNow:"Following",
  unfollowed:n=>`Unfollowed ${n}`,followed:n=>`You follow ${n} now`,
  emptySaved:"Nothing saved yet",emptySavedP:"Save posts from the feed to keep them here. Only you can see this list.",
  emptyLiked:"No likes yet",emptyLikedP:"Posts you like show here.",emptyPeople:"No one matches",emptyPeopleP:"Try another name or skill.",openFeed:"Go to the feed"});
-Object.assign(FAMA.T.ar,{"h.label":"ده ليك إنت بس","h.title":"النشاط","h.lead":"اللي حفظته وعجبك، ومين بتتابعه، ومين بيتابعك.",
+Object.assign(FAMA.T.ar,{"h.label":"","h.title":"النشاط","h.lead":"",
  saved:"المحفوظ",liked:"اللي عجبك",following:"بتتابعهم",followers:"بيتابعوك",search:"ابحث بالاسم أو اسم المستخدم",allSkills:"كل المهارات",
  sort:"الترتيب",sRecent:"أحدث متابعة",sAlpha:"أبجدي",sLeast:"الأقل نشاطاً",mutual:"متبادل",quiet:m=>`هادي من ${m}`,
  unfollow:"إلغاء المتابعة",unfollowA:n=>`إلغاء متابعة ${n}`,followBack:"تابعه",followBackA:n=>`تابع ${n}`,followingNow:"بتتابعه",
@@ -66,7 +66,7 @@ document.write(FAMA.ICONS);
   <div id="panel" role="tabpanel"></div>
 </main>
 <div data-fama-foot></div>
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search);
 const NINE=FAMA_SKILL_NAMES; /* all 41, from assets/js/skills.js */

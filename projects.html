@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Projects · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <style>
 /* Screen: /talent/projects — "Projects" in the Fama V1 Blueprint.
@@ -32,6 +32,17 @@
 .pc .waiting{font-size:var(--t-meta);color:var(--grey)}
 .pc .owners{display:flex;align-items:center;gap:var(--s2);font-size:13px;color:var(--ink);font-weight:500;margin-top:var(--s2);min-width:0}
 .pc .owners>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 12 Nov 2026 review: chunkier card details, in line with the chunky UI */
+.pc .cover{cursor:pointer}
+.pc b{font-size:20px}
+.pc .meta{font-size:15px}
+.pc .chips{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s1)}
+.pc .tag{font-size:14px;padding:6px 14px}
+.pc .owners{font-size:15px}
+.pc .owners .stack i{width:32px;height:32px;font-size:12px}
+.pc .waiting{font-size:15px;color:var(--ink)}
+.pc .pc-edit{min-height:44px;padding-inline:var(--s4)}
+.pc .pc-edit .icon{width:18px;height:18px}
 .owners .stack{display:flex;flex:none}
 .owners .stack i{font-style:normal;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;background:var(--line);border:2px solid var(--white);margin-inline-start:-8px}
 .owners .stack i:first-child{margin-inline-start:0;background:#E9DDF3}
@@ -105,7 +116,7 @@ dialog.dlg.wide{max-width:760px;max-height:calc(100vh - 32px)}
 <script src="assets/js/featured.js?v=12"></script>
 <script src="assets/js/skillfield.js?v=30"></script>
 <script>
-FAMA.T.en={"h.label":"Selected work","h.title":"Projects","h.lead":"Each project carries at least one of your skills, which decides the profile tab it appears in.",newP:"New project",
+FAMA.T.en={"h.label":"","h.title":"Projects","h.lead":"",newP:"New project",
  all:"All work",hintDrag:"Drag cards to set the order visitors see.",hintFiltered:"Clear the filter to reorder.",
  edit:"Edit",del:"Delete",editA:p=>`Edit ${p}`,delA:p=>`Delete ${p}`,leaveA:p=>`Leave ${p}`,coowned:n=>`Co-owned with ${n}`,you:"You",ownMany:n=>`You and ${n} others`,
  leaveTitle:p=>`Leave ${p}?`,leaveBody:n=>`You stop being an owner, and it comes off your profile. The project stays for ${n}. Nobody can delete a project that still has other owners.`,leaveOk:"Leave project",left:p=>`You left ${p}`,dragA:p=>`Drag to reorder ${p}`,
@@ -122,7 +133,7 @@ FAMA.T.en={"h.label":"Selected work","h.title":"Projects","h.lead":"Each project
  remove:"Remove",required:"Required",optional:"Optional",cancel:"Cancel",save:"Save project",
  errTitle:"Add a title.",errSkill:"Tag at least one of your skills.",errPerson:"Each credit needs a name, a skill and a role.",
  discard:"Discard your changes?",discardB:"Nothing you changed in this project will be saved.",discardOk:"Discard"};
-FAMA.T.ar={"h.label":"أعمال مختارة","h.title":"المشاريع","h.lead":"كل مشروع عليه مهارة من مهاراتك على الأقل، وهي اللي بتحدد التبويب اللي يظهر فيه.",newP:"مشروع جديد",
+FAMA.T.ar={"h.label":"","h.title":"المشاريع","h.lead":"",newP:"مشروع جديد",
  all:"كل الأعمال",hintDrag:"اسحب الكروت لترتيب ظهورها للزوار.",hintFiltered:"امسح الفلتر عشان ترتّب.",
  edit:"تعديل",del:"حذف",editA:p=>`تعديل ${p}`,delA:p=>`حذف ${p}`,dragA:p=>`اسحب لترتيب ${p}`,
  waiting:n=>`${n} بانتظار التأكيد`,newHint:"أضف مشروع",newHintS:"العنوان والمهارات وأحسن لقطاتك",
@@ -151,7 +162,7 @@ document.getElementById("newTopTx").textContent=FAMA.t("newP");
 
 <dialog class="dlg wide" id="pf"><form class="pf" novalidate id="pform"></form></dialog>
 
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 const {t,esc,num,href}=FAMA;
 const MY=[{id:"styling",en:"Styling",ar:"التنسيق",specs:["Fashion","Editorial","Menswear","Commercial wardrobe"]},{id:"modelling",en:"Modelling",ar:"عرض الأزياء",specs:["Fashion","Commercial","Beauty","Runway"]},{id:"photography",en:"Photography",ar:"التصوير الفوتوغرافي",specs:["Fashion","Portrait","Beauty","Product"]}];
@@ -194,9 +205,7 @@ function render(){
       <span class="meta">${esc([p.client,p.role].filter(Boolean).join(" · "))}</span>${ownersHTML(coOwners(p))}
       <div class="chips">${p.skills.map((s,i)=>`<span class="tag${i===0?" tag-ink":""}">${esc(sk(s))}</span>`).join("")}</div>
       <div class="foot"><span class="waiting">${w?t("waiting",num(w)):""}</span><span>
-        <button class="iconbtn plain" data-edit aria-label="${esc(t("editA",p.title))}"><svg class="icon"><use href="#i-edit"/></svg></button>
-        ${coOwners(p).length?`<button class="iconbtn plain del" data-leave aria-label="${esc(t("leaveA",p.title))}" title="${esc(t("leaveA",p.title))}"><svg class="icon"><use href="#i-leave"/></svg></button>`
-          :`<button class="iconbtn plain del" data-del aria-label="${esc(t("delA",p.title))}"><svg class="icon"><use href="#i-trash"/></svg></button>`}</span></div></div></article>`}).join("")
+        <button class="btn btn-2 pc-edit" data-edit aria-label="${esc(t("editA",p.title))}"><svg class="icon"><use href="#i-edit"/></svg>${t("edit")}</button></span></div></div></article>`}).join("")
    +`<button class="newcard" data-new><svg class="icon"><use href="#i-plus"/></svg>${t("newHint")}<small>${t("newHintS")}</small></button>`;
 }
 document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(b){filter=b.dataset.f;render()}});
@@ -205,6 +214,8 @@ document.getElementById("grid").addEventListener("click",async e=>{
   if(e.target.closest("[data-new]"))return location.href=FAMA.href("project-edit.html");
   const card=e.target.closest(".pc");if(!card)return;const p=P.find(x=>x.id===card.dataset.id);
   if(e.target.closest("[data-edit]"))return location.href=FAMA.href("project-edit.html?p="+p.id);
+  /* 12 Nov 2026 review: one action per card. The cover opens the project; Edit is the only button. Delete/leave left the card. */
+  if(e.target.closest(".cover")&&!e.target.closest("[data-feat],.grip"))return location.href=FAMA.href("project.html?p="+p.id);
   /* the star: feature this project, or press it again to let Fama show the latest. Saved at once, with Undo */
   if(e.target.closest("[data-feat]")){const prf=FAMA_PROFILE.load(),was=prf.featured||"",v=was===p.id?"":p.id;
     const put=x=>{const q=FAMA_PROFILE.load();q.featured=x;FAMA_PROFILE.save(q);render();const b=document.querySelector(`.pc[data-id="${CSS.escape(p.id)}"] [data-feat]`);if(b)b.focus()};

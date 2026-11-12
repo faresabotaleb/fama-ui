@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Project · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
@@ -23,7 +23,7 @@
   <button class="lb-arr lb-prev" id="lbP" aria-label="Previous picture">‹</button><div class="lb-stage" id="lbS"></div><button class="lb-arr lb-next" id="lbNx" aria-label="Next picture">›</button>
   <p class="lb-cap" id="lbC"></p></dialog>
 <div data-fama-foot></div>
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script src="assets/js/featured.js?v=12"></script>
 <script>
 const {t,esc,href}=FAMA;
@@ -127,10 +127,10 @@ function render(){
   const clientName=p.nda?"Confidential client":p.client;
   /* any owner can edit: the talent on their own work, or as a co-owner of someone else's */
   const mine=!GUEST&&(!p.owner||co.includes("Demo talent"));
-  /* pictures are numbered across the page: 01 / 09 */
+  /* 12 Nov 2026 review: picture numbers (01 / 09) show only in the full-screen viewer, not on the page */
   const total=B.reduce((a,b)=>a+(b.t==="image"&&b.has?1:0)+(b.t==="gallery"?b.n||0:0),0); let no=0, pi=1;
   /* a picture the talent chose (src, from the editor) wins; otherwise the sample pictures stand in */
-  const fig=(cls,cap,ar,src)=>{no++;const n=`${two(no)} / ${two(total)}`,u=pic(pi++);return `<figure class="${cls}"${ar?` style="--ar:${ar}"`:""}><div class="ph-img" style="background-image:url(${src||u})"></div><figcaption><b>${n}</b>${esc(cap||"")}</figcaption></figure>`};
+  const fig=(cls,cap,ar,src)=>{no++;const u=pic(pi++);return `<figure class="${cls}"${ar?` style="--ar:${ar}"`:""}><div class="ph-img" style="background-image:url(${src||u})"></div>${cap?`<figcaption>${esc(cap)}</figcaption>`:""}</figure>`};
   const facts=()=>[
     ["Client",p.nda?`<span class="nda">${LOCK}Confidential</span><span class="nda-note">The client asked not to be named</span>`:esc(p.client)],
     ["Role",esc(p.role)],

@@ -77,7 +77,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
      New project and every link, in three groups; the page sits in a rounded panel beside it.
      Open, it reads like Contra (icon and name in a row); folded, like Upwork (icon over a short name). */
   function sItem(file, icon, label, extra) {
-    return '<li><a href="' + href(file) + '"' + cur(file.split('#')[0]) + '>' +
+    return '<li><a href="' + href(file) + '"' + cur(file.split('#')[0]) + ' data-tip="' + label + '">' +
       '<span class="fx-si"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-' + icon + '"/></svg>' + (extra || '') + '</span>' +
       '<span class="fx-sl">' + label + '</span></a></li>';
   }

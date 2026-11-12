@@ -42,7 +42,7 @@
 .emk-tools button{width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--ink);display:grid;place-items:center;cursor:pointer}
 .emk-tools button:hover{background:var(--line)}
 .emk-tools .grip{cursor:grab;color:var(--grey)}
-.emk-tools .kind{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-align:center;padding:4px 0 2px;writing-mode:vertical-rl;transform:rotate(180deg)}
+.emk-tools .kind{align-self:center;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-align:center;padding:4px 0 2px;writing-mode:vertical-rl;transform:rotate(180deg)}
 .emk-b.emk-on{box-shadow:0 0 0 2px var(--purple);border-radius:6px}
 
 /* pictures: one button to replace, on the picture */

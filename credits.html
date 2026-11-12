@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Credits & recognitions · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <style>
 /* Screen: /talent/credits — the collaborator's side of journey 3 in the Fama V1 Blueprint.
@@ -51,7 +51,7 @@
 <script src="assets/js/skills.js?v=6"></script>
 <script src="assets/js/profile.js?v=25"></script>
 <script>
-FAMA.T.en={label:"What other people say about your work",title:"Credits & recognitions",lead:"Projects other people credited you on, and what peers say about you. Confirm a credit and the project is yours too.",
+FAMA.T.en={label:"",title:"Credits & recognitions",lead:"",
  showOn:"Show on profile",recHid:"Hidden from your profile",recOff:"Recognitions are hidden from your profile. They keep their content.",recOn:"Recognitions are back on your profile.",
  recs:"Recognitions",recsLead:"Peers vouching for you. They show on your profile; hide any you'd rather not show.",recBy:(w,r)=>`${w} · ${r}`,
  tRecHidden:w=>`${w}'s recognition is hidden from your profile`,tRecShown:w=>`${w}'s recognition is back on your profile`,recHiddenNote:"Hidden from your profile.",
@@ -68,7 +68,7 @@ FAMA.T.en={label:"What other people say about your work",title:"Credits & recogn
  emptyW:"Nothing waiting",emptyWP:"When someone credits you on a project, it shows up here for you to confirm.",
  emptyP:"No shared projects yet",emptyPP:"Projects you confirm show on your profile, in the tab of the skill you were credited for.",
  confirmed:d=>`Confirmed ${d}`,see:"See it on your profile",whereTab:s=>`Shows in your ${s} tab.`,owners:n=>`${n} owners`};
-FAMA.T.ar={label:"تعاونات",title:"المشاركات",lead:"أعمال ذكرك فيها آخرون. أكّدها عشان تظهر على بروفايلك.",
+FAMA.T.ar={label:"",title:"المشاركات",lead:"",
  waiting:"بانتظارك",onProfile:"على بروفايلك",
  from:(who)=>`من ${who}`,confirm:"تأكيد",decline:"رفض",withdraw:"سحب",
  confirmA:p=>`تأكيد مشاركتك في ${p}`,declineA:p=>`رفض مشاركتك في ${p}`,withdrawA:p=>`سحب مشاركتك من ${p}`,
@@ -101,7 +101,7 @@ const H=document.getElementById("hero");H.dataset.label=FAMA.t("label");H.datase
 </main>
 <div data-fama-foot></div>
 
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 const {t,esc,href}=FAMA; FAMA.apply();
 /* credits and skills are shared with Preview (assets/js/profile.js), so a confirmed credit shows on the profile */

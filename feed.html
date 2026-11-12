@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Feed · Fama</title>
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/shell.css?v=75">
+<link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="stylesheet" href="assets/css/posts.css?v=32">
 <style>
@@ -101,7 +101,7 @@
 <div data-fama-hero data-tone="soft" data-photo="assets/img/banners/feed-star.png" id="hero"></div>
 <script src="assets/js/posts.js?v=34y"></script>
 <script>
-Object.assign(FAMA.T.en,{"g.label":"Creative talent on Fama","g.lead":"Work from stylists, models, photographers and more. Join to post your own.","g.join":"Join as talent","g.login":"Log in","h.label":"Your people","h.title":"Feed","h.lead":"See what your network is working on, and share your own.",
+Object.assign(FAMA.T.en,{"g.label":"Creative talent on Fama","g.lead":"Work from stylists, models, photographers and more. Join to post your own.","g.join":"Join as talent","g.login":"Log in","h.label":"","h.title":"Feed","h.lead":"",
  start:"Start a post",photo:"Photo",video:"Video",shareProj:"Share a project",
  follow:"Follow",following:"Following",dismiss:n=>`Hide ${n} from suggestions`,hidden:n=>`${n} won't be suggested again`,
  toFollow:"Talent to follow",toDiscover:"Talent to discover",followSub:"People near your work",discoverSub:"New faces in your skills",projShort:"Project",whyFollows:"Follows you",whyAlso:s=>`Also in ${s}`,
@@ -115,7 +115,7 @@ Object.assign(FAMA.T.en,{"g.label":"Creative talent on Fama","g.lead":"Work from
  discard:"Discard this post?",discardB:"What you wrote will be lost.",discardOk:"Discard",posted:"Posted to the feed",updated:"Post updated",
  lockedMedia:"Media can't be changed after publishing. You can edit the text and skills for 15 minutes.",youFollow:"you follow",
  counter:(n)=>`${n} / 2,200`});
-Object.assign(FAMA.T.ar,{"h.label":"ناسك","h.title":"المستجدات","h.lead":"شوف ناسك بيشتغلوا على إيه، وشارك شغلك.",
+Object.assign(FAMA.T.ar,{"h.label":"","h.title":"المستجدات","h.lead":"",
  start:"ابدأ منشور",photo:"صورة",video:"فيديو",shareProj:"شارك مشروع",
  follow:"متابعة",following:"بتتابعه",dismiss:n=>`إخفاء ${n} من الاقتراحات`,hidden:n=>`مش هنقترح ${n} تاني`,
  toFollow:"مواهب تتابعها",toDiscover:"مواهب تكتشفها",followSub:"ناس قريبة من شغلك",discoverSub:"وشوش جديدة في مهاراتك",projShort:"مشروع",whyFollows:"بيتابعك",whyAlso:s=>`برضه في ${s}`,
@@ -170,7 +170,7 @@ document.write(FAMA.ICONS);
   <div class="acts"><button class="btn btn-2" value="cancel" data-t="cancel"></button><button class="btn" value="ok" data-t="show"></button></div></form></dialog>
 <dialog class="dlg wide" id="np"><form class="np" id="npf" novalidate></form></dialog>
 
-<script src="assets/js/shell.js?v=65"></script>
+<script src="assets/js/shell.js?v=66"></script>
 <script>
 const {t,esc,num,href}=FAMA, Q=new URLSearchParams(location.search), GUEST=FAMA.guest;
 const MY_SKILLS=["Styling","Modelling","Photography"];
@@ -191,11 +191,11 @@ let more=false, suggestions=FAMA.PEOPLE.slice();
 const init=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
 
 function personRow(p){return `<li data-u="${p.user}"><span class="av">${init(p.name)}</span><span class="grow"><a href="${href("preview.html?view=guest")}"><b>${esc(p.name)}</b></a><span class="why">${GUEST?esc(p.skill):p.why==="follows"?t("whyFollows"):t("whyAlso",esc(p.skill))}</span>
-  <button class="btn btn-2" data-follow aria-pressed="false" style="min-height:36px;padding-inline:var(--s4);margin-top:var(--s2)">${t("follow")}</button></span><button class="iconbtn plain" data-dismiss aria-label="${esc(t("dismiss",p.name))}"><svg class="icon sm"><use href="#i-x"/></svg></button></li>`}
+  <button class="btn btn-2" data-follow aria-pressed="false" style="min-height:40px;padding-inline:var(--s4);margin-top:var(--s2)"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg>${t("follow")}</button></span><button class="iconbtn plain" data-dismiss aria-label="${esc(t("dismiss",p.name))}"><svg class="icon sm"><use href="#i-x"/></svg></button></li>`}
 function renderSide(){document.getElementById("toFollow").innerHTML=suggestions.slice(0,4).map(personRow).join("")}
 /* people between posts: a tinted band of cards you swipe through, so it never reads as another post (11 Oct 2026) */
 function strip(kind){const ppl=kind==="discover"?FAMA.PEOPLE.slice(3):suggestions.slice(0,4);
-  return `<section class="strip ${kind==="follow"?"mobile-follow":""}" aria-label="${kind==="discover"?t("toDiscover"):t("toFollow")}"><div class="strip-h"><div><h2 class="h3">${kind==="discover"?t("toDiscover"):t("toFollow")}</h2><p class="why">${t(kind==="discover"?"discoverSub":"followSub")}</p></div></div>
+  return `<section class="strip ${kind==="follow"?"mobile-follow":""}" aria-label="${t("toFollow")}"><div class="strip-h"><div><h2 class="h3">${t("toFollow")}</h2></div></div>
   <div class="people">${ppl.map(p=>`<div class="pp" data-u="${p.user}">${kind==="follow"?`<button class="iconbtn plain px" data-dismiss aria-label="${esc(t("dismiss",p.name))}"><svg class="icon sm"><use href="#i-x"/></svg></button>`:""}<span class="av md">${init(p.name)}</span><b>${esc(p.name)}</b><span class="role">${esc(p.skill)}</span>${GUEST?"":`<span class="why">${p.why==="follows"?t("whyFollows"):t("whyAlso",esc(p.skill))}</span>`}<button class="btn btn-2" data-follow aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#a-user-plus"/></svg>${t("follow")}</button></div>`).join("")}</div></section>`}
 function render(){
   const shown=list.filter(matches), el=document.getElementById("posts");

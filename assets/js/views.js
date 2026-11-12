@@ -23,7 +23,7 @@
       /* 24 Oct 2026 (critique): the card is a heading, the number and one line; the chart opens on request */
       '<div class="vw-head"><div><h2 class="vw-label">Profile views · all time</h2><span class="vw-n">' + num(sum(daily)) + '</span>' +
       '<span class="vw-d">This week <b>' + (up ? '▲' : '▼') + ' ' + num(Math.round(Math.abs(wkv - prev) / prev * 100)) + '%</b> on last week</span></div>' +
-      '<div class="vw-hr"><span class="vw-only">' + ic('i-lock') + 'Only you see this</span>' +
+      '<div class="vw-hr">' +
       '<button type="button" class="vw-link vw-open" data-chart aria-expanded="false" aria-controls="vwMore">See chart' + ic('i-down') + '</button></div></div>' +
       '<div class="vw-more" id="vwMore" hidden>' +
       '<div class="vw-sh"><p class="vw-sum" data-sum></p><div class="vw-seg" role="group" aria-label="Period">' +
@@ -88,7 +88,7 @@
     var tick = function (ok) { return '<span class="tick">' + (ok ? ic('i-check') : '') + '</span>'; };
     var left = function (L) { return L.filter(function (r) { return !done[r[0]]; }); };
     /* the track: one segment per step (each one jumps to its step), with labelled milestones between the parts:
-       Live after Go Live, Index after something to show, Ready at the end. A milestone turns solid once reached. */
+       Live after Go Live, Ready at the end (12 Nov 2026 review: no Index milestone). A milestone turns solid once reached. */
     function track(all, next, fresh) {
       fresh = fresh || [];
       var listed = all || !!done[KEY], isLive = all || !left(REQ).length, ready = all || (!left(REQ).length && !left(REC).length);
@@ -101,8 +101,7 @@
       var cnt = function (L) { return L.filter(function (r) { return all || done[r[0]]; }).length + ' of ' + L.length; };
       return '<div class="gt-track" role="group" aria-label="Go Live ' + cnt(REQ) + ' done, Stand out ' + cnt(REC) + ' done">' +
         REQ.map(seg).join('') + ms(isLive, STAR.replace('gt-star', 'gt-msi'), 'Live') +
-        seg(REC[0]) + ms(listed, ic('i-search'), 'Index') +
-        REC.slice(1).map(seg).join('') + ms(ready, ic('i-check'), 'Ready') + '</div>';
+        REC.map(seg).join('') + ms(ready, ic('i-check'), 'Ready') + '</div>';
     }
     function part(L, n, title, sub, state) {
       var got = L.length - left(L).length;
@@ -138,8 +137,7 @@
       } else if (!el.hidden) el.innerHTML = '<div class="vw-head"><div><span class="vw-label">Your profile</span><h2 class="vw-h">' +
           (stage === 'live' ? reqLeft.length + ' more ' + (reqLeft.length === 1 ? 'step' : 'steps') + ' to go Live' : listed ? 'You’re Live. Now stand out' : 'You’re Live. Next, the Creatives Index') + '</h2>' +
           '<p class="vw-lead">' + (stage === 'live' ? 'Two parts. Go Live takes a minute, and then your link works. Stand out starts with something to show, which puts you in the Creatives Index where brands search. The rest gets you picked.' :
-            listed ? 'Your link works and brands find you in the Creatives Index. Fama recommends these next: they are what gets a profile picked.' : 'Your link works and you can share it. Add something to show and brands find you in the Creatives Index too.') + '</p></div>' +
-          '<span class="vw-only">' + ic('i-lock') + 'Only you see this</span></div>' +
+            listed ? 'Your link works and brands find you in the Creatives Index. Fama recommends these next: they are what gets a profile picked.' : 'Your link works and you can share it. Add something to show and brands find you in the Creatives Index too.') + '</p></div></div>' +
         part(REQ, 1, 'Go Live', 'Your link works and you can share it.', stage === 'live' ? 'is-now' : 'is-done') +
         part(REC, 2, 'Stand out', 'Not needed to go Live. Something to show gets you into the Creatives Index; the rest gets you picked.', stage === 'live' ? 'is-later' : 'is-now') +
         (stage !== 'live' ? '<p class="vw-note"><button type="button" class="vw-link jr-more" data-jr="close" aria-expanded="true">Fold steps' + ic('i-down') + '</button></p>' : '');
