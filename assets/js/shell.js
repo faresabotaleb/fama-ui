@@ -21,7 +21,7 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       dashboard: 'Dashboard', feed: 'Feed', activity: 'Activity', structure: 'Edit profile',
       content: 'Profile content', projects: 'Projects', credits: 'Credits', preview: 'View profile', viewMine: 'View your profile',
       activityT: 'Saved, liked, and the people you follow', joinShort: 'Join', fold: 'Collapse', unfold: 'Expand',
-      newProject: 'New project', create: 'Create', newPost: 'New post', newMedia: 'Photos or video', notifs: 'Notifications', gWork: 'Your work', gProfile: 'Your profile',
+      newProject: 'New project', create: 'Create', newPost: 'New post', newMedia: 'Photos or video', notifs: 'Notifications', gWork: 'Your work', gProfile: 'Your profile', gCommunity: 'Community',
       menu: 'Menu', account: 'Your account', logout: 'Log out', role: 'fama.so/demo-talent', login: 'Log in', join: 'Join as talent',
       brand: 'Fama', foot: 'Where creative talent gets seen.',
       gIncomplete: 'Your profile is Private: only you can see it. Complete it to go Live and share your link.',
@@ -39,11 +39,12 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
      Credits has no page yet; Activity opens the Following view for now. */
   /* 30 Oct 2026: ordered by how often a talent goes there; "Profile structure" reads as "Edit profile" */
   var items = [
-    ['feed', 'feed.html', 'home'],
+    /* 13 Nov 2026 review: the portfolio comes first, the feed after it */
     ['projects', 'projects.html', 'grid'],
     /* Profile content is folded into Profile structure (brands) and Credits (recognitions), 3 Oct 2026 */
     ['structure', 'profile-structure.html', 'upen'],
     ['credits', 'credits.html', 'award'],
+    ['feed', 'feed.html', 'home'],
     ['activity', 'following.html', 'heart']
   ];
 
@@ -93,16 +94,16 @@ window.FAMA_FEATURES = { reviews: false }; /* reviews are dropped for good (12 O
       /* 1 Nov 2026: + opens a short menu of what can be made (a project or a post), instead of going straight to a new project */
       '<button type="button" class="fx-snew" id="fxSNew" aria-haspopup="menu" aria-expanded="false" aria-controls="fxSNewPop"><svg class="fx-icon" aria-hidden="true"><use href="#fx-i-plus"/></svg><span class="fx-sl">' + L.create + '</span></button>' +
       '<nav class="fx-snav" aria-label="' + L.menu + '">' +
-        '<ul class="fx-slinks">' +
-          sItem('feed.html', 'home', L.feed) +
-          sItem('notifications.html', 'bell', L.notifs, '<span class="fx-count" id="fxSCount" aria-hidden="true" hidden></span>') +
-          sItem('following.html', 'heart', L.activity) +
-        '</ul>' +
         '<p class="fx-sgroup">' + L.gWork + '</p><ul class="fx-slinks">' +
           sItem('projects.html', 'grid', L.projects) + sItem('credits.html', 'award', L.credits) +
         '</ul>' +
         '<p class="fx-sgroup">' + L.gProfile + '</p><ul class="fx-slinks">' +
           sItem('profile-structure.html', 'upen', L.structure) + sItem('preview.html', 'eye', L.preview) +
+        '</ul>' +
+        '<p class="fx-sgroup">' + L.gCommunity + '</p><ul class="fx-slinks">' +
+          sItem('feed.html', 'home', L.feed) +
+          sItem('notifications.html', 'bell', L.notifs, '<span class="fx-count" id="fxSCount" aria-hidden="true" hidden></span>') +
+          sItem('following.html', 'heart', L.activity) +
         '</ul>' +
       '</nav>' +
       '<div class="fx-spop" id="fxSPop" hidden>' +

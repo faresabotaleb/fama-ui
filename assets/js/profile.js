@@ -266,5 +266,5 @@
     return has('display') && has('city') && has('headline') && has('bio') && !!p.photo && (p.skills || []).length > 0 &&
       (p.links || []).some(function (l) { return l.u; }) && (p.brands || []).some(function (b) { return b.n || b.t; });
   };
-  window.FAMA_HOME = function () { return window.FAMA_PROFILE_DONE() ? 'feed.html' : 'profile-structure.html'; };
+  window.FAMA_HOME = function () { /* 13 Nov 2026 review: the portfolio first, then the feed */ return window.FAMA_PROFILE_DONE() ? 'projects.html' : 'profile-structure.html'; };
 })();

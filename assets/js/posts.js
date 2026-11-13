@@ -14,7 +14,7 @@
     'p.likes': function (n) { return FAMA.num(n) + (n === 1 ? ' like' : ' likes'); }, 'p.comments': function (n) { return FAMA.num(n) + (n === 1 ? ' comment' : ' comments'); },
     'p.copied': 'Link copied', 'p.repost': 'Share to your feed', 'p.copy': 'Copy link', 'p.shareOn': function (n) { return 'Share on ' + n; }, 'p.more2': 'More options',
     'p.rpT': 'Share to your feed', 'p.rpPh': 'Add your thoughts (optional). Type @ to credit someone.', 'p.rpGo': 'Share', 'p.rpDone': 'Shared to your feed', 'p.rpBy': function (n) { return 'Shared from ' + n; },
-    'p.cAll': function (n) { return 'View all ' + n + ' comments'; }, 'p.cAdd': 'Add a comment\u2026', 'p.cSend': 'Post', 'p.cGuest': 'Log in to comment', 'p.cNone': 'No comments yet. Start the conversation.', 'p.cHide': 'Hide comments', 'p.report': 'Report', 'p.reported': 'You reported this', 'p.edit': 'Edit', 'p.delete': 'Delete', 'p.pin': 'Pin to top of my posts', 'p.unpin': 'Unpin',
+    'p.cAll': function (n) { return 'View all ' + n + ' comments'; }, 'p.cAdd': 'Add a comment\u2026', 'p.cSend': 'Post', 'p.cGuest': 'Log in to comment', 'p.cNone': 'No comments yet. Start the conversation.', 'p.cHide': 'Hide comments', 'p.cReply': 'Reply', 'p.cReplyTo': function (u) { return 'Reply to @' + u + '\u2026'; }, 'p.cReplies': function (n) { return n === 1 ? '1 reply' : n + ' replies'; }, 'p.cCancel': 'Cancel', 'p.report': 'Report', 'p.reported': 'You reported this', 'p.edit': 'Edit', 'p.delete': 'Delete', 'p.pin': 'Pin to top of my posts', 'p.unpin': 'Unpin',
     'p.pinned': 'Pinned', 'p.editLeft': function (m) { return 'Edit · ' + m + ' min left'; },
     'p.delT': 'Delete this post?', 'p.delB': 'It comes off the feed and your profile, with its comments.', 'p.delOk': 'Delete post', 'p.deleted': 'Post deleted',
     'p.pinT': 'Pinned. It stays at the top of your posts.', 'p.pinReplace': 'Pinned. Your previous pin was replaced.',
@@ -27,7 +27,7 @@
     'p.alt': 'Image'
   });
   Object.assign(FAMA.T.ar, {
-    'p.like': 'إعجاب', 'p.unlike': 'إلغاء الإعجاب', 'p.comment': 'تعليق', 'p.share': 'مشاركة', 'p.save': 'حفظ', 'p.saved': 'محفوظ', 'p.more': 'المزيد',
+    'p.like': 'إعجاب', 'p.unlike': 'إلغاء الإعجاب', 'p.comment': 'تعليق', 'p.share': 'مشاركة', 'p.save': 'حفظ', 'p.saved': 'محفوظ', 'p.more': 'المزيد', 'p.cReply': 'رد', 'p.cReplyTo': function (u) { return 'رد على @' + u + '\u2026'; }, 'p.cReplies': function (n) { return n + ' رد'; }, 'p.cCancel': 'إلغاء',
     'p.likes': function (n) { return FAMA.num(n) + ' إعجاب'; }, 'p.comments': function (n) { return FAMA.num(n) + ' تعليق'; },
     'p.copied': 'اتنسخ الرابط', 'p.report': 'إبلاغ', 'p.reported': 'بلّغت عن ده', 'p.edit': 'تعديل', 'p.delete': 'حذف', 'p.pin': 'ثبّته أول منشوراتي', 'p.unpin': 'إلغاء التثبيت',
     'p.pinned': 'مثبّت', 'p.editLeft': function (m) { return 'تعديل · فاضل ' + m + ' دقيقة'; },
@@ -49,10 +49,16 @@
     ['Karim F.', 'karim-f', 'Saving this for the next brief.', '5h']
   ];
   function inlineComments(p) {
-    if (!p._c) p._c = SAMPLE_C.slice(0, Math.min(2, p.comments)).map(function (c, i) { return { n: c[0], u: c[1], tx: c[2], ago: c[3], id: p.id + '-' + i }; });
+    /* 13 Nov 2026 review: comments take replies, one level deep, shown under the comment they answer */
+    if (!p._c) p._c = SAMPLE_C.slice(0, Math.min(2, p.comments)).map(function (c, i) { return { n: c[0], u: c[1], tx: c[2], ago: c[3], id: p.id + '-' + i, r: i === 0 && !p.mine && p.a.user !== c[1] ? [{ n: p.a.name, u: p.a.user, tx: '@' + c[1] + ' Right before sunset, about twenty minutes of it.', ago: '45m' }] : [] }; });
     return p._c;
   }
   FAMA.ME = ME;
+  function cItem(c, small) {
+    var init = c.n.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase(), prof = FAMA.href(c.u === ME.user ? 'preview.html' : 'preview.html?view=guest');
+    return '<a class="av sm' + (small ? ' xs' : '') + '" href="' + prof + '" aria-hidden="true" tabindex="-1">' + init + '</a>' +
+      '<div class="cb"><p><a class="who" href="' + prof + '"><b>' + FAMA.esc(c.n) + '</b></a> <span class="meta">' + c.ago + '</span></p><p dir="auto">' + FAMA.fmt(c.tx) + '</p></div>';
+  }
   FAMA.POSTS = [
     { id: 4812, a: { name: 'Lina Haddad', user: 'lina-haddad', init: 'LH' }, ago: '2h', text: 'New story for @maison-nour, shot at golden hour with @omar-saleh. https://youtube.com/watch?v=bts', media: 3, skills: ['Photography', 'Styling'], likes: 128, comments: 14 },
     { id: 4807, kind: 'project', a: { name: 'Omar Saleh', user: 'omar-saleh', init: 'OS' }, ago: '5h', project: { title: 'Desert Light — 2026', client: 'Maison Nour', year: 2026, credits: 'Omar Saleh · Styling — with Lina Haddad' }, skills: ['Styling'], likes: 86, comments: 6 },
@@ -132,9 +138,14 @@
         (guest ? '<p class="cguest"><a class="link" href="' + FAMA.href('login.html?next=feed') + '">' + t('p.cGuest') + '</a></p>' :
           '<form class="cadd" data-cadd><span class="av sm" aria-hidden="true">' + ME.init + '</span><label class="fx-vh" for="ci-' + p.id + '">' + t('p.cAdd') + '</label>' +
           '<span class="cpill"><input id="ci-' + p.id + '" maxlength="2200" placeholder="' + t('p.cAdd') + '" autocomplete="off"><button class="csend" disabled aria-label="' + t('p.cSend') + '">' + ico('i-send-up') + '</button></span></form>') +
-        (cs.length ? '<ul class="clist">' + cs.map(function (c) {
-          return '<li><a class="av sm" href="' + FAMA.href('preview.html?view=guest') + '" aria-hidden="true" tabindex="-1">' + c.n.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase() + '</a>' +
-            '<div class="cb"><p><a class="who" href="' + FAMA.href('preview.html?view=guest') + '"><b>' + esc(c.n) + '</b></a> <span class="meta">' + c.ago + '</span></p><p dir="auto">' + FAMA.fmt(c.tx) + '</p></div></li>';
+        (cs.length ? '<ul class="clist">' + cs.map(function (c, ci) {
+          var rs = c.r || [];
+          return '<li class="cthread">' + cItem(c) +
+            '<div class="cfoot">' + (guest ? '' : '<button type="button" class="creply" data-creply="' + ci + '" aria-label="' + t('p.cReply') + ': ' + esc(c.n) + '">' + t('p.cReply') + '</button>') +
+            (rs.length || p._rto === ci ? '<div class="creplies" aria-label="' + t('p.cReplies', rs.length) + '">' + (rs.length ? '<ul class="clist">' + rs.map(function (r) { return '<li>' + cItem(r, true) + '</li>'; }).join('') + '</ul>' : '') +
+              (p._rto === ci ? '<form class="cadd crform" data-cadd data-rto="' + ci + '"><label class="fx-vh" for="cr-' + p.id + '">' + t('p.cReplyTo', c.u) + '</label>' +
+                '<span class="cpill"><input id="cr-' + p.id + '" maxlength="2200" value="@' + esc(c.u) + ' " placeholder="' + t('p.cReplyTo', c.u) + '" autocomplete="off"><button class="csend" aria-label="' + t('p.cSend') + '">' + ico('i-send-up') + '</button></span>' +
+                '<button type="button" class="creply" data-ccancel>' + t('p.cCancel') + '</button></form>' : '') + '</div>' : '') + '</div></li>';
         }).join('') + '</ul>' : '<p class="meta cnone">' + t('p.cNone') + '</p>') +
         (p.comments > cs.length ? '<a class="link call" href="' + FAMA.href('post.html?id=' + p.id) + '">' + t('p.cAll', FAMA.num(p.comments)) + '</a>' : '') +
         '</div>';
@@ -288,6 +299,12 @@
       if (guest && (b = e.target.closest('[data-like],[data-save],[data-focus-comment]'))) {
         FAMA.signInPrompt(art, b.dataset.like !== undefined ? 'p.like' : b.dataset.save !== undefined ? 'p.save' : 'p.comment'); return;
       }
+      if ((b = e.target.closest('[data-creply]'))) {
+        p._rto = +b.dataset.creply; rerender(p);
+        var ri = root.querySelector('.post[data-id="' + p.id + '"] .crform input'); if (ri) { ri.focus(); ri.setSelectionRange(ri.value.length, ri.value.length); }
+        return;
+      }
+      if ((b = e.target.closest('[data-ccancel]'))) { var at = p._rto; p._rto = null; rerender(p); var rb = root.querySelector('.post[data-id="' + p.id + '"] [data-creply="' + at + '"]'); if (rb) rb.focus(); return; }
       if ((b = e.target.closest('[data-like]'))) { p.liked = !p.liked; p.likes += p.liked ? 1 : -1; rerender(p); return; }
       if ((b = e.target.closest('[data-save]'))) { p.saved = !p.saved; rerender(p); return; }
       if ((b = e.target.closest('[data-share]'))) {
@@ -312,8 +329,13 @@
     root.addEventListener('submit', function (e) {
       var f = e.target.closest('[data-cadd]'); if (!f) return; e.preventDefault();
       var art = f.closest('.post'), p = list.find(function (x) { return String(x.id) === art.dataset.id; }), v = f.querySelector('input').value.trim(); if (!v) return;
-      inlineComments(p).unshift({ n: ME.name, u: ME.user, tx: v, ago: 'now' }); p.comments++; rerender(p);
-      var na = root.querySelector('.post[data-id="' + p.id + '"] .pcomments input'); if (na) na.focus();
+      if (f.dataset.rto !== undefined) {
+        var at = +f.dataset.rto, rc = inlineComments(p)[at]; if (v === '@' + rc.u) return;
+        (rc.r = rc.r || []).push({ n: ME.name, u: ME.user, tx: v, ago: 'now' }); p._rto = null; p.comments++; rerender(p);
+        var rb = root.querySelector('.post[data-id="' + p.id + '"] [data-creply="' + at + '"]'); if (rb) rb.focus(); return;
+      }
+      inlineComments(p).unshift({ n: ME.name, u: ME.user, tx: v, ago: 'now', r: [] }); if (p._rto != null) p._rto++; p.comments++; rerender(p);
+      var na = root.querySelector('.post[data-id="' + p.id + '"] .pcomments > form input'); if (na) na.focus();
     });
     /* the swipe row keeps its counter and dots in step */
     root.addEventListener('scroll', function (e) {

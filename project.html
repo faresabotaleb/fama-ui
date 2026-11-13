@@ -6,24 +6,16 @@
 <link rel="stylesheet" href="assets/css/ds.css?v=35">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
-<link rel="stylesheet" href="assets/css/project-page.css?v=6">
+<link rel="stylesheet" href="assets/css/project-page.css?v=8">
 </head><body>
 <script src="assets/js/ds.js?v=31"></script>
 <script>document.write(new URLSearchParams(location.search).get("view")==="guest"?'<div data-fama-nav data-mode="public"></div>':'<div data-fama-nav></div>')</script>
 <main class="ed" id="page"></main>
-<div class="hirebar" id="hirebar" aria-hidden="true"></div>
-<dialog class="hiredlg" id="hiredlg" aria-labelledby="hdT"><form method="dialog">
-  <div class="hd-h"><h2 id="hdT">Work with Demo talent</h2><button class="iconbtn plain" value="x" aria-label="Close">✕</button></div>
-  <p class="hd-p" id="hdP">Say what the job is. They get it in their messages, with this project attached.</p>
-  <label class="hd-f"><span>The job</span><textarea class="ta" rows="4" placeholder="A two-day lookbook in Cairo, mid-November. Menswear, about 20 looks."></textarea></label>
-  <div class="hd-row"><label class="hd-f"><span>When</span><input class="in" placeholder="Mid-November"></label><label class="hd-f"><span>Budget (optional)</span><input class="in" placeholder="EGP"></label></div>
-  <div class="hd-a"><button class="btn btn-2" value="x">Cancel</button><button class="btn" value="send">Send</button></div>
-</form></dialog>
 <dialog class="lb" id="lb" aria-label="Pictures"><div class="lb-top"><span class="lb-n" id="lbN"></span><button class="lb-x" id="lbX" aria-label="Close">✕</button></div>
   <button class="lb-arr lb-prev" id="lbP" aria-label="Previous picture">‹</button><div class="lb-stage" id="lbS"></div><button class="lb-arr lb-next" id="lbNx" aria-label="Next picture">›</button>
   <p class="lb-cap" id="lbC"></p></dialog>
 <div data-fama-foot></div>
-<script src="assets/js/shell.js?v=66"></script>
+<script src="assets/js/shell.js?v=67"></script>
 <script src="assets/js/featured.js?v=12"></script>
 <script>
 const {t,esc,href}=FAMA;
@@ -123,6 +115,9 @@ function render(){
   const people=(p.people||credits).map(x=>({n:x.n,r:x.r,u:x.u,st:x.st}));
   const shown=people.filter(x=>x.st==="confirmed"||x.st==="listed");
   const lead=p.owner?p.owner[0]:"Demo talent", co=shown.filter(x=>x.st==="confirmed"&&(p.people?x.u:true)).map(x=>x.n);
+  /* 13 Nov 2026 review: a shared project reads the same for everyone on it. One team, listed as equals,
+     not "by the person who posted it, with the others". */
+  const team=[{n:lead,r:p.owner?(DB[PKEY]||{}).role||"":p.role,lead:1}].concat(shown.filter(x=>x.n!==lead));
   const short=!B.some(b=>b.t==="heading");
   const clientName=p.nda?"Confidential client":p.client;
   /* any owner can edit: the talent on their own work, or as a co-owner of someone else's */
@@ -198,10 +193,6 @@ function render(){
     while(j<others.length){const b=others[j];if(b.t==="embed"){const list=[];while(others[j]&&others[j].t==="embed"){if(others[j].url)list.push(others[j]);j++} if(list.length)story+=R.embeds(list);continue}
       story+=b.t==="text"?R.txt(b):(R[b.t]?R[b.t](b):"");j++}
   }
-  /* credits: the owners first, then everyone confirmed. Only when there's someone besides the owner. */
-  if(shown.length) story+=`<section class="ch"><div class="ch-h"><span>THE TEAM</span><h2>Credits</h2></div><ul class="cred">
-    <li><span class="av">${ini(lead)}</span><b>${esc(lead)}</b><span class="r">${esc(p.owner?(DB[PKEY]||{}).role||"":p.role)}</span><span class="st">Owner</span></li>
-    ${shown.map(x=>`<li><span class="av">${ini(x.n)}</span><b>${x.u?`<a href="${href("preview.html?view=guest")}">${esc(x.n)}</a>`:esc(x.n)}</b><span class="r">${esc(x.r||"")}</span>${co.includes(x.n)?`<span class="st">Owner</span>`:"<span></span>"}</li>`).join("")}</ul></section>`;
 
   const others=Object.entries(DB).filter(([k,v])=>k!==PKEY&&(p.owner?v.owner&&v.owner[0]===p.owner[0]:!v.owner)).slice(0,4);
   const next=others[0], more=others.slice(1,4);
@@ -210,22 +201,22 @@ function render(){
   const [tMain,...tRest]=p.title.split(/\s+[—–-]\s+/), tSub=tRest.join(" — "), tTitleYear=/^(19|20)\d\d$/.test(tSub)?tSub:"", tYear=tTitleYear||(ED&&ED.date?String(ED.date).slice(0,4):"")||FAMA_FEATURED.year(PKEY,"");
   const h1size=tMain.length>28?"clamp(44px,6vw,88px)":tMain.length>18?"clamp(52px,7.5vw,108px)":"";
   const profileHref=href(p.owner?"preview.html?view=guest":(GUEST?"preview.html?view=guest":"preview.html"));
+  const who=x=>x.lead?`<a href="${profileHref}"><b>${esc(x.n)}</b></a>`:x.u?`<a href="${href("preview.html?view=guest")}"><b>${esc(x.n)}</b></a>`:`<b>${esc(x.n)}</b>`;
+  const names=team.map(who), byLine=names.length>1?names.slice(0,-1).join(", ")+" and "+names[names.length-1]:names[0];
 
   page.className="ed"+(short?" is-short":"");
   page.innerHTML=(PREV?`<div class="st-prev"><span><b>Preview</b>${p.draft?" · This is a draft. Only you can see it.":" · This is how it looks on your profile."}</span><a class="btn btn-2" href="${href("project-edit.html?p="+PKEY)}">Back to editing</a></div>`:"")+`
   <header class="cover"><div class="ph-img" style="background-image:url(${p.coverSrc||pic(0)})" role="img" aria-label="${esc(p.title)}, the cover picture"></div>
     <div class="cap grid"><div><p class="kick">${tYear?`<span class="ytag">${tYear}</span>`:""}${esc([clientName,p.skills[0]].filter(Boolean).join(" · "))}</p><h1${h1size?` style="font-size:${h1size}"`:""}>${esc(tMain)}${tSub&&!tTitleYear?`<span class="vh"> — </span><span class="h1-sub">${esc(tSub)}</span>`:""}${tYear?`<span class="vh">, ${tYear}</span>`:""}</h1>
-      <div class="by"><span class="av" aria-hidden="true">${ini(lead)}</span><span><a href="${profileHref}"><b>${esc(lead)}</b></a>${p.role&&!p.owner?", "+esc(p.role.toLowerCase()):""}${co.length?" · with "+esc(co.join(" and ")):""}</span></div></div>
+      <div class="by"><span class="avs" aria-hidden="true">${team.slice(0,4).map(x=>`<span class="av">${ini(x.n)}</span>`).join("")}</span><span>By ${byLine}${team.length===1&&p.role&&!p.owner?", "+esc(p.role.toLowerCase()):""}</span></div></div>
       <div class="acts"><button class="btn btn-2" type="button" data-share>Share</button><button class="btn btn-2" type="button" data-like aria-pressed="false">♡ Like</button>${mine?`<a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:""}</div></div></header>
   ${short?"":`<div class="grid"><dl class="colo" style="--n:${facts().length}">${facts().map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl></div>`}
   <div class="grid"><article class="story${short?" short":""}">${story}</article></div>
-  <div class="grid"><section class="hire" id="hire" aria-labelledby="hireT"><span class="av hav" aria-hidden="true">${ini(lead)}</span>
-    <div class="hwho"><p class="hk">${mine&&!p.owner?"Made by you":"Made by"}</p><h2 id="hireT"><a href="${profileHref}">${esc(lead)}</a></h2><p class="hm">${p.owner?"On Fama":"Art director &amp; stylist · Cairo"} <span class="open"><i></i>Open for work</span></p></div>
-    <div class="hacts">${mine?`<a class="btn btn-2" href="${href("project.html?p="+PKEY+"&view=guest")}">See it as a visitor</a><a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:`<button class="btn btn-2" type="button" data-like aria-pressed="false">♡ Like</button><button class="btn" type="button" data-hire>Work with ${esc(lead)}</button>`}</div></section></div>
+  <div class="grid"><section class="hire team" id="hire" aria-labelledby="hireT"><div class="hwho"><h2 class="hk" id="hireT">Made by</h2>
+    <ul class="tm">${team.map(x=>`<li><span class="av" aria-hidden="true">${ini(x.n)}</span><span>${who(x)}${x.r?`<span class="r">${esc(x.r)}</span>`:""}</span></li>`).join("")}</ul></div>
+    <div class="hacts">${mine?`<a class="btn btn-2" href="${href("project.html?p="+PKEY+"&view=guest")}">See it as a visitor</a><a class="btn" href="${href("project-edit.html?p="+PKEY)}">${t("edit")}</a>`:`<button class="btn btn-2" type="button" data-share>Share</button><button class="btn" type="button" data-like aria-pressed="false">♡ Like</button>`}</div></section></div>
   ${next?`<a class="next" href="${href("project.html?p="+next[0]+(GUEST?"&view=guest":""))}"><div class="ph-img" style="background-image:url(${FAMA_FEATURED.pic(next[0])})"></div><div class="cap grid"><small>Next project</small><b>${esc(FAMA_FEATURED.split(next[1].title).name)}</b></div></a>`:""}
   ${more.length?`<div class="grid"><div class="more">${more.map(([k,v])=>`<a href="${href("project.html?p="+k+(GUEST?"&view=guest":""))}"><div class="ph-img" style="position:relative;background-image:url(${FAMA_FEATURED.pic(k)})">${FAMA_FEATURED.year(k,v.title)?`<span class="mtag">${FAMA_FEATURED.year(k,v.title)}</span>`:""}</div><b>${esc(FAMA_FEATURED.split(v.title).name)}</b><span>${esc(v.nda?"Confidential client":v.client||v.role)}</span></a>`).join("")}</div></div>`:""}`;
-  if(!mine){document.getElementById("hirebar").innerHTML=`<span class="av" aria-hidden="true">${ini(lead)}</span><span class="hb-t"><b>${esc(lead)}</b><span class="open"><i></i>Open for work</span></span><button class="btn" type="button" data-hire tabindex="-1">Work with</button>`;document.getElementById("hdT").textContent="Work with "+lead;document.getElementById("hdP").textContent=`Say what the job is. ${lead} gets it in their messages, with this project attached.`}
-  else document.getElementById("hirebar").remove();
 }
 </script>
 
@@ -238,15 +229,6 @@ function render(){
     const lk=e.target.closest("[data-like]"); if(lk){const on=lk.getAttribute("aria-pressed")!=="true";$("[data-like]").forEach(b=>{b.setAttribute("aria-pressed",on);b.textContent=(on?"♥ ":"♡ ")+"Like"});return}
     if(e.target.closest("[data-share]")){try{await navigator.clipboard.writeText(location.href.replace(/[?&]preview=1/,""))}catch(_){} FAMA.toast&&FAMA.toast(t("copied"))}
   });
-  /* hire: a short brief, sent to the talent with this project attached */
-  const dlg=document.getElementById("hiredlg");
-  document.addEventListener("click",e=>{if(e.target.closest("[data-hire]")){dlg.showModal();dlg.querySelector("textarea").focus()}});
-  dlg.addEventListener("close",()=>{if(dlg.returnValue==="send"){FAMA.toast&&FAMA.toast("Sent to "+document.getElementById("hdT").textContent.replace("Work with ",""));dlg.querySelector("form").reset()}});
-  /* on a phone the way to hire follows you once the cover is gone, until the "Made by" band is on screen */
-  const bar=document.getElementById("hirebar");
-  if(bar){let pastCover=false,atHire=false;const sync=()=>{const on=pastCover&&!atHire;bar.classList.toggle("show",on);bar.setAttribute("aria-hidden",!on);const b=bar.querySelector("button");if(b)b.tabIndex=on?0:-1};
-    new IntersectionObserver(([e])=>{pastCover=!e.isIntersecting;sync()}).observe(document.querySelector(".cover"));
-    new IntersectionObserver(([e])=>{atHire=e.isIntersecting;sync()}).observe(document.getElementById("hire"));}
   /* before / after: drag, click, or arrow keys; a one-time nudge shows the line moves */
   $(".ba-box").forEach(box=>{const line=box.querySelector(".ba-line");
     const set=v=>{v=Math.max(0,Math.min(100,v));box.style.setProperty("--p",v+"%");line.setAttribute("aria-valuenow",Math.round(v))};
