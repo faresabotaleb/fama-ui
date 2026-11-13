@@ -44,7 +44,7 @@
   try { store = JSON.parse(FAMA_YEARS(localStorage.getItem(KEY) || '{}')); } catch (e) {}
   var pid = Q.get('p');
   var P = pid && (store[pid] || SEED[pid]) ? clone(store[pid] || SEED[pid]) :
-    { id: 'p' + Date.now(), title: '', status: 'draft', cover: false, client: '', role: '', date: '', link: '', skills: MY.length ? [MY[0].name] : [], specs: [], blocks: [{ t: 'text', v: '' }] };
+    { id: 'p' + Date.now(), title: '', status: 'draft', cover: false, client: '', role: '', date: '', link: '', skills: MY.length ? [MY[0].name] : [], specs: [], blocks: [{ t: 'gallery', n: 0, caps: [], srcs: [] }, { t: 'text', v: '' }] }; /* 13 Nov 2026 review: a new project opens with Add photos ready */
   /* older copies: the sample's look and before/after pictures; the year moves from the title to the date */
   if (P.id === 'desert-light') {
     var L = DESERT[8], BA = DESERT[10];

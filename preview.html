@@ -114,6 +114,9 @@ dialog.signdlg{max-width:440px}
 .ct-skills a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .ct-with{margin:var(--s3) 0 0;font-size:15px;line-height:1.5;color:var(--ink);max-width:44ch}
 .ct-with span{color:var(--grey)}
+.ct-pov{margin:var(--s4) 0 0;padding-inline-start:var(--s4);border-inline-start:3px solid var(--purple);max-width:44ch}
+.ct-pov h2{margin:0 0 2px;font-size:14px;font-weight:600;color:var(--purple-dk)}
+.ct-pov p{margin:0;font-size:17px;line-height:1.5;color:var(--ink);font-style:italic;text-wrap:pretty}
 .ct-bio{margin:var(--s3) 0 0;font-size:17px;line-height:1.5;color:var(--ink);max-width:40ch;text-wrap:pretty}
 #page p,#page li{text-wrap:pretty}
 .povq{margin:var(--s4) 0 0;max-width:62ch;font-size:20px;line-height:1.5}
@@ -479,6 +482,7 @@ function hero(){
       <div class="ct-tags"><div class="ct-chips"><span class="${P.taking?"on":""}">${P.taking?t("taking"):t("notTaking")}</span>${P.travel?`<span>${t("travel")}</span>`:""}</div>
       ${P.skills.length?`<ul class="ct-skills" aria-label="${t("skillsNav")}">${P.skills.map(s=>`<li><a href="${href("preview.html?skill="+s.id+(GUEST?"&view=guest":""))}" data-goskill="${s.id}">${esc(s.name)}</a></li>`).join("")}</ul>`:""}</div>
       ${P.bio?`<p class="ct-bio" dir="auto">${esc(P.bio)}</p>`:""}
+      ${P.pov?`<div class="ct-pov"><h2>${t("pov")}</h2><p dir="auto">“${esc(P.pov)}”</p></div>`:""}
       ${with_}
       <dl class="ct-stats"><div><dt>${t("projects")}</dt><dd>${num(nP)}</dd></div><div><dt>${t("brandsN")}</dt><dd>${num(firms.length)}</dd></div><div><dt>${t("recognitions")}</dt><dd>${num(C.recs.length)}</dd></div></dl>
       <div class="ct-acts">
@@ -568,7 +572,8 @@ function section(b,id){
 }
 /* 24 Oct 2026: what is true for every skill shows once, after the tabs, under the person's name: their point of view,
    experience, recognitions and what they'd explore. Before, it repeated inside each tab (stylist roles under Modelling). */
-const wide=()=>{const pov=P.pov?`<section class="blk blk-pov"><div class="pv-sh"><h3 class="h2">${t("pov")}</h3></div><p class="povq" dir="auto">${esc(P.pov)}</p></section>`:"";
+/* 13 Nov 2026 review: the point of view is part of the person's details, so it moved up into the hero */
+const wide=()=>{const pov="";
   const pw=shown("pw"), sec=b=>pw.includes(b)?section(b,primary?primary.id:"pw"):"";
   const h=sec("brands")+sec("recognitions")+pov+sec("explore");
   return h?`<section class="wide-sections" aria-labelledby="wideH"><h2 class="h1" id="wideH">${esc(t("wideTitle",P.name))}</h2>${h}</section>`:""};

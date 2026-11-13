@@ -4,7 +4,7 @@
 <link rel="icon" href="assets/img/fama-emblem.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/shell.css?v=77">
 <link rel="stylesheet" href="assets/css/fields.css?v=9">
-<link rel="stylesheet" href="assets/css/views.css?v=24">
+<link rel="stylesheet" href="assets/css/views.css?v=25">
 <link rel="stylesheet" href="assets/css/exp.css?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Sofia+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -409,9 +409,10 @@ dialog::backdrop{background:rgba(20,17,15,.5)}
 .savebar.is-away .in-bar{pointer-events:none}
 @media (prefers-reduced-motion:reduce){.savebar,.savebar.is-away{transition:none}}
 /* skills: in the order of the profile tabs; the first opens first */
-.sk .shead{grid-template-columns:auto minmax(0,1fr) auto}
+.sk .shead{grid-template-columns:minmax(0,1fr) auto} /* 13 Nov 2026: no grip column any more */
 .sk .grip{cursor:grab}
 .sk .grip:active{cursor:grabbing}
+.sk .skprim .icon{width:16px;height:16px}
 .sk .order{font-size:13px;font-weight:600;color:var(--purple-dk);background:var(--lavender,#F3EAF8);border-radius:var(--radius-pill);padding:2px 10px}
 .sk .ssum{grid-column:2/-1}
 .sk .sbody{padding:0 var(--s6) var(--s5) calc(var(--s6) + 44px)}
@@ -511,6 +512,7 @@ dialog::backdrop{background:rgba(20,17,15,.5)}
 <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol>
 <symbol id="i-pen" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M11.5 2.3a.6.6 0 0 1 1 0l2.8 5.7 6.3.9a.6.6 0 0 1 .3 1l-4.5 4.4 1 6.3a.6.6 0 0 1-.8.6L12 18.3l-5.6 2.9a.6.6 0 0 1-.8-.6l1-6.3L2.1 9.9a.6.6 0 0 1 .3-1l6.3-.9z"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
 <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
@@ -741,7 +743,7 @@ en:{
  "social.type":"Account type","social.addLink":"Add another link","social.other":"Other","social.newPh":"Link to social profile","social.pick":p=>`Account type: ${p}. Change`,"social.added":"Added","social.add":"Add a platform","social.url":"Link",
  "social.user":p=>`Your ${p} username`,"social.site":"Your website address","social.addA":p=>`Add ${p}`,"social.full":"You've added nine. Remove one to add another.","social.open":p=>`Open your ${p} page`,
  "social.remove":p=>`Remove ${p} link`,"social.web":"Website","social.wait":"Paste a link","social.dup":"You've already added this link.",
- "skills.label":"What you do","skills.lead":"Each skill is a tab on your profile, in this order. The first one opens first. Drag to reorder.","now.short":"Tell brands if they can book you right now. It shows under your name on your profile.",
+ "skills.label":"What you do","skills.lead":"Each skill is a tab on your profile. Your primary skill opens first.","now.short":"Tell brands if they can book you right now. It shows under your name on your profile.",
  "d.core":"Your name, your address on Fama, and how you introduce yourself.",
  "copy":"Copy","copied":"Copied","copyA":"Copy your profile link","copiedA":"Link copied to the clipboard",
  "pub.live":"Live","pub.private":"Private","pub.tipA":"What Live and Private mean",
@@ -756,8 +758,8 @@ en:{
  "sb.badName":"Add a display name to save","sb.badNameN":"Your profile needs one, and brands see it first.",
  "sb.badUser":"Fix your username to save","sb.badUserN":"Use letters, numbers and dashes only.",
  "t.discarded":"Changes discarded","t.saved":"Changes saved",
- "skills.first":"Opens first","skills.up":s=>`Move ${s} up`,"skills.down":s=>`Move ${s} down`,"skills.drag":s=>`Reorder ${s}. Use the arrow keys, or drag.`,
- "skills.moved":(s,n)=>`${s} is now tab ${n}`,"skills.details":"About your practice","skills.detailsN":(n,m)=>`${n} of ${m} added`,
+ "skills.first":"Primary","skills.make":"Make primary","skills.makeA":s=>`Make ${s} your primary skill`,"skills.up":s=>`Move ${s} up`,"skills.down":s=>`Move ${s} down`,"skills.drag":s=>`Reorder ${s}. Use the arrow keys, or drag.`,
+ "skills.moved":(s,n)=>n===1?`${s} is now your primary skill`:`${s} is now tab ${n}`,"skills.details":"About your practice","skills.detailsN":(n,m)=>`${n} of ${m} added`,
  "skills.add":"Add skill","skills.about":"About your practice","skills.specs":"Specialities","skills.primary":"Primary","skills.makePrimary":"Make primary","skills.remove":"Remove",
  "skills.makePrimaryA":s=>`Make ${s} your primary skill`,"skills.removeA":s=>`Remove ${s}`,
  "sec.label":"What's on your profile","sec.lead":"Every profile follows the same order, so brands always know where to look. Switch a section off to hide it. Hidden sections keep their content.",
@@ -1036,11 +1038,9 @@ function renderSkills(){
   $("skillList").innerHTML=profile.skills.map((s,i)=>{const n=skName(s.id),l=FX.forSkill(s.id),got=l.filter(f=>FX.filled(f.id,profile.fields[f.id])).length;
     return `<div class="sk skill${s.id===newSkill?" is-new":""}" data-s="${s.id}">
     <div class="shead">
-      <button type="button" class="grip" draggable="true" data-grip="${s.id}" aria-label="${esc(t("skills.drag",n))}"><svg class="icon" aria-hidden="true"><use href="#i-grip"/></svg></button>
       <div class="stitle"><b>${esc(n)}${i===0?`<span class="order">${t("skills.first")}</span>`:""}</b></div>
       <span class="skacts">
-        <button type="button" class="iconbtn mv" data-mv="-1" aria-label="${esc(t("skills.up",n))}" ${i===0?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
-        <button type="button" class="iconbtn mv" data-mv="1" aria-label="${esc(t("skills.down",n))}" ${i===N-1?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button>
+        ${i===0?"":`<button type="button" class="btn btn-2 skprim" data-primary="${s.id}" aria-label="${esc(t("skills.makeA",n))}"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span>${t("skills.make")}</span></button>`}
         <button type="button" class="btn btn-2 skrm" data-remove="${s.id}" aria-label="${esc(t("skills.removeA",n))}" ${N<2?"disabled":""}><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg><span>${t("skills.remove")}</span></button></span>
     </div>
     <div class="sbody" id="sb-${s.id}">
@@ -1101,8 +1101,9 @@ FX.bind($("skillList"),profile.fields,(id,el,typing)=>{
 });
 $("skillList").addEventListener("click",e=>{
   const sp=e.target.closest("[data-spec]"), rm=e.target.closest("[data-remove]"), mv=e.target.closest("[data-mv]");
-  if(mv){const id=mv.closest(".sk").dataset.s,i=profile.skills.findIndex(x=>x.id===id),d=+mv.dataset.mv;
-    moveSkill(id,i+d,`[data-mv="${d}"]:not(:disabled)`);return}
+  /* 13 Nov 2026 review: no reordering (drag and arrows are gone); one primary skill, which opens first */
+  const pr=e.target.closest("[data-primary]");
+  if(pr){moveSkill(pr.dataset.primary,0,".skrm");return}
   if(sp){const s=profile.skills.find(x=>x.id===sp.closest(".skill").dataset.s);const on=s.specs.includes(sp.dataset.spec);
     s.specs=on?s.specs.filter(x=>x!==sp.dataset.spec):[...s.specs,sp.dataset.spec];sp.setAttribute("aria-pressed",!on);saved()}
   if(rm){askRemove(rm.dataset.remove)}

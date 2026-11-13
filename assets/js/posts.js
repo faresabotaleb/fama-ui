@@ -105,14 +105,15 @@
         (o.kind === 'project' ? '<span class="rp-t"><span class="label">' + t('p.project') + '</span> ' + esc(o.project.title) + '</span>' : '<span class="rp-t" dir="auto">' + esc((o.text || '').replace(/https?:\/\/\S+/g, '').trim()) + '</span>') +
         (o.media ? '<span class="meta rp-m">' + ico('i-image') + ' ' + o.media + '</span>' : '') + '</a>';
     } else if (p.kind === 'project') {
-      body = (p.text ? '<p class="ptext" dir="auto">' + FAMA.fmt(p.text) + '</p>' : '') +
-        '<a class="projframe" href="' + FAMA.href('project.html?p=' + (p.project.slug || 'desert-light')) + '"><div class="ph cover">' + ico('i-image') + '</div><div class="pf-b"><span class="label">' + t('p.project') + ' · ' + esc(p.project.client) + ' · ' + p.project.year + '</span>' +
-        '<b class="pf-t">' + esc(p.project.title) + '</b><span class="meta">' + esc(p.project.credits) + '</span></div></a>';
+      body = '<a class="projframe" href="' + FAMA.href('project.html?p=' + (p.project.slug || 'desert-light')) + '"><div class="ph cover">' + ico('i-image') + '</div><div class="pf-b"><span class="label">' + t('p.project') + ' · ' + esc(p.project.client) + ' · ' + p.project.year + '</span>' +
+        '<b class="pf-t">' + esc(p.project.title) + '</b><span class="meta">' + esc(p.project.credits) + '</span></div></a>' +
+        (p.text ? '<p class="ptext" dir="auto">' + FAMA.fmt(p.text) + '</p>' : '');
     } else {
       var links = FAMA.links(p.text || '');
-      body = '<p class="ptext" dir="auto">' + FAMA.fmt(p.text || '') + '</p>' +
-        (links.length ? '<div class="chips lchips">' + links.map(function (u) { return '<a class="chip" href="' + esc(u) + '" target="_blank" rel="noopener">' + ico('i-link') + esc(FAMA.platform(u)) + '</a>'; }).join('') + '</div>' : '') +
-        (p.media ? mediaHTML(p) : '');
+      /* 13 Nov 2026 review: the visual leads; the words, then their links, follow it */
+      body = (p.media ? mediaHTML(p) : '') +
+        '<p class="ptext" dir="auto">' + FAMA.fmt(p.text || '') + '</p>' +
+        (links.length ? '<div class="chips lchips">' + links.map(function (u) { return '<a class="chip" href="' + esc(u) + '" target="_blank" rel="noopener">' + ico('i-link') + esc(FAMA.platform(u)) + '</a>'; }).join('') + '</div>' : '');
     }
     /* posts tagged with #skills in their text don't repeat them as chips below */
     var tags = p.skills && p.skills.length && !FAMA.tagsIn(p.text).length ? '<div class="chips ptags">' + p.skills.map(function (s) { return '<span class="tag">' + esc(s) + '</span>'; }).join('') + '</div>' : '';

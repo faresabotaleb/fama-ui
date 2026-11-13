@@ -99,9 +99,15 @@
       var ms = function (on, icon, label) { return '<span class="gt-ms' + (on ? ' on' : '') + '">' + icon + '<span class="gt-msl">' + label + '</span></span>'; };
       var n = ALL.filter(function (r) { return all || done[r[0]]; }).length;
       var cnt = function (L) { return L.filter(function (r) { return all || done[r[0]]; }).length + ' of ' + L.length; };
+      /* 13 Nov 2026 review: "not clear how to read it". Two labelled groups, each with its name and count,
+         instead of loose segments with milestone chips between them. */
+      var grp = function (L, label, on) {
+        return '<div class="gt-g' + (on ? ' on' : '') + '" style="--n:' + L.length + '"><span class="gt-gl">' + (on ? ic('i-check') : '') + label +
+          ' <span class="gt-gc">' + L.filter(function (r) { return all || done[r[0]]; }).length + '/' + L.length + '</span></span>' +
+          '<span class="gt-gs">' + L.map(seg).join('') + '</span></div>';
+      };
       return '<div class="gt-track" role="group" aria-label="Go Live ' + cnt(REQ) + ' done, Stand out ' + cnt(REC) + ' done">' +
-        REQ.map(seg).join('') + ms(isLive, STAR.replace('gt-star', 'gt-msi'), 'Live') +
-        REC.map(seg).join('') + ms(ready, ic('i-check'), 'Ready') + '</div>';
+        grp(REQ, '1 · Go Live', isLive) + grp(REC, '2 · Stand out', ready) + '</div>';
     }
     function part(L, n, title, sub, state) {
       var got = L.length - left(L).length;
@@ -164,7 +170,7 @@
         '<button type="button" class="gt-sum" aria-expanded="' + open + '" aria-controls="gtList">' +
           '<span class="gt-ring" aria-hidden="true"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="fg" cx="18" cy="18" r="15" style="stroke-dasharray:' + C.toFixed(1) + ';stroke-dashoffset:' + (C * (1 - n / L.length)).toFixed(1) + '"/></svg>' +
             '<b>' + n + '/' + L.length + '</b>' + STAR + '</span>' +
-          '<span class="gt-t"><b class="gt-h"><span class="gt-hl">' + head + '</span><span class="gt-hs">' + short + '</span></b><span class="gt-sub">' + (stage === 'live' ? 'Part 1 of 2 · Go Live' : listed ? 'Part 2 of 2 · Recommended by Fama' : 'Part 2 of 2 · Live, not in the Creatives Index yet') + '</span></span>' + ic('i-down') + '</button>' +
+          '<span class="gt-t"><b class="gt-h"><span class="gt-hl">' + head + '</span><span class="gt-hs">' + short + '</span></b><span class="gt-sub">' + (stage === 'live' ? 'Part 1 of 2 · Go Live' : listed ? 'Part 2 of 2 · Optional, gets you picked' : 'Part 2 of 2 · Live, not in the Creatives Index yet') + '</span></span>' + ic('i-down') + '</button>' +
         track(false, next, fresh) +
         (next ? link(next, 'gt-next', '<span class="gt-nl">Next: </span><span class="gt-nn">' + next[1] + '</span>' + ic('i-arrow')) : '') +
       '</div>' +
